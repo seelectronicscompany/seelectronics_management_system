@@ -1,0 +1,532 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>স্মার্ট ওয়ালেট - এস ই ইলেকট্রনিকস</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&display=swap');
+        
+        body { 
+            font-family: 'Hind Siliguri', sans-serif; 
+            background-color: #f1f5f9; 
+            overflow-x: hidden;
+            font-size: 15px;
+            display: flex;
+            justify-content: center;
+        }
+
+        /* পিসিতে মোবাইল ভিউ বজায় রাখার জন্য কন্টেইনার */
+        .app-container {
+            width: 100%;
+            max-width: 450px;
+            background: #f8fafc;
+            min-height: 100vh;
+            position: relative;
+            box-shadow: 0 0 50px rgba(0,0,0,0.1);
+        }
+
+        .gradient-bg {
+            background: linear-gradient(135deg, #1e1b4b 0%, #4338ca 100%);
+        }
+
+        .status-badge {
+            position: absolute;
+            top: 0;
+            right: 0;
+            padding: 4px 15px;
+            font-size: 11px;
+            font-weight: 700;
+            color: white;
+            border-bottom-left-radius: 15px;
+            text-transform: uppercase;
+        }
+        .status-completed { background: #15803d; }
+        .status-canceled { background: #dc2626; }
+        .status-processing { background: #f59e0b; }
+
+        .action-btn {
+            background: white;
+            border-radius: 16px;
+            padding: 15px 10px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+            transition: all 0.2s;
+            border: 1px solid #f1f5f9;
+        }
+        .action-btn:active { transform: scale(0.95); background: #f1f5f9; }
+
+        .list-card {
+            position: relative;
+            background: white;
+            border-radius: 12px;
+            border: 1px solid #e2e8f0;
+            padding: 15px;
+            margin-bottom: 12px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+            overflow: hidden;
+            cursor: pointer;
+        }
+
+        #loader {
+            position: fixed; inset: 0; background: white; z-index: 1000;
+            display: flex; align-items: center; justify-content: center;
+        }
+        .spinner {
+            width: 40px; height: 40px; border: 4px solid #f3f3f3;
+            border-top: 4px solid #4338ca; border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+        .bottom-sheet {
+            transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            transform: translateY(100%);
+            max-width: 450px;
+            margin: 0 auto;
+        }
+        .bottom-sheet.active { transform: translateY(0); }
+
+        .success-checkmark {
+            width: 80px; height: 80px; margin: 0 auto; border-radius: 50%;
+            border: 4px solid #059669; display: flex; align-items: center;
+            justify-content: center; color: #059669; font-size: 40px;
+        }
+
+        .id-label {
+            border: 2px dashed #cbd5e1; padding: 12px; border-radius: 12px;
+            background: #f8fafc; display: flex; justify-content: center;
+            align-items: center; gap: 10px;
+        }
+    </style>
+</head>
+<body class="pb-24">
+
+    <div class="app-container">
+        <!-- Loading Screen -->
+        <div id="loader">
+            <div class="text-center">
+                <div class="spinner mx-auto mb-4"></div>
+                <p class="text-slate-500 text-sm font-bold">লোডিং হচ্ছে...</p>
+            </div>
+        </div>
+
+        <!-- Header -->
+        <div class="bg-white p-4 flex justify-between items-center border-b sticky top-0 z-40">
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded bg-slate-900 flex items-center justify-center text-white">
+                    <i class="fas fa-bolt"></i>
+                </div>
+                <div>
+                    <h1 class="font-bold text-slate-800 text-base">এস ই ইলেকট্রনিকস</h1>
+                    <p class="text-[10px] text-emerald-600 font-bold uppercase">Official Service</p>
+                </div>
+            </div>
+            <button onclick="toggleView('notifications')" class="w-10 h-10 rounded-full bg-slate-50 flex items-center justify-center text-slate-500 border relative">
+                <i class="fas fa-bell"></i>
+                <span id="notif-dot" class="absolute top-1 right-1 w-2.5 h-2.5 bg-rose-500 rounded-full border-2 border-white hidden"></span>
+            </button>
+        </div>
+
+        <main class="p-4 space-y-6">
+            <!-- Balance Card -->
+            <div id="main-balance-card" class="gradient-bg rounded-2xl p-6 text-white shadow-xl relative overflow-hidden">
+                <div class="relative z-10">
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <p class="text-[10px] opacity-70 font-bold uppercase tracking-widest">মোট ব্যালেন্স</p>
+                            <h2 id="balance-text" class="text-3xl font-bold mt-1">৳ 0.00</h2>
+                        </div>
+                        <div class="text-right">
+                            <p class="text-[9px] opacity-70 font-bold uppercase">রিওয়ার্ড</p>
+                            <p id="points-text" class="text-lg font-bold">0 Pts</p>
+                        </div>
+                    </div>
+                    <div class="mt-6 flex items-center gap-2 bg-white/10 p-2 rounded-lg border border-white/10">
+                        <i class="fas fa-info-circle text-[10px]"></i>
+                        <p class="text-[10px] font-medium">আপনার অ্যাকাউন্ট ভেরিফাইড। লিমিট আনলিমিটেড।</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div id="action-grid" class="grid grid-cols-4 gap-3">
+                <button onclick="addMoney()" class="action-btn">
+                    <div class="w-10 h-10 bg-emerald-50 text-emerald-600 rounded-full flex items-center justify-center">
+                        <i class="fas fa-plus-circle"></i>
+                    </div>
+                    <span class="text-[10px] font-bold text-slate-600">অ্যাড মানি</span>
+                </button>
+                <button onclick="toggleView('send')" class="action-btn">
+                    <div class="w-10 h-10 bg-indigo-50 text-indigo-600 rounded-full flex items-center justify-center">
+                        <i class="fas fa-paper-plane"></i>
+                    </div>
+                    <span class="text-[10px] font-bold text-slate-600">টাকা পাঠান</span>
+                </button>
+                <button onclick="toggleView('cashout')" class="action-btn">
+                    <div class="w-10 h-10 bg-rose-50 text-rose-600 rounded-full flex items-center justify-center">
+                        <i class="fas fa-hand-holding-usd"></i>
+                    </div>
+                    <span class="text-[10px] font-bold text-slate-600">ক্যাশ আউট</span>
+                </button>
+                <button onclick="toggleView('paybill')" class="action-btn">
+                    <div class="w-10 h-10 bg-amber-50 text-amber-600 rounded-full flex items-center justify-center">
+                        <i class="fas fa-file-invoice-dollar"></i>
+                    </div>
+                    <span class="text-[10px] font-bold text-slate-600">পে বিল</span>
+                </button>
+            </div>
+
+            <!-- Service History -->
+            <div id="section-balance" class="space-y-4">
+                <div class="flex justify-between items-center px-1">
+                    <h3 class="font-bold text-slate-800 text-lg">সার্ভিস হিস্ট্রি</h3>
+                    <button onclick="openHistorySheet()" class="text-[11px] font-bold text-indigo-600 uppercase">সব দেখুন</button>
+                </div>
+                <div id="transaction-list"></div>
+            </div>
+
+            <!-- Send Money Section -->
+            <div id="section-send" class="hidden space-y-4">
+                <div class="bg-white p-6 rounded-2xl shadow-sm border space-y-4">
+                    <div class="flex items-center gap-3 mb-2">
+                        <button onclick="toggleView('balance')" class="text-slate-400"><i class="fas fa-arrow-left"></i></button>
+                        <h3 class="font-bold text-slate-800 text-lg">টাকা পাঠান</h3>
+                    </div>
+                    <div class="space-y-3">
+                        <input id="send-name" type="text" placeholder="কাস্টমারের নাম" class="w-full p-4 bg-slate-50 rounded-xl outline-none focus:ring-2 focus:ring-indigo-500 border">
+                        <input id="send-id" type="text" placeholder="সার্ভিস আইডি (SE-XXXXX)" class="w-full p-4 bg-slate-50 rounded-xl outline-none focus:ring-2 focus:ring-indigo-500 border">
+                        <input id="send-amount" type="number" placeholder="৳ ০.০০" class="w-full p-4 bg-slate-50 rounded-xl outline-none font-bold text-2xl text-center focus:ring-2 focus:ring-indigo-500 border">
+                    </div>
+                    <button onclick="processTransaction('send-name', 'send-id', 'send-amount', 'মানি ট্রান্সফার')" class="w-full gradient-bg text-white py-4 rounded-xl font-bold uppercase">নিশ্চিত করুন</button>
+                </div>
+            </div>
+
+            <!-- Cash Out Section -->
+            <div id="section-cashout" class="hidden space-y-4">
+                <div class="bg-white p-6 rounded-2xl shadow-sm border space-y-4">
+                    <div class="flex items-center gap-3 mb-2">
+                        <button onclick="toggleView('balance')" class="text-slate-400"><i class="fas fa-arrow-left"></i></button>
+                        <h3 class="font-bold text-slate-800 text-lg">ক্যাশ আউট</h3>
+                    </div>
+                    <div class="space-y-3">
+                        <input id="cash-agent" type="text" placeholder="এজেন্ট নাম্বার / নাম" class="w-full p-4 bg-slate-50 rounded-xl outline-none border focus:ring-2 focus:ring-rose-500">
+                        <input id="cash-amount" type="number" placeholder="৳ ০.০০" class="w-full p-4 bg-slate-50 rounded-xl outline-none border font-bold text-2xl text-center focus:ring-2 focus:ring-rose-500">
+                    </div>
+                    <button onclick="processTransaction('cash-agent', null, 'cash-amount', 'ক্যাশ আউট')" class="w-full bg-rose-600 text-white py-4 rounded-xl font-bold uppercase shadow-lg shadow-rose-100">ক্যাশ আউট করুন</button>
+                </div>
+            </div>
+
+            <!-- Pay Bill Section -->
+            <div id="section-paybill" class="hidden space-y-4">
+                <div class="bg-white p-6 rounded-2xl shadow-sm border space-y-4">
+                    <div class="flex items-center gap-3 mb-2">
+                        <button onclick="toggleView('balance')" class="text-slate-400"><i class="fas fa-arrow-left"></i></button>
+                        <h3 class="font-bold text-slate-800 text-lg">পে বিল</h3>
+                    </div>
+                    <div class="space-y-3">
+                        <select id="bill-type" class="w-full p-4 bg-slate-50 rounded-xl outline-none border focus:ring-2 focus:ring-amber-500">
+                            <option value="Electricity">বিদ্যুৎ বিল</option>
+                            <option value="Water">পানি বিল</option>
+                            <option value="Internet">ইন্টারনেট বিল</option>
+                        </select>
+                        <input id="bill-id" type="text" placeholder="বিল একাউন্ট নাম্বার" class="w-full p-4 bg-slate-50 rounded-xl outline-none border focus:ring-2 focus:ring-amber-500">
+                        <input id="bill-amount" type="number" placeholder="৳ ০.০০" class="w-full p-4 bg-slate-50 rounded-xl outline-none border font-bold text-2xl text-center focus:ring-2 focus:ring-amber-500">
+                    </div>
+                    <button onclick="processTransaction('bill-type', 'bill-id', 'bill-amount', 'পে বিল')" class="w-full bg-amber-500 text-white py-4 rounded-xl font-bold uppercase shadow-lg shadow-amber-100">বিল প্রদান করুন</button>
+                </div>
+            </div>
+
+            <!-- Notifications -->
+            <div id="section-notifications" class="hidden space-y-4">
+                <div class="flex items-center justify-between mb-2">
+                    <div class="flex items-center gap-3">
+                        <button onclick="toggleView('balance')" class="text-slate-400"><i class="fas fa-arrow-left"></i></button>
+                        <h3 class="font-bold text-slate-800 text-xl">নোটিফিকেশন</h3>
+                    </div>
+                    <button onclick="clearNotifications()" class="text-[10px] text-rose-500 font-bold uppercase">সব মুছুন</button>
+                </div>
+                <div id="notification-list" class="space-y-3"></div>
+            </div>
+
+            <!-- Profile -->
+            <div id="section-profile" class="hidden space-y-4">
+                <div class="bg-white p-6 rounded-2xl border text-center">
+                    <div class="w-20 h-20 bg-slate-100 rounded-full flex items-center justify-center mx-auto mb-4 shadow-md">
+                        <i class="fas fa-user-gear text-3xl text-slate-400"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-slate-800">এডমিন প্যানেল</h3>
+                    <div class="mt-8 space-y-2">
+                        <button onclick="resetAccount()" class="w-full text-rose-500 font-bold bg-rose-50 p-4 rounded-xl">ডেটা রিসেট করুন</button>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- Navigation -->
+        <nav class="absolute bottom-0 left-0 right-0 bg-white border-t h-20 flex justify-around items-center px-4 z-50">
+            <button onclick="toggleView('balance')" id="nav-balance" class="flex flex-col items-center text-indigo-600 w-16">
+                <i class="fas fa-home text-lg"></i>
+                <span class="text-[9px] mt-1 font-bold">হোম</span>
+            </button>
+            <button onclick="openHistorySheet()" class="flex flex-col items-center text-slate-400 w-16">
+                <i class="fas fa-list text-lg"></i>
+                <span class="text-[9px] mt-1 font-bold">লিস্ট</span>
+            </button>
+            <div onclick="openScanner()" class="w-12 h-12 gradient-bg rounded-full flex items-center justify-center text-white shadow-lg -mt-10 border-4 border-white cursor-pointer">
+                <i class="fas fa-qrcode"></i>
+            </div>
+            <button onclick="toggleView('notifications')" id="nav-notifications" class="flex flex-col items-center text-slate-400 w-16">
+                <i class="fas fa-bell text-lg"></i>
+                <span class="text-[9px] mt-1 font-bold">নোটিশ</span>
+            </button>
+            <button onclick="toggleView('profile')" id="nav-profile" class="flex flex-col items-center text-slate-400 w-16">
+                <i class="fas fa-user text-lg"></i>
+                <span class="text-[9px] mt-1 font-bold">প্রোফাইল</span>
+            </button>
+        </nav>
+    </div>
+
+    <!-- Modals and Overlays -->
+    <div id="detail-modal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-[200] flex items-center justify-center p-6 hidden">
+        <div class="bg-white w-full max-w-sm rounded-[35px] shadow-2xl p-8 relative">
+            <button onclick="closeModal()" class="absolute top-6 right-6 text-slate-300 text-xl"><i class="fas fa-times"></i></button>
+            <div id="modal-content" class="text-center"></div>
+        </div>
+    </div>
+
+    <div id="history-overlay" class="fixed inset-0 bg-slate-900/60 z-[60] hidden" onclick="closeHistorySheet()"></div>
+    <div id="history-sheet" class="fixed bottom-0 left-0 right-0 bg-white rounded-t-3xl z-[70] bottom-sheet h-[85vh] flex flex-col shadow-2xl overflow-hidden">
+        <div class="px-6 py-5 flex justify-between items-center border-b">
+            <h3 class="font-bold text-slate-800">লেনদেনের ইতিহাস</h3>
+            <button onclick="closeHistorySheet()" class="text-slate-400"><i class="fas fa-times"></i></button>
+        </div>
+        <div id="full-history-list" class="flex-1 overflow-y-auto p-4 bg-slate-50"></div>
+    </div>
+
+    <div id="toast" class="fixed top-10 left-1/2 -translate-x-1/2 bg-slate-800 text-white px-6 py-3 rounded-full text-xs font-bold shadow-xl opacity-0 transition-all z-[300] pointer-events-none"></div>
+
+    <script>
+        let userData = JSON.parse(localStorage.getItem('wallet_service_v3')) || {
+            balance: 15250.00,
+            points: 450,
+            transactions: [
+                { id: 'TXN982345', customer: 'Md. Anuar Mia', phone: '01322247774', product: 'IPS - SEPI-1050 VA DSP SINE WAVE', status: 'completed', amount: 500, date: '22 Mar, 2024' }
+            ],
+            notifications: [
+                { title: "স্বাগতম!", message: "এস ই ইলেকট্রনিকস স্মার্ট ওয়ালেটে আপনাকে স্বাগতম।", time: "এখন", type: 'info' }
+            ]
+        };
+
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                document.getElementById('loader').style.display = 'none';
+            }, 600);
+            updateUI();
+        });
+
+        function saveData() {
+            localStorage.setItem('wallet_service_v3', JSON.stringify(userData));
+            updateUI();
+        }
+
+        function updateUI() {
+            document.getElementById('balance-text').innerText = `৳ ${userData.balance.toLocaleString('en-IN')}`;
+            document.getElementById('points-text').innerText = `${userData.points} Pts`;
+            renderList('transaction-list', 5);
+            renderList('full-history-list', 100);
+            renderNotifications();
+        }
+
+        function renderList(containerId, limit) {
+            const list = document.getElementById(containerId);
+            if (!list) return;
+            list.innerHTML = '';
+            userData.transactions.slice().reverse().slice(0, limit).forEach((tx, idx) => {
+                const originalIndex = userData.transactions.length - 1 - idx;
+                let statusClass = tx.status === 'completed' ? 'status-completed' : (tx.status === 'canceled' ? 'status-canceled' : 'status-processing');
+                let statusText = tx.status === 'completed' ? 'COMPLETED' : (tx.status === 'canceled' ? 'CANCELED' : 'Processing');
+
+                list.insertAdjacentHTML('beforeend', `
+                    <div onclick="showDetails(${originalIndex})" class="list-card">
+                        <div class="status-badge ${statusClass}">${statusText}</div>
+                        <div class="space-y-1.5">
+                            <p class="text-slate-600 text-[13px] font-medium">Service ID # <span class="text-slate-900 font-bold">${tx.id}</span></p>
+                            <p class="text-slate-600 text-[13px] font-medium">Customer : <span class="text-slate-900 font-bold">${tx.customer}</span></p>
+                            <p class="text-slate-600 text-[13px] font-medium">Product : <span class="text-slate-900 font-bold">${tx.product}</span></p>
+                        </div>
+                    </div>
+                `);
+            });
+        }
+
+        function renderNotifications() {
+            const list = document.getElementById('notification-list');
+            if(!list) return;
+            list.innerHTML = '';
+            
+            if (userData.notifications.length === 0) {
+                list.innerHTML = '<div class="text-center py-10 text-slate-400">কোনো নোটিফিকেশন নেই</div>';
+                return;
+            }
+
+            userData.notifications.slice().reverse().forEach(n => {
+                let icon = 'fa-bell';
+                let iconBg = 'bg-indigo-50 text-indigo-600';
+                if(n.type === 'success') { icon = 'fa-check-circle'; iconBg = 'bg-emerald-50 text-emerald-600'; }
+                if(n.type === 'danger') { icon = 'fa-exclamation-triangle'; iconBg = 'bg-rose-50 text-rose-600'; }
+                if(n.type === 'warning') { icon = 'fa-receipt'; iconBg = 'bg-amber-50 text-amber-600'; }
+
+                list.insertAdjacentHTML('beforeend', `
+                    <div class="bg-white p-4 rounded-xl border border-slate-100 flex gap-4 shadow-sm items-start">
+                        <div class="w-10 h-10 rounded-full ${iconBg} flex items-center justify-center shrink-0">
+                            <i class="fas ${icon}"></i>
+                        </div>
+                        <div class="flex-1">
+                            <div class="flex justify-between items-start">
+                                <h4 class="font-bold text-slate-800 text-sm">${n.title}</h4>
+                                <span class="text-[9px] text-slate-400 font-bold uppercase">${n.time}</span>
+                            </div>
+                            <p class="text-slate-500 text-xs mt-1 leading-relaxed">${n.message}</p>
+                        </div>
+                    </div>
+                `);
+            });
+        }
+
+        function addNotification(title, message, type = 'info') {
+            userData.notifications.push({ title, message, type, time: 'এখন' });
+            document.getElementById('notif-dot').classList.remove('hidden');
+            saveData();
+        }
+
+        function clearNotifications() {
+            if(confirm("সব নোটিফিকেশন মুছে ফেলতে চান?")) {
+                userData.notifications = [];
+                saveData();
+            }
+        }
+
+        function showDetails(idx) {
+            const tx = userData.transactions[idx];
+            document.getElementById('modal-content').innerHTML = `
+                <div class="success-checkmark mb-6">
+                    <i class="fas fa-check"></i>
+                </div>
+                <h2 class="text-2xl font-bold text-slate-800 mb-4 tracking-tight">Request Submitted!</h2>
+                <p class="text-slate-400 text-sm mb-8 leading-relaxed px-2">
+                    Your request for <b>${tx.product}</b> has been submitted successfully.
+                </p>
+                <div class="id-label mb-10">
+                    <p class="text-slate-600 font-bold text-sm uppercase">TXN ID: <span class="text-slate-900">${tx.id}</span></p>
+                    <button onclick="copyToClipboard('${tx.id}')" class="text-emerald-500 hover:scale-110 transition-transform">
+                        <i class="fas fa-copy"></i>
+                    </button>
+                </div>
+                <div class="flex gap-3">
+                    <button onclick="openHistorySheet(); closeModal();" class="flex-1 bg-[#00a884] text-white py-4 rounded-xl font-bold text-sm shadow-lg">View History</button>
+                    <button onclick="closeModal()" class="flex-1 border-2 border-[#00a884] text-[#00a884] py-4 rounded-xl font-bold text-sm">Close</button>
+                </div>
+            `;
+            document.getElementById('detail-modal').classList.remove('hidden');
+        }
+
+        function processTransaction(field1Id, field2Id, amountId, typeName) {
+            const f1 = document.getElementById(field1Id);
+            const f2 = field2Id ? document.getElementById(field2Id) : null;
+            const fa = document.getElementById(amountId);
+            
+            const val1 = f1.value;
+            const val2 = f2 ? f2.value : 'N/A';
+            const amt = parseFloat(fa.value);
+            
+            if (!val1 || isNaN(amt) || amt <= 0) { showToast("সঠিক তথ্য দিন"); return; }
+            if (userData.balance < amt) { showToast("পর্যাপ্ত ব্যালেন্স নেই"); return; }
+
+            userData.balance -= amt;
+            const txnId = 'TXN'+Date.now().toString().slice(-6);
+            
+            userData.transactions.push({
+                id: txnId, customer: val1, phone: val2,
+                product: typeName, status: 'processing', amount: amt, date: 'আজ'
+            });
+
+            addNotification(
+                `${typeName} সফল হয়েছে`,
+                `আপনার অ্যাকাউন্ট থেকে ৳${amt} ${typeName} করা হয়েছে। আইডি: ${txnId}`,
+                typeName === 'ক্যাশ আউট' ? 'danger' : 'warning'
+            );
+
+            f1.value = ''; if(f2) f2.value = ''; fa.value = '';
+            saveData();
+            toggleView('balance');
+            showDetails(userData.transactions.length - 1);
+        }
+
+        function toggleView(view) {
+            ['balance', 'send', 'cashout', 'paybill', 'profile', 'notifications'].forEach(s => {
+                const el = document.getElementById('section-' + s);
+                if(el) el.classList.add('hidden');
+            });
+            document.getElementById('section-' + view).classList.remove('hidden');
+            
+            document.getElementById('main-balance-card').classList.toggle('hidden', view !== 'balance');
+            document.getElementById('action-grid').classList.toggle('hidden', view !== 'balance');
+            
+            document.querySelectorAll('nav button').forEach(b => b.classList.replace('text-indigo-600', 'text-slate-400'));
+            const activeNavId = (['send', 'cashout', 'paybill'].includes(view)) ? 'nav-balance' : 'nav-' + view;
+            const activeNav = document.getElementById(activeNavId);
+            if(activeNav) activeNav.classList.replace('text-slate-400', 'text-indigo-600');
+
+            if(view === 'notifications') {
+                document.getElementById('notif-dot').classList.add('hidden');
+            }
+        }
+
+        function copyToClipboard(text) {
+            const el = document.createElement('textarea');
+            el.value = text; document.body.appendChild(el);
+            el.select(); document.execCommand('copy');
+            document.body.removeChild(el);
+            showToast("ID কপি করা হয়েছে");
+        }
+
+        function showToast(msg) {
+            const t = document.getElementById('toast');
+            t.innerText = msg;
+            t.classList.replace('opacity-0', 'opacity-100');
+            setTimeout(() => t.classList.replace('opacity-100', 'opacity-0'), 2500);
+        }
+
+        function addMoney() {
+            userData.balance += 500;
+            const txnId = 'TXN'+Date.now().toString().slice(-6);
+            userData.transactions.push({
+                id: txnId, customer: 'সেলফ রিচার্জ', phone: 'N/A', 
+                product: 'Wallet Add Money', status: 'completed', amount: 500, date: 'এখন'
+            });
+            addNotification("টাকা যোগ হয়েছে", `৳৫০০ সফলভাবে যোগ করা হয়েছে। আইডি: ${txnId}`, 'success');
+            saveData();
+            showDetails(userData.transactions.length - 1);
+        }
+
+        function openHistorySheet() {
+            document.getElementById('history-overlay').classList.remove('hidden');
+            document.getElementById('history-sheet').classList.add('active');
+        }
+        function closeHistorySheet() {
+            document.getElementById('history-overlay').classList.add('hidden');
+            document.getElementById('history-sheet').classList.remove('active');
+        }
+        function openScanner() { showToast("ক্যামেরা ওপেন হচ্ছে..."); }
+        function closeModal() { document.getElementById('detail-modal').classList.add('hidden'); }
+        function resetAccount() { if(confirm("সব ডেটা মুছে যাবে?")) { localStorage.clear(); location.reload(); } }
+    </script>
+</body>
+</html>

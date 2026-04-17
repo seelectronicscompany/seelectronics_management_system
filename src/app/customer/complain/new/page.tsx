@@ -1,0 +1,49 @@
+import { verifyCustomerSession } from "@/actions/customerActions";
+import { getAllTeamMembers } from "@/actions/staffActions";
+import FormalComplainForm from "./FormalComplainForm";
+import Link from "next/link";
+import { ArrowLeft } from "lucide-react";
+import { getCustomerById } from "@/actions";
+import { MobilePageHeader } from "@/components/layout";
+import { PlusCircle } from "lucide-react";
+
+export default async function NewComplaintPage() {
+    const session = await verifyCustomerSession();
+    if (!session.isAuth || !session.customer) {
+        return (
+            <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4 text-center">
+                <div>
+                    <h2 className="text-2xl font-bold mb-4">Please log in to submit a complaint</h2>
+                    <Link href="/customer/login" className="bg-brand text-white font-bold py-3 px-6 rounded-md hover:bg-brand/90 transition-colors">
+                        Login
+                    </Link>
+                </div>
+            </div>
+        );
+    }
+
+    const { data: customerData } = await getCustomerById(session.customer.customerId);
+    const staffRes = await getAllTeamMembers();
+    const staffs = staffRes.success ? (staffRes.data || []) : [];
+
+    return (
+        <div className="min-h-screen bg-gray-50 flex flex-col">
+
+
+            <div className="flex-1 py-2 px-4 flex justify-center w-full">
+                <div className="max-w-4xl w-full">
+                    <div className="flex mb-2 items-center gap-4">
+                        <Link href="/customer/complain" className="p-1 bg-white rounded-md shadow-sm border border-gray-100 hover:bg-gray-50 hover:shadow-md transition-all active:scale-95">
+                            <ArrowLeft size={24} className="text-gray-600" />
+                        </Link>
+                        <h1 className="text-2xl font-black text-gray-900  border-brand/20 pb-1">
+                           নতুন অভিযোগ  করুন
+                        </h1>
+                    </div>
+
+                <FormalComplainForm customer={customerData} customerId={session.customer.customerId} staffs={staffs} />
+                </div>
+            </div>
+        </div>
+    );
+}
