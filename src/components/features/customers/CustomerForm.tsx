@@ -401,12 +401,20 @@ export default function CustomerForm({
               <table className="w-full table-auto whitespace-nowrap">
                 <thead>
                   <tr className="text-sm bg-gray-100">
-                    <th className="text-left py-4 px-2">Type</th>
-                    <th className="text-left py-4 px-2">Model</th>
+                    <th className="text-left py-4 px-2">
+                      Type <span className="text-red-500">*</span>
+                    </th>
+                    <th className="text-left py-4 px-2">
+                      Model <span className="text-red-500">*</span>
+                    </th>
                     <th className="text-left py-4 px-2">Warranty</th>
                     <th className="text-left py-4 px-2">Warranty Start Date</th>
-                    <th className="text-left py-4 px-2">Qty</th>
-                    <th className="text-left py-4 px-2">Unit Price</th>
+                    <th className="text-left py-4 px-2">
+                      Qty <span className="text-red-500">*</span>
+                    </th>
+                    <th className="text-left py-4 px-2">
+                      Unit Price <span className="text-red-500">*</span>
+                    </th>
                   </tr>
                 </thead>
                 <tbody>
@@ -446,6 +454,7 @@ export default function CustomerForm({
                             name={`model-${item.id}`}
                             placeholder="Model"
                             required={true}
+                            variant="sm"
                             value={item.model}
                             onChange={(e) =>
                               handleProductItemChange(
@@ -486,6 +495,7 @@ export default function CustomerForm({
                             name={`warrantyStartDate-${item.id}`}
                             type="date"
                             required={false}
+                            variant="sm"
                             value={
                               item.warrantyStartDate instanceof Date
                                 ? item.warrantyStartDate
@@ -509,6 +519,7 @@ export default function CustomerForm({
                             type="number"
                             placeholder="Quantity"
                             required={true}
+                            variant="sm"
                             value={item.quantity}
                             onChange={(e) =>
                               handleProductItemChange(
@@ -527,6 +538,7 @@ export default function CustomerForm({
                               type="number"
                               placeholder="Unit Price"
                               required={true}
+                              variant="sm"
                               value={item.unitPrice}
                               onChange={(e) =>
                                 handleProductItemChange(

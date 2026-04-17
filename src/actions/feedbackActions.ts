@@ -8,6 +8,7 @@ import { FeedbackDataSchema } from "@/validationSchemas"
 import { desc, eq, getTableColumns, ilike, or, sql } from "drizzle-orm"
 import { revalidatePath } from "next/cache"
 import { updateStaffStats } from "./staffActions"
+import { getBaseUrl } from "@/utils"
 import z from "zod"
 
 export const getFeedbackById = async (serviceId: string) => {
@@ -171,7 +172,7 @@ export async function createFeedback(feedbackInfo: z.infer<typeof FeedbackDataSc
         await sendEmail({
             from: `"New Feedback" <${process.env.EMAIL}>`,
             subject: 'Feedback Notification',
-            text: `A feedback was added to your dashboard by a customer.\nView Feedback: ${process.env.NEXT_PUBLIC_BASE_URL}/feedbacks`
+            text: `A feedback was added to your dashboard by a customer.\nView Feedback: ${getBaseUrl()}/feedbacks`
         })
 
         return { success: true, message: 'Feedback sent' }

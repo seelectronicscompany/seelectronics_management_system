@@ -13,7 +13,7 @@ import { SMSError, sendEmail, sendSMS, verifySession } from "@/lib";
 import { deleteObject, getObjectUrl, putObject } from "@/lib/s3";
 import { compressImage } from "@/lib/sharp";
 import { SearchParams } from "@/types";
-import { generateRandomId, generateUrl, renderText } from "@/utils";
+import { generateRandomId, generateUrl, getBaseUrl, renderText } from "@/utils";
 import {
   AddToServiceSchema,
   AppointmentDataSchema,
@@ -950,7 +950,7 @@ export const reportService = async ({
       await sendEmail({
         from: `New Technician Comment`,
         subject: "Technician Comment Notification",
-        text: `A comment was added to your dashboard by a Technician.\nView Comment: ${process.env.NEXT_PUBLIC_BASE_URL}/services`,
+        text: `A comment was added to your dashboard by a Technician.\nView Comment: ${getBaseUrl()}/services`,
       });
     }
 

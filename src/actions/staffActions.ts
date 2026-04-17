@@ -27,7 +27,7 @@ import {
 import { deleteObject, getObjectUrl, putObject } from "@/lib/s3";
 import { compressImage } from "@/lib/sharp";
 import { CertificateData, SearchParams } from "@/types";
-import { generateRandomId, generateUrl, renderText } from "@/utils";
+import { generateRandomId, generateUrl, getBaseUrl, renderText } from "@/utils";
 import {
   LoginCredentialsSchema,
   StaffDataSchema,
@@ -998,7 +998,7 @@ export async function setStaffCredentials(
       .where(eq(staffs.staffId, staffId));
 
     // Send SMS with credentials
-    const loginUrl = `${process.env.NEXT_PUBLIC_BASE_URL}/staff/login`;
+    const loginUrl = `${getBaseUrl()}/staff/login`;
     const message = ApplicationMessages.staff.CREDENTIALS.replace(
       "{staff_name}",
       staffData.name

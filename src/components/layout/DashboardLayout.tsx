@@ -159,11 +159,19 @@ export default function DashboardLayout({
   return (
     <>
       <ProgressBar />
+      {showSideNav && (
+        <div
+          className="fixed inset-0 bg-black/20 backdrop-blur-sm z-40 xl:hidden"
+          onClick={() => setShowSideNav(false)}
+        />
+      )}
       <div className="flex">
         <div
           className={clsx(
             "xl:flex flex-col h-[100vh] text-[#444444] min-w-[210px] p-4 border-r-[0.5px] border-r-borderColor bg-white",
-            showSideNav ? "flex fixed inset-0 z-50 shadow-md" : "hidden",
+            showSideNav
+              ? "flex fixed inset-y-0 left-0 z-50 w-[280px] shadow-2xl"
+              : "hidden",
           )}
         >
           <div className="flex mb-4 __center gap-4 justify-normal">

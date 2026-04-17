@@ -10,8 +10,9 @@ export default function InputField({
   label,
   required = true,
   src,
+  variant = "md",
   ...restProps
-}: InputFieldProps) {
+}: InputFieldProps & { variant?: "sm" | "md" }) {
   const [previewImage, setPreviewImage] = useState<string | null>(src || null);
   const inputRef = useRef<HTMLInputElement | null>(null);
 
@@ -42,10 +43,12 @@ export default function InputField({
     <div className="flex-1 text-start">
       {restProps.type === "file" ? (
         <div className="flex flex-col gap-2">
-          <span className="text-base font-bold text-gray-700">
-            {label}{" "}
-            {required && <span className="text-red-500 text-xl">*</span>}
-          </span>
+          {label && (
+            <span className="text-base font-bold text-gray-700">
+              {label}{" "}
+              {required && <span className="text-red-500 text-lg">*</span>}
+            </span>
+          )}
           <div className="relative group">
             <div
               className={clsx(
@@ -135,15 +138,18 @@ export default function InputField({
         </div>
       ) : (
         <label className="flex flex-col gap-2">
-          <span className="text-sm sm:text-base font-bold text-gray-700 ml-1">
-            {label}{" "}
-            {required && <span className="text-red-500 text-xl">*</span>}
-          </span>
+          {label && (
+            <span className="text-sm sm:text-base font-bold text-gray-700 ml-1">
+              {label}{" "}
+              {required && <span className="text-red-500 text-lg">*</span>}
+            </span>
+          )}
           <input
             {...restProps}
             required={required}
             className={clsx(
-              "w-full px-5 py-3.5 bg-white border-2 border-gray-100 rounded-md text-base transition-all focus:ring-4 focus:ring-brand/10 focus:border-brand outline-none font-medium placeholder:text-gray-400",
+              "w-full bg-white border-2 border-gray-100 rounded-md transition-all focus:ring-4 focus:ring-brand/10 focus:border-brand outline-none font-medium placeholder:text-gray-400",
+              variant === "sm" ? "px-3 py-2 text-sm h-10" : "px-5 py-3.5 text-base",
               restProps.className,
             )}
             placeholder={

@@ -39,13 +39,20 @@ export function generateVipCardNumber(): string {
   return result;
 }
 
+export function getBaseUrl() {
+  return process.env.APP_URL
+    ? `https://${process.env.APP_URL}`
+    : process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000";
+}
+
 export const generateUrl = <T extends UrlConfig["type"]>(
   type: T,
   params: Extract<UrlConfig, { type: T }>["params"],
 ) => {
-  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
+  const baseUrl = getBaseUrl();
+
   if (!baseUrl) {
-    throw new Error("NEXT_PUBLIC_BASE_URL is not defined");
+    throw new Error("Base URL is not defined");
   }
 
   const p = params as any;
