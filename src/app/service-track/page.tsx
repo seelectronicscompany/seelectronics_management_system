@@ -213,7 +213,7 @@ const technicianStatuses = {
         />
       </svg>
     ),
-    color: "red",
+    color: "yellow",
   },
 };
 
@@ -585,20 +585,20 @@ export default async function ServiceTrackPage({
                       )}
                     </div>
                     <div className="flex flex-col text-start gap-1 pb-5">
-    <span
-  className={clsx(
-    "font-bold",
-    status === "appointment_retry"
-      ? "text-red-600"
-      : status === "completed"
-        ? "text-green-600"
-        : serviceData?.type === "install"
-          ? "text-yellow-500"
-          : isCustomStatus
-            ? "text-blue-500"
-            : `text-${statusData?.color}-500`,
-  )}
->
+                      <span
+                        className={clsx(
+                          "font-bold",
+                          status === "appointment_retry"
+                            ? "text-red-600"
+                            : status === "completed"
+                              ? "text-green-600"
+                              : serviceData?.type === "install"
+                                ? "text-yellow-500"
+                                : isCustomStatus
+                                  ? "text-blue-500"
+                                  : `text-${statusData?.color}-500`,
+                        )}
+                      >
                         {isCustomStatus ? customLabel : statusData?.title}
                       </span>
                       <p className="text-sm">

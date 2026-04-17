@@ -14,8 +14,13 @@ const nextConfig: NextConfig = {
       },
       {
         protocol: "https",
-        hostname:
-          "service-manager.45739e2ef39226b7c581576fc26bd700.r2.cloudflarestorage.com",
+        hostname: "seelectronics-dashboard-media.502db6a88eaf3d5e6b4ed9aa91d8fcd9.r2.cloudflarestorage.com",
+        port: "",
+        pathname: "/**",
+      },
+      {
+        protocol: "https",
+        hostname: "502db6a88eaf3d5e6b4ed9aa91d8fcd9.r2.cloudflarestorage.com",
         port: "",
         pathname: "/**",
       },
