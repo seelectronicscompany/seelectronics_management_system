@@ -203,13 +203,13 @@ export default function DashboardLayout({
 
           {/* SMS Balance display */}
           <div className="mb-4">
-            <div className="bg-gray-50 rounded-lg p-3 border border-borderColor">
-              <span className="text-xs text-gray-500 font-medium block">
-                SMS Balance
+            <div className="bg-gray-50 rounded-lg p-3 flex flex-start items-center gap-2 border border-borderColor">
+              <span className="text-sm text-gray-500 font-medium block">
+                SMS BAL:
               </span>
               <span className="text-lg font-bold text-brand">
                 {smsBalance !== null
-                  ? `৳${smsBalance.toLocaleString()}`
+                  ? `৳ ${smsBalance.toLocaleString()}`
                   : "---"}
               </span>
             </div>

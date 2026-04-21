@@ -186,15 +186,25 @@ export const sendCertificateLink = async (formData: FormData) => {
       download_link: generateUrl("certificate-download", { token }),
     });
 
-    const { notifyStaff } = await import("./notificationActions");
-    await notifyStaff({
-      staffId: staffId!,
-      phoneNumber: phone,
-      type: "certificate",
-      message: message,
-      shortMessage: `প্রিয় {ownerName}, আপনার সার্টিফিকেট ডাউনলোড করার জন্য ড্যাশবোর্ডে লগইন করুন।`,
-      link: "/staff/profile",
-    });
+    // Only create notification if staff exists in database
+    if (staffId) {
+      const staffExists = await db.query.staffs.findFirst({
+        where: eq(staffs.staffId, staffId),
+        columns: { staffId: true },
+      });
+
+      if (staffExists) {
+        const { notifyStaff } = await import("./notificationActions");
+        await notifyStaff({
+          staffId: staffId,
+          phoneNumber: phone,
+          type: "certificate",
+          message: message,
+          shortMessage: `প্রিয় {ownerName}, আপনার সার্টিফিকেট ডাউনলোড করার জন্য ড্যাশবোর্ডে লগইন করুন।`,
+          link: "/staff/profile",
+        });
+      }
+    }
 
     return { success: true, message: "Certificate link sent" };
   } catch (error) {

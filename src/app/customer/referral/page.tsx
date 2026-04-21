@@ -224,7 +224,7 @@ export default function CustomerReferralPage() {
             <p className="text-blue-900 font-bold text-md">
               {bonus.referredCustomerName}
             </p>
-            <p className="text-blue-400 text-[13px] font-medium uppercase tracking-wider">
+            <p className="text-blue-700 font-semibold text-[13px]  uppercase tracking-wider">
               {new Date(bonus.createdAt).toLocaleDateString('bn-BD')}
             </p>
           </div>

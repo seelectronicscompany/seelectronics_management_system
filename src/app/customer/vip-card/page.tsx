@@ -257,19 +257,16 @@ export default async function VipCardPage() {
                     দ্বারা দ্রুত ও মানসম্মত সেবার নিশ্চয়তা দিচ্ছি।
                   </p>
                 </div>
-                <div className="p-6 bg-purple-50/50 rounded-2xl border border-purple-100 hover:shadow-md transition-shadow">
-                  <h4 className="font-bold text-purple-900 mb-2 flex items-center gap-2">
-                    <CheckCircle2 size={18} className="text-purple-600" />
-                    ২. নতুন ক্রয়ে ৭% বিশেষ ছাড় (Purchase Discount)
-                  </h4>
-                  <p className="text-sm text-gray-600 leading-relaxed font-medium">
-                    এই ভিআইপি কার্ড নাম্বারটি ব্যবহার করে আপনি নিজে অথবা আপনার
-                    রেফারেন্সে অন্য কেউ যদি নতুন আইপিএস, ব্যাটারী বা
-                    স্ট্যাবিলাইজার ক্রয় করেন, তবে মোট মূল্যের ওপর ৭% বিশেষ ছাড়
-                    প্রদান করা হবে। এটি আপনার প্রিয়জনদের জন্য সাশ্রয়ী কেনাকাটার
-                    একটি দারুণ সুযোগ!
-                  </p>
-                </div>
+<div className="p-6 bg-purple-50/50 rounded-2xl border border-purple-100 hover:shadow-md transition-shadow">
+  <h4 className="font-bold text-purple-900 mb-2 flex items-center gap-2">
+    <CheckCircle2 size={18} className="text-purple-600" />
+    ২. নতুন ক্রয়ে বিশেষ ছাড় ও রেফারেল বোনাস
+  </h4>
+  <p className="text-sm text-gray-600 leading-relaxed font-medium">
+    এই ভিআইপি কার্ড নাম্বার ব্যবহার করে আপনি নিজে অথবা আপনার রেফারেন্সে অন্য কেউ যদি নতুন আইপিএস, ব্যাটারি বা স্ট্যাবিলাইজার ক্রয় করেন, তাহলে মোট মূল্যের ওপর ৪% বিশেষ ছাড় প্রদান করা হবে ক্রেতাকে। পাশাপাশি, যাঁর ভিআইপি কার্ড ব্যবহার করা হবে, তিনি অতিরিক্ত ২% রেফারেল বোনাস উপভোগ করবেন। 
+    এটি আপনার এবং আপনার পরিচিতদের জন্য একটি লাভজনক ও সাশ্রয়ী সুবিধা।
+  </p>
+</div>
               </div>
             </section>
 

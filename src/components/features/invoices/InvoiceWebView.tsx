@@ -219,7 +219,7 @@ export default function InvoiceWebView({ data }: InvoiceWebViewProps) {
           <>
             {/* Advance Paid */}
             <tr className="bg-emerald-50/70 hover:bg-emerald-50 transition">
-              <td className="p-4 font-black text-emerald-600 uppercase text-[13px] tracking-widest border-r border-emerald-100">
+              <td className="p-4  font-black text-emerald-600 uppercase text-[13px] tracking-widest border-r border-emerald-100">
                 Advance Paid
               </td>
               <td className="p-4 text-right font-black text-emerald-700">
@@ -229,10 +229,10 @@ export default function InvoiceWebView({ data }: InvoiceWebViewProps) {
 
             {/* Due */}
             <tr className="bg-gradient-to-r from-rose-500 to-rose-600 text-white">
-              <td className="p-4 font-black uppercase text-[11px] tracking-widest border-r border-white/20">
+              <td className="p-4 text-white font-black uppercase text-[11px] tracking-widest border-r border-white/20">
                 Balance Due
               </td>
-              <td className="p-4 text-right font-black text-2xl tracking-tight">
+              <td className="p-4 text-white text-right font-black text-2xl tracking-tight">
                 ৳{data.dueAmount.toLocaleString()}
               </td>
             </tr>
@@ -240,10 +240,10 @@ export default function InvoiceWebView({ data }: InvoiceWebViewProps) {
         ) : (
           /* Fully Paid */
           <tr className="bg-gradient-to-r from-emerald-500 to-emerald-600 text-white">
-            <td className="p-4 font-black uppercase text-[11px] tracking-widest border-r border-white/20">
+            <td className="p-4 text-white font-black uppercase text-[11px] tracking-widest border-r border-white/20">
               Full Amount Paid
             </td>
-            <td className="p-4 text-right font-black text-2xl tracking-tight">
+            <td className="p-4 text-white text-right font-black text-2xl tracking-tight">
               ৳{data.total.toLocaleString()}
             </td>
           </tr>

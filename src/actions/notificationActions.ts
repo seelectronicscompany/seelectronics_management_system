@@ -5,6 +5,7 @@ import { customerNotifications, staffNotifications } from "@/db/schema";
 import { sendSMS } from "@/lib";
 import { generateUrl } from "@/utils";
 import { revalidatePath } from "next/cache";
+import { and, gt, sql } from "drizzle-orm";
 
 /**
  * Creates a notification and sends a shortened SMS to a customer
@@ -25,6 +26,27 @@ export async function notifyCustomer({
   link?: string;
 }) {
   try {
+    // Check if a similar notification was sent in the last 30 seconds to prevent duplicates
+    const thirtySecondsAgo = new Date(Date.now() - 30000);
+    const recentNotification = await db.query.customerNotifications.findFirst({
+      where: and(
+        gt(customerNotifications.createdAt, thirtySecondsAgo),
+        sql`${customerNotifications.type} = ${type}`
+      ),
+    });
+
+    if (recentNotification) {
+      console.log(`Recent notification of type ${type} found, skipping duplicate SMS to ${phoneNumber}`);
+      // Still create the notification in DB for consistency
+      await db.insert(customerNotifications).values({
+        customerId,
+        type,
+        message,
+        link,
+      });
+      return { success: true };
+    }
+
     // 1. Create notification in database
     await db.insert(customerNotifications).values({
       customerId,
@@ -66,6 +88,27 @@ export async function notifyStaff({
   link?: string;
 }) {
   try {
+    // Check if a similar notification was sent in the last 30 seconds to prevent duplicates
+    const thirtySecondsAgo = new Date(Date.now() - 30000);
+    const recentNotification = await db.query.staffNotifications.findFirst({
+      where: and(
+        gt(staffNotifications.createdAt, thirtySecondsAgo),
+        sql`${staffNotifications.type} = ${type}`
+      ),
+    });
+
+    if (recentNotification) {
+      console.log(`Recent notification of type ${type} found, skipping duplicate SMS to ${phoneNumber}`);
+      // Still create the notification in DB for consistency
+      await db.insert(staffNotifications).values({
+        staffId,
+        type,
+        message,
+        link,
+      });
+      return { success: true };
+    }
+
     // 1. Create notification in database
     await db.insert(staffNotifications).values({
       staffId,

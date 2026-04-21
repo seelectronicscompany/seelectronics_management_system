@@ -51,7 +51,6 @@ export default function AddServicePage() {
       <div className="bg-white rounded-3xl p-8 border border-gray-100 shadow-sm">
         <form
           action={createServiceAction}
-          onChange={checkEmptyField}
           className="space-y-6"
         >
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -157,6 +156,7 @@ export default function AddServicePage() {
           </div>
 
           <button
+            type="submit"
             disabled={isPending || hasEmptyField}
             className="w-full py-4 bg-blue-600 text-white rounded-md font-bold shadow-lg shadow-blue-200 hover:bg-blue-700 active:scale-[0.98] transition-all disabled:bg-gray-300 disabled:shadow-none mt-4"
           >

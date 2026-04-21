@@ -485,6 +485,7 @@ export default function GetServiceForm({
             />
           </div>
           <button
+            type="submit"
             disabled={isPending}
             className="w-full py-4 bg-brand text-white rounded-md font-bold text-lg hover:bg-brand-800 active:scale-[0.98] transition-all shadow-lg shadow-brand/20 disabled:opacity-50 mt-4"
           >
