@@ -42,7 +42,7 @@ export function generateVipCardNumber(): string {
 export function getBaseUrl() {
   return process.env.APP_URL
     ? `https://${process.env.APP_URL}`
-    : process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000";
+    : process.env.NEXT_PUBLIC_BASE_URL || "https://seelectronicspro.vercel.app";
 }
 
 export const generateUrl = <T extends UrlConfig["type"]>(

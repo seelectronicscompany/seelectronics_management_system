@@ -93,13 +93,13 @@ export default function VipManagementPage({
           <input
             type="text"
             placeholder="Search by name, phone or card number..."
-            className="w-full pl-10 pr-4 py-2.5 bg-gray-50 border-none rounded-md text-sm focus:ring-2 focus:ring-brand/20 transition-all"
+            className="w-full pl-10 pr-4 py-2.5 bg-gray-50 border rounded-md text-sm focus:ring-2 focus:ring-brand/20 transition-all"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
           />
         </div>
         <select
-          className="px-4 py-2.5 bg-gray-50 border-none rounded-md text-sm focus:ring-2 focus:ring-brand/20 outline-none min-w-[150px]"
+          className="px-4 py-2.5 bg-gray-50 border rounded-md text-sm focus:ring-2 focus:ring-brand/20 outline-none min-w-[150px]"
           value={status}
           onChange={(e) => setStatus(e.target.value)}
         >

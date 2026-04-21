@@ -132,14 +132,14 @@ export default function Toolbar({
               onChange={(e) => handleSearch(e.target.value)}
               type="text"
               placeholder="Search records..."
-              className="w-full pl-10 pr-4 py-2.5 bg-gray-50 border-none rounded-md text-base focus:ring-2 focus:ring-brand/20 transition-all outline-none"
+              className="w-full pl-10 pr-4 py-2.5 bg-gray-50 border rounded-md text-base focus:ring-2 focus:ring-brand/20 transition-all outline-none"
             />
           </div>
 
           {/* Refresh button */}
           <button
             onClick={handleRefresh}
-            className="flex items-center justify-center gap-2 hover:bg-gray-50 text-gray-600 rounded-md px-4 py-2.5 text-base font-medium transition-colors border border-gray-100 sm:border-none"
+            className="flex items-center justify-center gap-2 hover:bg-gray-50 text-gray-600 rounded-md px-4 py-2.5 text-base font-medium transition-colors border border-gray-100 sm:border"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -160,7 +160,7 @@ export default function Toolbar({
         </div>
 
         {/* Pagination controls */}
-        <div className="flex flex-wrap items-center gap-4 lg:gap-6 pt-3 lg:pt-0 border-t lg:border-none border-gray-50">
+        <div className="flex flex-wrap items-center gap-4 lg:gap-6 pt-3 lg:pt-0 border-t lg:border border-gray-50">
           {filters && <div className="flex items-center gap-2">{filters}</div>}
 
           <div className="flex items-center gap-4 ml-auto sm:ml-0">
@@ -178,7 +178,7 @@ export default function Toolbar({
                 onChange={(e) =>
                   handlePaginationControls({ limit: parseInt(e.target.value) })
                 }
-                className="bg-gray-100 border-none rounded-md text-sm font-bold h-9 px-2 outline-none focus:ring-2 focus:ring-brand/20"
+                className="bg-gray-100 border rounded-md text-sm font-bold h-9 px-2 outline-none focus:ring-2 focus:ring-brand/20"
               >
                 <option value="20">20</option>
                 <option value="30">30</option>
