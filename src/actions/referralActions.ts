@@ -15,7 +15,6 @@ export const getCustomerReferralData = async () => {
     if (!session) return { success: false, message: "Unauthorized" };
 
     const customerId = session.userId as string;
-
     const customer = await db.query.customers.findFirst({
       where: eq(customers.customerId, customerId),
       columns: {
@@ -58,6 +57,7 @@ export const getCustomerReferralData = async () => {
 /**
  * Submits a referral payment request
  */
+
 export const requestReferralPayment = async (data: {
   amount: number;
   paymentMethod: any;

@@ -304,6 +304,7 @@ export default function CustomerForm({
             </label>
           </div>
         </div>
+
         {mode === "create" && (
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div className="flex-1 text-start">
@@ -594,9 +595,9 @@ export default function CustomerForm({
                 referralVipCard.length === 16 &&
                 totalAmount > 0 && (
                   <div className="flex justify-between text-green-600">
-                    <p className="font-medium">Referral Discount (5%):</p>
+                    <p className="font-medium">Referral Discount (4%):</p>
                     <p className="font-medium">
-                      -{Math.floor(totalAmount * 0.05).toLocaleString()} TK
+                      -{Math.floor(totalAmount * 0.04).toLocaleString()} TK
                     </p>
                   </div>
                 )}

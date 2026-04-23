@@ -199,7 +199,7 @@ export const createCustomer = async (data: any, sendLink = false) => {
 
       if (referrer) {
         const purchaseTotal = data.invoice.total;
-        const discountGiven = Number(purchaseTotal) * 0.05;
+        const discountGiven = Number(purchaseTotal) * 0.04;
         const bonusEarned = Number(purchaseTotal) * 0.02;
 
         // Log the referral bonus
