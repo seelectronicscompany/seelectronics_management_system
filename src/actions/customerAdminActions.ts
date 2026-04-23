@@ -262,7 +262,7 @@ export const createCustomer = async (data: any, sendLink = false) => {
     if (result.success) {
       try {
         const { sendSMS } = await import("@/lib/sms");
-        const loginLink = "https://seelectronics.vercel.app/customer/login";
+        const loginLink = "https://seelectronicspro.vercel.app/customer/login";
         const smsMessage =
           `স্বাগতম! আপনার SE Electronics অ্যাকাউন্ট তৈরি হয়েছে।\n` +
           `Customer ID: ${customerId}\n` +

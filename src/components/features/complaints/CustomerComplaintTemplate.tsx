@@ -37,7 +37,7 @@ export default function CustomerComplaintTemplate({
     >
       <div>
         <p>বরাবর,</p>
-        <p className="font-bold">এস ই ইলেকট্রনিক্স মহাপরিচালক / চেয়ারম্যান,</p>
+        <p className="font-bold">এস ই ইলেকট্রনিক্স মহাপরিচালক , চেয়ারম্যান,</p>
         <p>বাদাম বাগিচা সিলেট সদর ৩১০০।</p>
       </div>
 
@@ -65,7 +65,7 @@ export default function CustomerComplaintTemplate({
       <div>
         <p className="font-bold underline mb-2">ঘটনার বিস্তারিত বিবরণঃ</p>
         <div className="space-y-1">
-          <p>
+          {/* <p>
             টেকনিশিয়ানের নাম:{" "}
             <span className="font-bold">{data.staff.name}</span>, টেকনিশিয়ানের
             আইডি:{" "}
@@ -76,8 +76,8 @@ export default function CustomerComplaintTemplate({
             </span>
             , ঘটনার সময়:{" "}
             <span className="font-bold font-mono">{dateStr} ইং</span>
-          </p>
-          <p className="font-bold">অভিযোগের সংক্ষিপ্ত বিবরণ:</p>
+          </p> */}
+          {/* <p className="font-bold">অভিযোগের সংক্ষিপ্ত বিবরণ:</p> */}
           <p>{data.description}</p>
         </div>
       </div>
@@ -134,20 +134,6 @@ export default function CustomerComplaintTemplate({
             <p className="font-mono">{data.customer.phone}</p>
           </div>
         </div>
-
-        {/* <div className="text-center w-64">
-          {data.elecLogo && (
-            <img src={data.elecLogo} alt="Logo" className="w-[40mm] mb-2 opacity-10 filter grayscale" />
-          )}
-          <div className="h-16 flex items-center justify-center">
-            {data.elecSign && (
-              <img src={data.elecSign} alt="Signature" className="max-h-full max-w-full object-contain" />
-            )}
-          </div>
-          <p className="text-[10px] mt-2">অনলাইনে যাচাইকৃত</p>
-          <p className="font-bold border-t border-black pt-1">প্রশাসনিক শাখা</p>
-          <p className="text-sm font-bold">এস ই ইলেকট্রনিক্স</p>
-        </div> */}
       </div>
     </div>
   );

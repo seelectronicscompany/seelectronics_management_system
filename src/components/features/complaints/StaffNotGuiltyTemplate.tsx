@@ -81,6 +81,7 @@ export default function StaffNotGuiltyTemplate({
               <img src={data.elecSign} alt="Signature" className="max-h-full max-w-full object-contain" />
             )}
           </div>
+          
           <p className="text-sm">কর্তৃপক্ষের আদেশক্রমে,</p>
           <div className="border-b border-black w-full my-1"></div>
           <p className="font-bold">{data.officerName || "মোঃ সাহাব উদ্দিন মাহমুদ"}</p>
