@@ -8,7 +8,8 @@ export const contactDetails = {
     customerCare2: '+8801322247774',
     email: 'seipsbd@gmail.com',
     website: 'www.seipsbd.com',
-    headOffice: ' বাদাম বাগিচা ২ নং রোড সিলেট'
+    headOffice: ' বাদাম বাগিচা ২ নং রোড সিলেট',
+    baseUrl: 'https://seelectronicspro.vercel.app'
 }
 
 export const warrantyMonths = [0, 6, 12, 18, 24, 30, 36]
