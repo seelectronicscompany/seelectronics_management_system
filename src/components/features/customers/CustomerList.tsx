@@ -1,9 +1,9 @@
 import { getCustomers } from "@/actions";
 import { CopyButton } from "@/components/ui";
-import { Crown } from "lucide-react";
 import { SearchParams } from "@/types";
 import { formatDate } from "@/utils";
 import clsx from "clsx";
+import { Crown } from "lucide-react";
 import InvoicePreviewButton from "../../features/invoices/InvoicePreviewButton";
 import CustomerActionButtons from "./CustomerActionButtons";
 
@@ -33,10 +33,15 @@ export default async function CustomerList(params: SearchParams) {
   const customers = response.data!;
 
   return customers.map((customer) => (
-    <tr key={customer.id} className="hover:bg-gray-50/50 transition-colors group">
+    <tr
+      key={customer.id}
+      className="hover:bg-gray-50/50 transition-colors group"
+    >
       <td className="py-4 px-4 whitespace-nowrap">
         <div className="flex items-center gap-2">
-          <span className="font-bold text-gray-900 text-sm sm:text-base">{customer.customerId}</span>
+          <span className="font-bold text-gray-900 text-sm sm:text-base">
+            {customer.customerId}
+          </span>
           <CopyButton content={customer.customerId} />
         </div>
       </td>
@@ -53,13 +58,17 @@ export default async function CustomerList(params: SearchParams) {
               <CopyButton content={customer.invoiceNumber} />
             </div>
           ) : (
-            <span className="text-sm sm:text-sm text-gray-400 italic">No Invoice</span>
+            <span className="text-sm sm:text-sm text-gray-400 italic">
+              No Invoice
+            </span>
           )}
         </div>
       </td>
       <td className="py-4 px-4 whitespace-nowrap">
         <div className="flex items-center gap-2">
-          <span className="font-bold text-gray-900 text-sm sm:text-base">{customer.name}</span>
+          <span className="font-bold text-gray-900 text-sm sm:text-base">
+            {customer.name}
+          </span>
           {customer.vipStatus === "approved" && (
             <span className="px-2 py-0.5 bg-gradient-to-r from-amber-200 to-yellow-400 text-amber-900 border border-amber-300 shadow-sm text-[10px] font-black rounded-full uppercase tracking-wider flex items-center gap-1">
               <Crown size={12} strokeWidth={3} className="text-amber-800" />
@@ -69,17 +78,23 @@ export default async function CustomerList(params: SearchParams) {
         </div>
       </td>
       <td className="py-4 px-4 whitespace-nowrap text-gray-700 font-bold text-sm sm:text-base">
-        {customer.phone}
+        <span>{customer.phone}</span>
+        <CopyButton content={customer.phone} />
       </td>
       <td className="py-4 px-4 whitespace-nowrap">
-        <p title={customer.address} className="truncate max-w-[200px] text-gray-600 text-[16px] font-medium">
+        <p
+          title={customer.address}
+          className="truncate max-w-[200px] text-gray-600 text-[16px] font-medium"
+        >
           {customer.address}
         </p>
       </td>
       <td
         className={clsx(
           "py-4 px-4 whitespace-nowrap text-right font-black text-sm sm:text-base",
-          (customer.invoice?.dueAmount || 0) > 0 ? "text-red-500" : "text-emerald-600",
+          (customer.invoice?.dueAmount || 0) > 0
+            ? "text-red-500"
+            : "text-emerald-600",
         )}
       >
         ৳{customer.invoice?.total.toLocaleString() || 0}
