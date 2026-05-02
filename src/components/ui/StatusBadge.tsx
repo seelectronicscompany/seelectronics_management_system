@@ -91,11 +91,6 @@ const STATUSES = {
     styles:
       "text-indigo-500 bg-indigo-500 bg-opacity-10 px-2 py-0.5 rounded-md border border-indigo-500",
   },
-  reappoint: {
-    name: "Reappoint",
-    styles:
-      "text-orange-500 bg-orange-500 bg-opacity-10 px-2 py-0.5 rounded-md border border-orange-500",
-  },
 };
 
 export default function StatusBadge({

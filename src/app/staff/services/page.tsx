@@ -4,9 +4,7 @@ import StaffDashboardActions from "@/components/features/staff/StaffDashboardAct
 import { StaffLayout } from "@/components/layout/StaffLayout";
 import clsx from "clsx";
 import { Wrench } from "lucide-react";
-import CancelServiceButton from "@/components/features/staff/CancelServiceButton";
 import Link from "next/link";
-import { MobilePageHeader } from "@/components/layout";
 
 export default async function StaffServicesPage() {
   const session = await verifyStaffSession();
@@ -67,6 +65,13 @@ export default async function StaffServicesPage() {
             {services.map((service: any) => {
               const currentStatus =
                 service.statusHistory?.[0]?.status || "pending";
+
+              // For staff view, show "canceled" when status is "appointment_retry"
+              const displayStatus =
+                currentStatus === "appointment_retry"
+                  ? "canceled"
+                  : currentStatus;
+
               return (
                 <div
                   key={service.serviceId}
@@ -87,10 +92,10 @@ export default async function StaffServicesPage() {
                     <span
                       className={clsx(
                         "px-2.5 py-1 rounded text-[10px] font-bold uppercase tracking-wider whitespace-nowrap shadow-sm",
-                        getStatusColor(currentStatus),
+                        getStatusColor(displayStatus),
                       )}
                     >
-                      {currentStatus.replace("_", " ")}
+                      {displayStatus.replace("_", " ")}
                     </span>
                   </div>
 
@@ -105,7 +110,8 @@ export default async function StaffServicesPage() {
                     </div>
                     <div className="flex items-center gap-2">
                       {currentStatus !== "completed" &&
-                        currentStatus !== "canceled" && (
+                        currentStatus !== "canceled" &&
+                        currentStatus !== "appointment_retry" && (
                           <>
                             <Link
                               href={`/service-report?serviceId=${service.serviceId}`}

@@ -1,14 +1,13 @@
 "use server";
 
 import { db } from "@/db/drizzle";
-import { tasks, staffs, smsLogs, staffNotifications } from "@/db/schema";
+import { smsLogs, staffNotifications, staffs, tasks } from "@/db/schema";
 import { sendSMS, verifySession } from "@/lib";
-import { TaskType, TaskStatus, NoticePriority, SMSFrequency } from "@/types";
-import { generateRandomId, formatDate, renderText } from "@/utils";
-import { TaskSchema, StaffSMSPreferencesSchema } from "@/validationSchemas";
-import { and, eq, desc } from "drizzle-orm";
+import { TaskStatus } from "@/types";
+import { formatDate, generateRandomId } from "@/utils";
+import { StaffSMSPreferencesSchema, TaskSchema } from "@/validationSchemas";
+import { desc, eq } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
-import { v4 as uuidv4 } from "uuid";
 
 /**
  * Checks if current time is within working hours (9 AM - 9 PM)
@@ -22,7 +21,12 @@ function isWithinWorkingHours() {
 /**
  * Sends a concise SMS notification to staff about a new task
  */
-async function sendTaskNotificationSMS(staffId: string, taskTitle: string, priority: string, dueDate?: Date | null) {
+async function sendTaskNotificationSMS(
+  staffId: string,
+  taskTitle: string,
+  priority: string,
+  dueDate?: Date | null,
+) {
   try {
     const staff = await db.query.staffs.findFirst({
       where: eq(staffs.staffId, staffId),
@@ -36,9 +40,10 @@ async function sendTaskNotificationSMS(staffId: string, taskTitle: string, prior
       return;
     }
 
-    const shortTitle = taskTitle.length > 30 ? taskTitle.substring(0, 27) + "..." : taskTitle;
+    const shortTitle =
+      taskTitle.length > 30 ? taskTitle.substring(0, 27) + "..." : taskTitle;
     const formattedDate = dueDate ? formatDate(dueDate) : "N/A";
-    
+
     // Minimal SMS content (< 160 chars)
     const smsContent = `New Task: ${shortTitle}\nPriority: ${priority.toUpperCase()}\nDue: ${formattedDate}\nLog in to your dashboard for details: ${process.env.NEXT_PUBLIC_APP_URL}/staff/tasks`;
 
@@ -101,7 +106,7 @@ export async function createTask(data: any) {
       validated.staffId,
       validated.title,
       validated.priority,
-      validated.dueDate
+      validated.dueDate,
     );
 
     revalidatePath("/staff/tasks", "layout");
@@ -119,7 +124,8 @@ export async function createTask(data: any) {
 export async function getStaffTasks() {
   try {
     const session = await verifySession(false); // Staff or admin
-    if (!session || !session.userId) return { success: false, message: "Unauthorized" };
+    if (!session || !session.userId)
+      return { success: false, message: "Unauthorized" };
 
     // Find staffId from session userId (id)
     const staff = await db.query.staffs.findFirst({
@@ -157,28 +163,49 @@ export async function updateTaskStatus(taskId: string, status: TaskStatus) {
     // Synchronize with related service if it exists
     const task = await db.query.tasks.findFirst({
       where: eq(tasks.taskId, taskId),
-      columns: { serviceId: true }
+      columns: { serviceId: true },
     });
 
     if (task?.serviceId) {
-      const { services, serviceStatusHistory } = await import("@/db/schema");
+      const { services, serviceStatusHistory, staffs } =
+        await import("@/db/schema");
+      const { sql } = await import("drizzle-orm");
+
       if (status === "cancelled") {
-        await db.update(services).set({ status: "canceled" }).where(eq(services.serviceId, task.serviceId));
+        await db
+          .update(services)
+          .set({ status: "appointment_retry" })
+          .where(eq(services.serviceId, task.serviceId));
         await db.insert(serviceStatusHistory).values({
           serviceId: task.serviceId,
-          status: "canceled",
-          cancelReason: "Task cancelled by staff member.",
-          statusType: "system"
+          status: "appointment_retry",
+          cancelReason:
+            "Task cancelled by staff member. Service requires reappointment.",
+          statusType: "system",
         });
+
+        // Increment canceled services count for staff
+        await db
+          .update(staffs)
+          .set({
+            canceledServices: sql`${staffs.canceledServices} + 1`,
+          })
+          .where(eq(staffs.staffId, session.userId as string));
       } else if (status === "completed") {
-        await db.update(services).set({ status: "completed", resolvedBy: "staff_member" }).where(eq(services.serviceId, task.serviceId));
+        await db
+          .update(services)
+          .set({ status: "completed", resolvedBy: "staff_member" })
+          .where(eq(services.serviceId, task.serviceId));
         await db.insert(serviceStatusHistory).values({
           serviceId: task.serviceId,
           status: "completed",
-          statusType: "system"
+          statusType: "system",
         });
       } else if (status === "in_progress") {
-        await db.update(services).set({ status: "in_progress" }).where(eq(services.serviceId, task.serviceId));
+        await db
+          .update(services)
+          .set({ status: "in_progress" })
+          .where(eq(services.serviceId, task.serviceId));
       }
     }
 
@@ -197,11 +224,13 @@ export async function updateTaskStatus(taskId: string, status: TaskStatus) {
 export async function updateStaffSMSPreferences(data: any) {
   try {
     const session = await verifySession(false);
-    if (!session || !session.userId) return { success: false, message: "Unauthorized" };
+    if (!session || !session.userId)
+      return { success: false, message: "Unauthorized" };
 
     const validated = StaffSMSPreferencesSchema.parse(data);
 
-    await db.update(staffs)
+    await db
+      .update(staffs)
       .set(validated)
       .where(eq(staffs.staffId, session.userId as string));
 
@@ -232,7 +261,3 @@ export async function getTaskDetails(taskId: string) {
     return { success: false, message: "Could not fetch task details." };
   }
 }
-
-
-
-

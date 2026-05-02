@@ -61,7 +61,7 @@ export const getServices = async ({
     ].filter(Boolean);
 
     const servicesData = await db.query.services.findMany({
-      where: and(...whereFilters as any),
+      where: and(...(whereFilters as any)),
       with: {
         statusHistory: {
           columns: {
@@ -169,7 +169,7 @@ export const getServiceById = async (serviceId: string) => {
     ].filter(Boolean) as string[];
 
     const mediaUrls = await Promise.all(
-      mediaKeys.map((key) => getObjectUrl(key))
+      mediaKeys.map((key) => getObjectUrl(key)),
     );
 
     const mediaMap: Record<string, string> = {};
@@ -179,13 +179,21 @@ export const getServiceById = async (serviceId: string) => {
 
     const data = {
       ...serviceData,
-      productFrontPhotoUrl: serviceData.productFrontPhotoKey ? mediaMap[serviceData.productFrontPhotoKey] : null,
-      productBackPhotoUrl: serviceData.productBackPhotoKey ? mediaMap[serviceData.productBackPhotoKey] : null,
-      warrantyCardPhotoUrl: serviceData.warrantyCardPhotoKey ? mediaMap[serviceData.warrantyCardPhotoKey] : null,
-      appointedStaff: serviceData.appointedStaff ? {
-        ...serviceData.appointedStaff,
-        photoUrl: mediaMap[serviceData.appointedStaff.photoKey] || null,
-      } : null,
+      productFrontPhotoUrl: serviceData.productFrontPhotoKey
+        ? mediaMap[serviceData.productFrontPhotoKey]
+        : null,
+      productBackPhotoUrl: serviceData.productBackPhotoKey
+        ? mediaMap[serviceData.productBackPhotoKey]
+        : null,
+      warrantyCardPhotoUrl: serviceData.warrantyCardPhotoKey
+        ? mediaMap[serviceData.warrantyCardPhotoKey]
+        : null,
+      appointedStaff: serviceData.appointedStaff
+        ? {
+            ...serviceData.appointedStaff,
+            photoUrl: mediaMap[serviceData.appointedStaff.photoKey] || null,
+          }
+        : null,
     };
 
     return { success: true, data };
@@ -243,28 +251,30 @@ export const getServiceHistoryById = async (id: string) => {
             rating: true,
           },
         },
-       feedback: {
-    columns: {
-      serviceId: true,
-      rating: true,
-    },
-  },
+        feedback: {
+          columns: {
+            serviceId: true,
+            rating: true,
+          },
+        },
       },
       orderBy: (services, { desc }) => [desc(services.createdAt)],
     });
-   console.log("TOTAL SERVICES:", serviceData.length);
-console.log("SERVICE STATUSES:", serviceData.map(s => ({
-  id: s.serviceId,
-  status: s.status,
-  historyStatus: s.statusHistory?.[0]?.status,
-})));
+    console.log("TOTAL SERVICES:", serviceData.length);
+    console.log(
+      "SERVICE STATUSES:",
+      serviceData.map((s) => ({
+        id: s.serviceId,
+        status: s.status,
+        historyStatus: s.statusHistory?.[0]?.status,
+      })),
+    );
 
-return { success: true, data: serviceData };
+    return { success: true, data: serviceData };
   } catch (error) {
     console.error(error);
     return { success: false, message: "Cannot fetch service history" };
   }
- 
 };
 
 export const getServiceMediaUrls = async (keys: string[]) => {
@@ -375,12 +385,10 @@ export async function createService(prevState: any, formData: FormData) {
     }
 
     if (originSource === "public_form") {
-      const res = await createApplication(
-        {
-          applicantId: serviceId,
-          type: "service_application",
-        }
-      );
+      const res = await createApplication({
+        applicantId: serviceId,
+        type: "service_application",
+      });
 
       applicationId = res.data!;
 
@@ -444,14 +452,16 @@ export async function createService(prevState: any, formData: FormData) {
           trackingId: serviceId,
         }),
       });
-      
+
       const shortSMS = renderText(
-         `প্রিয় গ্রাহক {customer_name}, আপনার সার্ভিস অনুরোধটি (ID: {service_id}) গ্রহণ করা হয়েছে। বিস্তারিত দেখুন: {tracking_link}`,
-         {
-           customer_name: validatedCustomerData.customerName,
-           service_id: serviceId,
-           tracking_link: generateUrl("service-tracking", { trackingId: serviceId }),
-         }
+        `প্রিয় গ্রাহক {customer_name}, আপনার সার্ভিস অনুরোধটি (ID: {service_id}) গ্রহণ করা হয়েছে। বিস্তারিত দেখুন: {tracking_link}`,
+        {
+          customer_name: validatedCustomerData.customerName,
+          service_id: serviceId,
+          tracking_link: generateUrl("service-tracking", {
+            trackingId: serviceId,
+          }),
+        },
       );
 
       if (validatedCustomerData.customerId) {
@@ -594,9 +604,8 @@ export const appointStaff = async (
       },
     );
 
-    const { notifyCustomer, notifyStaff } = await import(
-      "./notificationActions"
-    );
+    const { notifyCustomer, notifyStaff } =
+      await import("./notificationActions");
 
     const promises: Promise<any>[] = [];
 
@@ -806,7 +815,7 @@ export const updateService = async (
             customer_name: restData.customerName,
             service_id: serviceId,
             feedback_url: generateUrl("feedback", { serviceId: serviceId }),
-          }
+          },
         );
         await notifyCustomer({
           customerId: serviceRecord.customerId,
@@ -879,7 +888,16 @@ export const updateService = async (
     await Promise.all(promisesArray);
 
     // Update staff stats and related task if service status changed
-    if (["completed", "canceled", "pending", "in_progress", "service_center", "appointment_retry"].includes(serviceStatus)) {
+    if (
+      [
+        "completed",
+        "canceled",
+        "pending",
+        "in_progress",
+        "service_center",
+        "appointment_retry",
+      ].includes(serviceStatus)
+    ) {
       const service = await db.query.services.findFirst({
         where: eq(services.serviceId, serviceId),
         columns: { staffId: true },
@@ -889,11 +907,16 @@ export const updateService = async (
         updateStaffStats(service.staffId).catch((err) =>
           console.error("Failed to update staff stats:", err),
         );
-        
+
         // Update task status to match service
         let newTaskStatus: any = "in_progress";
-        if (serviceStatus === "completed" || serviceStatus === "service_center") newTaskStatus = "completed";
-        else if (serviceStatus === "canceled" || serviceStatus === "appointment_retry") newTaskStatus = "cancelled";
+        if (serviceStatus === "completed" || serviceStatus === "service_center")
+          newTaskStatus = "completed";
+        else if (
+          serviceStatus === "canceled" ||
+          serviceStatus === "appointment_retry"
+        )
+          newTaskStatus = "cancelled";
         else if (serviceStatus === "pending") newTaskStatus = "pending";
 
         db.update(tasks)
@@ -941,10 +964,19 @@ export const reportService = async ({
         })
         .where(eq(services.serviceId, serviceStatus.serviceId));
 
-      if (serviceStatus.status === "completed" || serviceStatus.status === "service_center") {
-        await db.update(tasks).set({ status: "completed" }).where(eq(tasks.serviceId, serviceStatus.serviceId));
+      if (
+        serviceStatus.status === "completed" ||
+        serviceStatus.status === "service_center"
+      ) {
+        await db
+          .update(tasks)
+          .set({ status: "completed" })
+          .where(eq(tasks.serviceId, serviceStatus.serviceId));
       } else if (serviceStatus.status === "canceled") {
-        await db.update(tasks).set({ status: "cancelled" }).where(eq(tasks.serviceId, serviceStatus.serviceId));
+        await db
+          .update(tasks)
+          .set({ status: "cancelled" })
+          .where(eq(tasks.serviceId, serviceStatus.serviceId));
       }
 
       await sendEmail({
@@ -1019,32 +1051,43 @@ export async function deleteService(serviceId: string) {
 export const staffCancelService = async (serviceId: string) => {
   try {
     const session = await verifySession(false);
-    if (!session || session.role !== "staff") return { success: false, message: "Unauthorized" };
+    if (!session || session.role !== "staff")
+      return { success: false, message: "Unauthorized" };
 
     const serviceData = await db.query.services.findFirst({
-        where: eq(services.serviceId, serviceId)
+      where: eq(services.serviceId, serviceId),
     });
     if (!serviceData || serviceData.staffId !== session.userId) {
-        return { success: false, message: "Service not found or unauthorized" };
+      return { success: false, message: "Service not found or unauthorized" };
     }
 
-    await db.update(services).set({ status: "canceled" }).where(eq(services.serviceId, serviceId));
-    
+    await db
+      .update(services)
+      .set({ status: "appointment_retry" })
+      .where(eq(services.serviceId, serviceId));
+
     await db.insert(serviceStatusHistory).values({
       serviceId: serviceId,
-      status: "canceled",
+      status: "appointment_retry",
       statusType: "system",
-      cancelReason: "Service canceled by assigned staff."
+      cancelReason:
+        "Service canceled by assigned staff. Requires reappointment.",
     });
 
-    await db.update(tasks).set({ status: "cancelled" }).where(eq(tasks.serviceId, serviceId));
+    await db
+      .update(tasks)
+      .set({ status: "cancelled" })
+      .where(eq(tasks.serviceId, serviceId));
 
     const { staffs } = await import("@/db/schema");
     const { sql } = await import("drizzle-orm");
 
-    await db.update(staffs).set({
-      canceledServices: sql`${staffs.canceledServices} + 1`
-    }).where(eq(staffs.staffId, session.userId as string));
+    await db
+      .update(staffs)
+      .set({
+        canceledServices: sql`${staffs.canceledServices} + 1`,
+      })
+      .where(eq(staffs.staffId, session.userId as string));
 
     revalidatePath("/staff/services");
     revalidatePath("/services/repairs");
@@ -1057,6 +1100,49 @@ export const staffCancelService = async (serviceId: string) => {
       message: `টেকনিসিয়ান ${serviceData.staffName} সার্ভিস অনুরোধটি (ID: ${serviceId}) বাতিল করেছেন। পুনরায় নিয়োগ প্রয়োজন।`,
       link: `/services/${serviceId}`,
     }).catch((err) => console.error("Admin notification failed:", err));
+
+    return { success: true, message: "Service canceled successfully" };
+  } catch (error) {
+    console.error(error);
+    return { success: false, message: "Something went wrong" };
+  }
+};
+
+export const adminCancelService = async (
+  serviceId: string,
+  cancelReason?: string,
+) => {
+  try {
+    const session = await verifySession(false);
+    if (!session || session.role !== "admin")
+      return { success: false, message: "Unauthorized" };
+
+    const serviceData = await db.query.services.findFirst({
+      where: eq(services.serviceId, serviceId),
+    });
+    if (!serviceData) {
+      return { success: false, message: "Service not found" };
+    }
+
+    await db
+      .update(services)
+      .set({ status: "canceled" })
+      .where(eq(services.serviceId, serviceId));
+
+    await db.insert(serviceStatusHistory).values({
+      serviceId: serviceId,
+      status: "canceled",
+      statusType: "system",
+      cancelReason: cancelReason || "Service canceled by admin.",
+    });
+
+    await db
+      .update(tasks)
+      .set({ status: "cancelled" })
+      .where(eq(tasks.serviceId, serviceId));
+
+    revalidatePath("/services/repairs");
+    revalidatePath("/services/installations");
 
     return { success: true, message: "Service canceled successfully" };
   } catch (error) {

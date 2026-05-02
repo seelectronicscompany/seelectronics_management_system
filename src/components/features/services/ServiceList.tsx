@@ -93,9 +93,7 @@ export default async function ServiceList(
         <StatusBadge
           status={
             service.statusHistory?.[0]?.statusType === "system"
-              ? service.statusHistory[0].status === "canceled"
-                ? "reappoint"
-                : (service.statusHistory[0].status ?? "pending") as any
+              ? ((service.statusHistory[0].status ?? "pending") as any)
               : "custom"
           }
         />

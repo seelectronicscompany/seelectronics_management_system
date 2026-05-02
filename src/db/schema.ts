@@ -155,7 +155,11 @@ export const customers = pgTable(
     vipStatus: applicationStatusEnum().default("pending"),
     vipExpiryDate: timestamp({ withTimezone: true }),
     referredByVipCard: varchar({ length: 16 }),
-    referralBalance: numeric({ precision: 12, scale: 2, mode: "number" }).default(0),
+    referralBalance: numeric({
+      precision: 12,
+      scale: 2,
+      mode: "number",
+    }).default(0),
     createdAt: timestamp({ withTimezone: true }).defaultNow().notNull(),
     updatedAt: timestamp({ withTimezone: true })
       .defaultNow()
@@ -177,11 +181,21 @@ export const referralBonuses = pgTable(
       .references(() => customers.customerId, { onDelete: "cascade" })
       .notNull(),
     referrerVipCard: varchar({ length: 16 }).notNull(),
-    referredCustomerId: varchar({ length: 255 })
-      .references(() => customers.customerId, { onDelete: "set null" }),
+    referredCustomerId: varchar({ length: 255 }).references(
+      () => customers.customerId,
+      { onDelete: "set null" },
+    ),
     referredCustomerName: varchar({ length: 255 }).notNull(),
-    purchaseAmount: numeric({ precision: 12, scale: 2, mode: "number" }).notNull(),
-    discountGiven: numeric({ precision: 12, scale: 2, mode: "number" }).notNull(),
+    purchaseAmount: numeric({
+      precision: 12,
+      scale: 2,
+      mode: "number",
+    }).notNull(),
+    discountGiven: numeric({
+      precision: 12,
+      scale: 2,
+      mode: "number",
+    }).notNull(),
     bonusEarned: numeric({ precision: 12, scale: 2, mode: "number" }).notNull(),
     createdAt: timestamp({ withTimezone: true }).defaultNow().notNull(),
   },
@@ -230,18 +244,21 @@ export const referralPaymentRequestsRelations = relations(
   }),
 );
 
-export const referralBonusesRelations = relations(referralBonuses, ({ one }) => ({
-  referrer: one(customers, {
-    fields: [referralBonuses.referrerCustomerId],
-    references: [customers.customerId],
-    relationName: "referralEarnings",
+export const referralBonusesRelations = relations(
+  referralBonuses,
+  ({ one }) => ({
+    referrer: one(customers, {
+      fields: [referralBonuses.referrerCustomerId],
+      references: [customers.customerId],
+      relationName: "referralEarnings",
+    }),
+    referred: one(customers, {
+      fields: [referralBonuses.referredCustomerId],
+      references: [customers.customerId],
+      relationName: "referredBy",
+    }),
   }),
-  referred: one(customers, {
-    fields: [referralBonuses.referredCustomerId],
-    references: [customers.customerId],
-    relationName: "referredBy",
-  }),
-}));
+);
 
 export const customersRelations = relations(customers, ({ many, one }) => ({
   invoice: one(invoices, {
@@ -562,7 +579,9 @@ export const tasks = pgTable(
     description: text().notNull(),
     priority: noticePriorityEnum().default("normal").notNull(),
     dueDate: timestamp({ withTimezone: true }),
-    serviceId: varchar({ length: 255 }).references(() => services.serviceId, { onDelete: "cascade" }),
+    serviceId: varchar({ length: 255 }).references(() => services.serviceId, {
+      onDelete: "cascade",
+    }),
     status: varchar({ length: 50 }).default("pending").notNull(),
     files: json().$type<string[]>(),
     comments: json().$type<any[]>(),
@@ -603,7 +622,6 @@ export const tasksRelations = relations(tasks, ({ one }) => ({
   }),
 }));
 
-
 export const smsLogs = pgTable(
   "smsLogs",
   {
@@ -623,7 +641,6 @@ export const smsLogs = pgTable(
     index("sms_log_status_idx").on(table.status),
   ],
 );
-
 
 export const smsLogsRelations = relations(smsLogs, ({ one }) => ({
   staff: one(staffs, {
@@ -715,31 +732,33 @@ export const userAgreementsRelations = relations(userAgreements, ({ one }) => ({
   }),
 }));
 
-export const payments = pgTable("payments", {
-  id: uuid().defaultRandom().primaryKey(),
-  paymentId: varchar({ length: 255 }).unique().notNull(),
-  staffId: varchar({ length: 255 })
-    .references(() => staffs.staffId, { onDelete: "cascade" })
-    .notNull(),
-  invoiceNumber: varchar({ length: 255 }).unique().notNull(),
-  paymentMethod: paymentTypesEnum().notNull(),
-  senderWalletNumber: varchar({ length: 255 }),
-  senderBankInfo: json().$type<BankInfo>(),
-  receiverWalletNumber: varchar({ length: 255 }),
-  receiverBankInfo: json().$type<BankInfo>(),
-  amount: numeric({ precision: 12, scale: 2, mode: "number" }).notNull(),
-  serviceId: varchar({ length: 255 }).references(() => services.serviceId, {
-    onDelete: "set null",
-  }),
-  status: paymentStatusEnum().default("pending").notNull(),
-  transactionId: varchar({ length: 255 }).unique(),
-  description: text(),
-  date: timestamp({ withTimezone: true }).defaultNow().notNull(),
-  createdAt: timestamp({ withTimezone: true }).defaultNow().notNull(),
-  updatedAt: timestamp({ withTimezone: true })
-    .defaultNow()
-    .notNull()
-    .$onUpdate(() => new Date()),
+export const payments = pgTable(
+  "payments",
+  {
+    id: uuid().defaultRandom().primaryKey(),
+    paymentId: varchar({ length: 255 }).unique().notNull(),
+    staffId: varchar({ length: 255 })
+      .references(() => staffs.staffId, { onDelete: "cascade" })
+      .notNull(),
+    invoiceNumber: varchar({ length: 255 }).unique().notNull(),
+    paymentMethod: paymentTypesEnum().notNull(),
+    senderWalletNumber: varchar({ length: 255 }),
+    senderBankInfo: json().$type<BankInfo>(),
+    receiverWalletNumber: varchar({ length: 255 }),
+    receiverBankInfo: json().$type<BankInfo>(),
+    amount: numeric({ precision: 12, scale: 2, mode: "number" }).notNull(),
+    serviceId: varchar({ length: 255 }).references(() => services.serviceId, {
+      onDelete: "set null",
+    }),
+    status: paymentStatusEnum().default("pending").notNull(),
+    transactionId: varchar({ length: 255 }).unique(),
+    description: text(),
+    date: timestamp({ withTimezone: true }).defaultNow().notNull(),
+    createdAt: timestamp({ withTimezone: true }).defaultNow().notNull(),
+    updatedAt: timestamp({ withTimezone: true })
+      .defaultNow()
+      .notNull()
+      .$onUpdate(() => new Date()),
   },
   (table) => [
     index("payment_staff_id_idx").on(table.staffId),
