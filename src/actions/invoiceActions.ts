@@ -63,13 +63,7 @@ export const sendInvoiceDownloadLink = async (
       },
     );
 
-    const shortenedSMS = renderText(
-      `প্রিয় গ্রাহক {name}, এস ই ইলেকট্রনিকস এ আপনাকে স্বাগতম! ইনভয়েস ও সার্ভিস আপডেট দেখতে লগইন করুন: {dashboard_link}`,
-      {
-        name,
-        dashboard_link: generateUrl("customer-login", {}),
-      },
-    );
+    
 
     if (customerId) {
       const { notifyCustomer } = await import("./notificationActions");
@@ -78,7 +72,7 @@ export const sendInvoiceDownloadLink = async (
         phoneNumber,
         type: invoiceType,
         message: fullMessage,
-        shortMessage: shortenedSMS,
+        
         link: "/customer/profile",
       });
     } else {
