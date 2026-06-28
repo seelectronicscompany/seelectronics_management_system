@@ -18,7 +18,7 @@ export const sendInvoiceDownloadLink = async (
   },
   invoiceData: {
     invoiceNumber: string;
-    customerId?: string;
+    customerId: string;
     date: Date;
     totalPrice: number;
     invoiceType:

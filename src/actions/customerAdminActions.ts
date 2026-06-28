@@ -184,6 +184,7 @@ export const createCustomer = async (data: any, sendLink = false) => {
           date: data.invoice.date,
           totalPrice: data.invoice.total,
           invoiceType: "customer-invoice",
+          customerId:customerId
         },
       );
     }
@@ -258,21 +259,7 @@ export const createCustomer = async (data: any, sendLink = false) => {
       }
     }
 
-    // Send welcome SMS to the newly created customer
-    if (result.success) {
-      try {
-        const { sendSMS } = await import("@/lib/sms");
-        const loginLink = "https://seelectronicspro.vercel.app/customer/login";
-        const smsMessage =
-          `স্বাগতম! আপনার SE ELECTRONICS অ্যাকাউন্ট তৈরি হয়েছে।\n` +
-          `Customer ID: ${customerId}\n` +
-          `Invoice ID: ${invoiceNumber}\n` +
-          `লগইন করুন: ${loginLink}`;
-        await sendSMS(data.phone, smsMessage);
-      } catch (e) {
-        console.error("Failed to send welcome SMS to new customer:", e);
-      }
-    }
+    
 
     return result;
   } catch (error) {
@@ -355,6 +342,7 @@ export const updateCustomer = async (
           date: data.invoice.date,
           totalPrice: data.invoice.total,
           invoiceType: "customer-invoice",
+          customerId: customerId
         },
       );
     }
