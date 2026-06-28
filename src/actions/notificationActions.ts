@@ -57,7 +57,7 @@ export async function notifyCustomer({
 
     // 2. Send shortened SMS
     // If no shortMessage provided, use a default one
-    const smsContent = shortMessage || `প্রিয় গ্রাহক, আপনার ড্যাশবোর্ডে একটি নতুন বার্তা আছে। বিস্তারিত দেখুন: ${generateUrl("customer-login", {})}`;
+    const smsContent = message || `প্রিয় গ্রাহক, আপনার ড্যাশবোর্ডে একটি নতুন বার্তা আছে। বিস্তারিত দেখুন: ${generateUrl("customer-login", {})}`;
     
     await sendSMS(phoneNumber, smsContent);
 
