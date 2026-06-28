@@ -34,6 +34,26 @@ const customerProtectedRoutes = [
 ];
 
 export async function middleware(request: NextRequest) {
+    // Block bots from generating link previews
+    const userAgent = request.headers.get("user-agent")?.toLowerCase() || "";
+    const botUserAgents = [
+        "whatsapp",
+        "facebookexternalhit",
+        "twitterbot",
+        "slackbot",
+        "linkedinbot",
+        "telegrambot",
+        "discordbot",
+        "skypeuripreview",
+        "viber",
+        "facebot",
+        "applebot"
+    ];
+
+    if (botUserAgents.some(bot => userAgent.includes(bot))) {
+        return new NextResponse(null, { status: 403 });
+    }
+
     const path = request.nextUrl.pathname
     const cookie = request.cookies.get('session')?.value
     const session = await decrypt(cookie)
