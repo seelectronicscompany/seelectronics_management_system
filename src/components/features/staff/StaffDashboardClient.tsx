@@ -121,7 +121,7 @@ export default function StaffDashboardClient({
           <div className="bg-emerald-50 border-emerald-200 p-2 sm:p-4 rounded-md shadow-sm border flex items-center text-center justify-center">
             <div>
               <p className="text-2xl sm:text-3xl font-black text-emerald-600">
-                {stats?.completedServices || 0}
+                {staffData.completedServices || 0}
               </p>
               <p className="text-[10px] sm:text-xs uppercase font-black text-emerald-600/70 tracking-tighter sm:tracking-widest">
                 Service Completed
@@ -132,7 +132,7 @@ export default function StaffDashboardClient({
           <div className="bg-amber-50 border-amber-200 p-2 sm:p-4 rounded-md shadow-sm border flex items-center text-center justify-center">
             <div>
               <p className="text-2xl sm:text-3xl font-black text-amber-600">
-                {stats?.activeServices || 0}
+                {staffData.activeServices || 0}
               </p>
               <p className="text-[10px] sm:text-xs uppercase font-black text-amber-600/70 tracking-tighter sm:tracking-widest">
                 Service Pending
@@ -143,7 +143,7 @@ export default function StaffDashboardClient({
           <div className="bg-rose-50 border-rose-200 p-2 sm:p-4 rounded-md shadow-sm border flex items-center text-center justify-center">
             <div>
               <p className="text-2xl sm:text-3xl font-black text-rose-600">
-                {stats?.canceledServices || 0}
+                {staffData.canceledServices || 0}
               </p>
               <p className="text-[10px] sm:text-xs uppercase font-black text-rose-600/70 tracking-tighter sm:tracking-widest">
                 Service Canceled

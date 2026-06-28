@@ -307,9 +307,9 @@ export const getStaffs = async ({
       staffsData.map(async (staff) => {
         const [photoUrl, nidFrontPhotoUrl, nidBackPhotoUrl] = await Promise.all(
           [
-            getObjectUrl(staff.photoKey),
-            getObjectUrl(staff.nidFrontPhotoKey),
-            getObjectUrl(staff.nidBackPhotoKey),
+            staff.photoKey ? getObjectUrl(staff.photoKey) : null,
+            staff.nidFrontPhotoKey ? getObjectUrl(staff.nidFrontPhotoKey) : null,
+            staff.nidBackPhotoKey ? getObjectUrl(staff.nidBackPhotoKey) : null,
           ],
         );
         return {
@@ -384,7 +384,14 @@ export const getStaffById = async (staffId: string) => {
 
     return {
       success: true,
-      data: { ...staffData, photoUrl, nidFrontPhotoUrl, nidBackPhotoUrl },
+      data: {
+        ...staffData,
+        photoUrl,
+        nidFrontPhotoUrl,
+        nidBackPhotoUrl,
+        completedServices: staffData.successfulServices || 0,
+        activeServices: (staffData.totalServices || 0) - (staffData.successfulServices || 0) - (staffData.canceledServices || 0)
+      },
     };
   } catch (error) {
     console.error(error);
