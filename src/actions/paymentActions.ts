@@ -188,7 +188,7 @@ export const updatePaymentStatus = async (
 
     if (statusMessages[status]) {
         const shortSMS = status === "completed" 
-            ? `আপনার পেমেন্ট রিকোয়েস্ট (৳${paymentData.amount}) সম্পন্ন হয়েছে। ধন্যাবাদ।`
+            ? `আপনার পেমেন্ট রিকোয়েস্ট 01310673600 ${paymentData.paymentMethod} থেকে ${paymentData.transactionId} (৳${paymentData.amount}) সম্পন্ন হয়েছে। ধন্যাবাদ।`
             : `আপনার পেমেন্ট রিকোয়েস্ট (৳${paymentData.amount}) এখন ${status} অবস্থায় আছে। বিস্তারিত দেখুন পোর্টালে।`;
         
         await notifyStaff({
