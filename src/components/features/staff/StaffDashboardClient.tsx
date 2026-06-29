@@ -39,7 +39,7 @@ export default function StaffDashboardClient({
   const showMarquee =
     activeComplaints.length > 0 ||
     unreadNotices.length > 0 ||
-    (stats?.activeServices || 0) > 0;
+    (stats?.pendingServices || 0) > 0;
 
   return (
     <StaffLayout balance={stats?.availableBalance || 0}>
@@ -97,7 +97,7 @@ export default function StaffDashboardClient({
             ))}
 
             {/* Assigned Services */}
-            {(stats?.activeServices || 0) > 0 && (
+            {(stats?.pendingServices || 0) > 0 && (
               <Link
                 href="/staff/services"
                 className="flex items-center mx-6 group font-black"
@@ -107,7 +107,7 @@ export default function StaffDashboardClient({
                     সার্ভিস
                   </span>
                   <span className="text-slate-900 text-sm tracking-wide group-hover:underline uppercase">
-                    আপনার জন্য {stats.activeServices}টি সার্ভিস পেন্ডিং আছে।
+                    আপনার জন্য {stats.pendingServices}টি সার্ভিস পেন্ডিং আছে।
                     দ্রুত কাজ শুরু করুন।
                   </span>
                 </div>
@@ -132,7 +132,7 @@ export default function StaffDashboardClient({
           <div className="bg-amber-50 border-amber-200 p-2 sm:p-4 rounded-md shadow-sm border flex items-center text-center justify-center">
             <div>
               <p className="text-2xl sm:text-3xl font-black text-amber-600">
-                {staffData.activeServices || 0}
+                {staffData.pendingServices || 0}
               </p>
               <p className="text-[10px] sm:text-xs uppercase font-black text-amber-600/70 tracking-tighter sm:tracking-widest">
                 Service Pending

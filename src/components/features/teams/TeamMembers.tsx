@@ -22,7 +22,7 @@ export default function TeamMembers({
   staffId,
 }: {
   staffs: {
-    photoUrl: string;
+    photoUrl: string | null;
     currentDistrict: string;
     currentPoliceStation: string | null;
     id: string;
@@ -31,12 +31,15 @@ export default function TeamMembers({
     phone: string;
     staffId: string;
     currentPostOffice: string | null;
-    photoKey: string;
+    photoKey: string | null;
     repairExperienceYears: number | null;
     installationExperienceYears: number | null;
     rating: number;
     totalFeedbacks: number;
     fiveStarCount: number;
+    completedServices: number;
+    canceledServices: number;
+    pendingServices: number;
   }[];
   staffId?: string;
 }) {
@@ -91,7 +94,7 @@ export default function TeamMembers({
               {/* <div className="bg-primary/15 border border-primary p-6  rounded-md"> */}
               {/* <!-- Profile Image Placeholder --> */}
               <div className="size-48 rounded-full overflow-hidden __center mx-auto mb-5">
-                <ImageWithLightbox src={selectedProfile?.photoUrl} />
+                <ImageWithLightbox src={selectedProfile?.photoUrl || ""} />
               </div>
               <h1 className="text-2xl font-bold mb-1">
                 {selectedProfile?.name}
@@ -126,23 +129,32 @@ export default function TeamMembers({
               </div>
             </div>
 
-            <div className="grid grid-cols-3 gap-3 py-4">
+            <div className="grid grid-cols-4 gap-3 py-4">
               <div className="flex flex-col items-center p-2 rounded-md bg-green-50 border border-green-200">
                 <div className="bg-green-100 rounded-md p-1 mb-3 mx-a">
                   <CheckSquare className="size-5 text-green-600" />
                 </div>
                 <span className="text-2xl font-bold text-gray-900">
-                  {(staffStats as Record<string, any>)[selectedProfile.role]?.[
-                    selectedProfile.phone
-                  ]?.completedServices ?? 0}
+                  {selectedProfile.completedServices ?? 0}
                 </span>
                 <span className="text-sm font-medium text-green-700 ">
                   সফল সার্ভিস
                 </span>
               </div>
+              <div className="flex flex-col items-center p-2 rounded-md bg-blue-50 border border-blue-200">
+                <div className="bg-blue-100 rounded-md p-1 mb-3">
+                  <Clock className="size-5 text-blue-600" />
+                </div>
+                <span className="text-2xl font-bold text-gray-900">
+                  {selectedProfile.pendingServices ?? 0}
+                </span>
+                <span className="text-sm font-medium text-blue-700 ">
+                  পেন্ডিং সার্ভিস
+                </span>
+              </div>
               <div className="flex flex-col items-center p-2 rounded-md bg-purple-50 border border-purple-200">
                 <div className="bg-purple-100 rounded-md p-1 mb-3">
-                  <Clock className="size-5 text-purple-600" />
+                  <BriefcaseBusiness className="size-5 text-purple-600" />
                 </div>
                 <span className="text-2xl font-bold text-gray-900">
                   {selectedProfile.repairExperienceYears ||
@@ -157,9 +169,7 @@ export default function TeamMembers({
                   <XCircle className="size-5 text-amber-600" />
                 </div>
                 <span className="text-2xl font-bold text-gray-900">
-                  {(staffStats as Record<string, any>)[selectedProfile.role]?.[
-                    selectedProfile.phone
-                  ]?.cancelledServices ?? 0}
+                  {selectedProfile.canceledServices ?? 0}
                 </span>
                 <span className="text-sm font-medium text-amber-700 mb-1">
                   বাতিল সার্ভিস
@@ -313,7 +323,7 @@ export default function TeamMembers({
               className="bg-white border p-6 rounded-md text-center cursor-pointer"
             >
               <div className="size-44 rounded-full overflow-hidden __center mx-auto">
-                <Image src={staff.photoUrl} alt="" width={176} height={176} />
+                <Image src={staff.photoUrl || ""} alt="" width={176} height={176} />
               </div>
               <div className="flex flex-col mt-5 gap-2">
                 <div className="flex gap-1 self-center items-center">

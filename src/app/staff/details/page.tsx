@@ -257,13 +257,22 @@ export default async function StaffDetailsPage() {
           </div>
 
           {/* PERFORMANCE STATS */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-2 ">
+          <div className="grid grid-cols-2 md:grid-cols-5 gap-2 ">
             <div className="bg-green-50/70 border border-green-400  p-3 rounded shadow-sm  text-center">
               <p className="text-2xl font-bold text-green-600">
                 {staffData.totalServices}
               </p>
               <p className="text-sm text-green-600 font-bold uppercase">
                 Total Services
+              </p>
+            </div>
+
+            <div className="bg-blue-50/70 border border-blue-400  p-3 rounded shadow-sm  text-center">
+              <p className="text-2xl font-bold text-blue-600">
+                {staffData.pendingServices}
+              </p>
+              <p className="text-sm text-blue-600 font-bold uppercase">
+                Pending
               </p>
             </div>
 

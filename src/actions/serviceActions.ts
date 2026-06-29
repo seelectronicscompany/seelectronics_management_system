@@ -670,10 +670,16 @@ export const appointStaff = async (
     }
 
     await Promise.all(promises);
+    
+    // Update staff stats
+    if (validatedData.staffId) {
+      updateStaffStats(validatedData.staffId).catch((err) =>
+        console.error("Failed to update staff stats:", err)
+      );
+    }
 
     revalidatePath("/services");
     revalidatePath("/installations");
-    revalidatePath("/staff/tasks"); // Added revalidation for staff tasks page
 
     return { success: true, message: "Appointed" };
   } catch (error) {
@@ -1079,15 +1085,10 @@ export const staffCancelService = async (serviceId: string) => {
       .set({ status: "cancelled" })
       .where(eq(tasks.serviceId, serviceId));
 
-    const { staffs } = await import("@/db/schema");
-    const { sql } = await import("drizzle-orm");
-
-    await db
-      .update(staffs)
-      .set({
-        canceledServices: sql`${staffs.canceledServices} + 1`,
-      })
-      .where(eq(staffs.staffId, session.userId as string));
+    // Update staff stats
+    updateStaffStats(session.userId as string).catch((err) =>
+      console.error("Failed to update staff stats:", err)
+    );
 
     revalidatePath("/staff/services");
     revalidatePath("/services/repairs");
@@ -1140,6 +1141,13 @@ export const adminCancelService = async (
       .update(tasks)
       .set({ status: "cancelled" })
       .where(eq(tasks.serviceId, serviceId));
+
+    // Update staff stats
+    if (serviceData.staffId) {
+      updateStaffStats(serviceData.staffId).catch((err) =>
+        console.error("Failed to update staff stats:", err)
+      );
+    }
 
     revalidatePath("/services/repairs");
     revalidatePath("/services/installations");

@@ -16,7 +16,7 @@ const sql = neon(DATABASE_URL);
 const db = drizzle(sql, { schema });
 
 async function main() {
-  console.log("🌱 Starting Database Seed...");
+  console.log("🌱 Starting Database Seed (Full)...");
 
   const adminUser = process.env.ADMIN_DASHBOARD_USERNAME || "admin";
   const adminPass = process.env.ADMIN_DASHBOARD_PASSWORD || "admin123";
@@ -61,13 +61,13 @@ async function main() {
 
     // 1. Seed Agreements
     console.log("⏳ Seeding agreements...");
-    const agreement = await db.insert(schema.agreements).values({
+    await db.insert(schema.agreements).values({
       type: "application_declaration",
       title: "Service Application Declaration",
       content: "I hereby declare that all the information provided is true and correct...",
       version: "1.0",
       isActive: true,
-    }).returning({ id: schema.agreements.id });
+    });
     console.log("✅ Agreements seeded");
 
     // 2. Seed Admin
@@ -96,21 +96,35 @@ async function main() {
             phone: `01${faker.string.numeric(9)}`,
             currentStreetAddress: faker.location.streetAddress(),
             currentDistrict: "Dhaka",
+            currentPoliceStation: "Gulshan",
+            currentPostOffice: "Gulshan-1",
             permanentStreetAddress: faker.location.streetAddress(),
             permanentDistrict: "Dhaka",
-            photoKey: faker.system.fileName(),
-            nidFrontPhotoKey: faker.system.fileName(),
-            nidBackPhotoKey: faker.system.fileName(),
+            permanentPoliceStation: "Gulshan",
+            permanentPostOffice: "Gulshan-1",
+            photoKey: "photo.jpg",
+            nidFrontPhotoKey: "nid_front.jpg",
+            nidBackPhotoKey: "nid_back.jpg",
             role: i % 2 === 0 ? "technician" : "electrician",
             isVerified: true,
             isActiveStaff: true,
             profileCompleted: true,
+            repairExperienceYears: i + 1,
+            installationExperienceYears: i + 2,
+            hasRepairExperience: true,
+            hasInstallationExperience: true,
+            rating: 4.5,
             totalServices: 10,
             successfulServices: 5,
             canceledServices: 2,
             pendingServices: 3,
             paymentPreference: "bkash",
+            walletNumber: `01${faker.string.numeric(9)}`,
             createdFrom: "dashboard",
+            smsNotificationEnabled: true,
+            smsWorkingHoursOnly: true,
+            smsFrequency: "immediate",
+            smsOptOut: false,
         });
     }
     console.log("✅ Staffs seeded");

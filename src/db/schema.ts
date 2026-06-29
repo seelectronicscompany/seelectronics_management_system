@@ -539,6 +539,7 @@ export const staffs = pgTable(
     totalServices: integer().default(0), // total services handled
     successfulServices: integer().default(0), // completed successfully
     canceledServices: integer().default(0), // services canceled
+    pendingServices: integer().default(0), // services pending
     paymentPreference: paymentTypesEnum().notNull(),
     walletNumber: varchar({ length: 255 }),
     bankInfo: json().$type<BankInfo>(),

@@ -238,6 +238,9 @@ export const getAllTeamMembers = async () => {
         rating: sql<number>`COALESCE(AVG(${feedbacks.rating}), 0)`.mapWith(Number),
         totalFeedbacks: sql<number>`COUNT(${feedbacks.id})`.mapWith(Number),
         fiveStarCount: sql<number>`COALESCE(SUM(CASE WHEN ${feedbacks.rating} = 5 THEN 1 ELSE 0 END), 0)`.mapWith(Number),
+        successfulServices: staffs.successfulServices,
+        canceledServices: staffs.canceledServices,
+        totalServices: staffs.totalServices,
     })
     .from(staffs)
     .leftJoin(services, eq(services.staffId, staffs.staffId))
@@ -249,9 +252,9 @@ export const getAllTeamMembers = async () => {
       staffsData.map(async (staff) => {
         const [photoUrl, nidFrontPhotoUrl, nidBackPhotoUrl] = await Promise.all(
           [
-            getObjectUrl(staff.photoKey),
-            getObjectUrl(staff.nidFrontPhotoKey),
-            getObjectUrl(staff.nidBackPhotoKey),
+            staff.photoKey ? getObjectUrl(staff.photoKey) : null,
+            staff.nidFrontPhotoKey ? getObjectUrl(staff.nidFrontPhotoKey) : null,
+            staff.nidBackPhotoKey ? getObjectUrl(staff.nidBackPhotoKey) : null,
           ],
         );
         return {
@@ -259,6 +262,9 @@ export const getAllTeamMembers = async () => {
           photoUrl,
           nidFrontPhotoUrl,
           nidBackPhotoUrl,
+          completedServices: staff.successfulServices || 0,
+          canceledServices: staff.canceledServices || 0,
+          activeServices: (staff.totalServices || 0) - (staff.successfulServices || 0) - (staff.canceledServices || 0)
         };
       }),
     );
@@ -390,6 +396,7 @@ export const getStaffById = async (staffId: string) => {
         nidFrontPhotoUrl,
         nidBackPhotoUrl,
         completedServices: staffData.successfulServices || 0,
+        pendingServices: staffData.pendingServices || 0,
         activeServices: (staffData.totalServices || 0) - (staffData.successfulServices || 0) - (staffData.canceledServices || 0)
       },
     };
@@ -1043,7 +1050,7 @@ export async function getStaffProfileStats(staffId: string) {
         total: sql<number>`count(*)`,
         completed: sql<number>`count(*) filter (where status = 'completed')`,
         canceled: sql<number>`count(*) filter (where status IN ('canceled', 'appointment_retry'))`,
-        active: sql<number>`count(*) filter (where status not in ('completed', 'canceled', 'appointment_retry'))`,
+        pending: sql<number>`count(*) filter (where status not in ('completed', 'canceled', 'appointment_retry'))`,
       })
       .from(services)
       .where(eq(services.staffId, staffId));
@@ -1080,7 +1087,7 @@ export async function getStaffProfileStats(staffId: string) {
         totalServices: Number(stats.total),
         completedServices: Number(stats.completed),
         canceledServices: Number(stats.canceled),
-        activeServices: Number(stats.active),
+        pendingServices: Number(stats.pending),
         averageRating: Number(ratingResult[0]?.avg || 0),
         recentPayments: staffPayments,
         totalEarnings,
@@ -1106,7 +1113,7 @@ export async function updateStaffStats(staffId: string) {
         services,
         and(
           eq(services.staffId, staffId),
-          sql`status = 'completed'`,
+          eq(services.status, "completed"),
         ),
       );
       const canceledCount = await tx.$count(
@@ -1114,9 +1121,16 @@ export async function updateStaffStats(staffId: string) {
         and(
           eq(services.staffId, staffId),
           or(
-            sql`status = 'canceled'`,
-            sql`status = 'appointment_retry'`
+            eq(services.status, "canceled"),
+            eq(services.status, "appointment_retry")
           )
+        ),
+      );
+      const pendingCount = await tx.$count(
+        services,
+        and(
+          eq(services.staffId, staffId),
+          notInArray(services.status, ["completed", "canceled", "appointment_retry"])
         ),
       );
 
@@ -1127,7 +1141,7 @@ export async function updateStaffStats(staffId: string) {
         .where(eq(services.staffId, staffId))
         .limit(1);
 
-      const rating = ratingResult[0]?.avg || 0;
+      const rating = Number(ratingResult[0]?.avg) || 0;
 
       await tx
         .update(staffs)
@@ -1135,6 +1149,7 @@ export async function updateStaffStats(staffId: string) {
           totalServices: totalCount,
           successfulServices: successCount,
           canceledServices: canceledCount,
+          pendingServices: pendingCount,
           rating: parseFloat(rating.toFixed(2)),
         })
         .where(eq(staffs.staffId, staffId));
