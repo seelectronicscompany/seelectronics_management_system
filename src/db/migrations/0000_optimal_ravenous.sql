@@ -362,6 +362,7 @@ CREATE TABLE "staffs" (
 	"totalServices" integer DEFAULT 0,
 	"successfulServices" integer DEFAULT 0,
 	"canceledServices" integer DEFAULT 0,
+	"pendingServices" integer DEFAULT 0,
 	"paymentPreference" "paymentTypes" NOT NULL,
 	"walletNumber" varchar(255),
 	"bankInfo" json,

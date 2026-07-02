@@ -8,6 +8,7 @@ import { formatDate, generateRandomId } from "@/utils";
 import { StaffSMSPreferencesSchema, TaskSchema } from "@/validationSchemas";
 import { desc, eq } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
+import { refreshStaffStats } from "./staffActions";
 
 /**
  * Checks if current time is within working hours (9 AM - 9 PM)
@@ -167,9 +168,7 @@ export async function updateTaskStatus(taskId: string, status: TaskStatus) {
     });
 
     if (task?.serviceId) {
-      const { services, serviceStatusHistory, staffs } =
-        await import("@/db/schema");
-      const { sql } = await import("drizzle-orm");
+      const { services, serviceStatusHistory } = await import("@/db/schema");
 
       if (status === "cancelled") {
         await db
@@ -183,14 +182,6 @@ export async function updateTaskStatus(taskId: string, status: TaskStatus) {
             "Task cancelled by staff member. Service requires reappointment.",
           statusType: "system",
         });
-
-        // Increment canceled services count for staff
-        await db
-          .update(staffs)
-          .set({
-            canceledServices: sql`${staffs.canceledServices} + 1`,
-          })
-          .where(eq(staffs.staffId, session.userId as string));
       } else if (status === "completed") {
         await db
           .update(services)
@@ -206,6 +197,18 @@ export async function updateTaskStatus(taskId: string, status: TaskStatus) {
           .update(services)
           .set({ status: "in_progress" })
           .where(eq(services.serviceId, task.serviceId));
+      }
+
+      if (status !== "in_progress") {
+        const service = await db.query.services.findFirst({
+          where: eq(services.serviceId, task.serviceId),
+          columns: { staffId: true },
+        });
+        try {
+          await refreshStaffStats([service?.staffId]);
+        } catch (err) {
+          console.error("Failed to refresh staff stats:", err);
+        }
       }
     }
 

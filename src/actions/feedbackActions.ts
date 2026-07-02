@@ -164,9 +164,11 @@ export async function createFeedback(feedbackInfo: z.infer<typeof FeedbackDataSc
             columns: { staffId: true }
         });
         if (service?.staffId) {
-            updateStaffStats(service.staffId).catch(err =>
-                console.error('Failed to update staff stats after feedback:', err)
-            );
+            try {
+                await updateStaffStats(service.staffId);
+            } catch (err) {
+                console.error('Failed to update staff stats after feedback:', err);
+            }
         }
 
         await sendEmail({

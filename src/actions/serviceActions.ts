@@ -27,7 +27,7 @@ import { headers } from "next/headers";
 import { v4 as uuidv4 } from "uuid";
 import z, { ZodError, flattenError } from "zod";
 import { createApplication } from "./applicationActions";
-import { updateStaffStats } from "./staffActions";
+import { refreshStaffStats, updateStaffStats } from "./staffActions";
 
 export const getServices = async ({
   query,
@@ -420,6 +420,10 @@ export async function createService(prevState: any, formData: FormData) {
       status: "pending",
     });
 
+    if (serviceData.staffId) {
+      await refreshStaffStats([serviceData.staffId]);
+    }
+
     // Revalidate service lists for admin and customer
     revalidatePath("/services/repairs");
     revalidatePath("/services/installations");
@@ -558,6 +562,12 @@ export const appointStaff = async (
     if (!session) return { success: false, message: "Unauthorized" };
 
     const validatedData = AppointmentDataSchema.parse(appointmentData);
+    const existingService = await db.query.services.findFirst({
+      where: eq(services.serviceId, validatedData.serviceId),
+      columns: {
+        staffId: true,
+      },
+    });
 
     const updatedService = await db
       .update(services)
@@ -670,12 +680,15 @@ export const appointStaff = async (
     }
 
     await Promise.all(promises);
-    
+
     // Update staff stats
-    if (validatedData.staffId) {
-      updateStaffStats(validatedData.staffId).catch((err) =>
-        console.error("Failed to update staff stats:", err)
-      );
+    const staffIdsToRefresh = [
+      existingService?.staffId,
+      validatedData.staffId,
+    ].filter((id): id is string => Boolean(id));
+
+    if (staffIdsToRefresh.length > 0) {
+      await refreshStaffStats([...new Set(staffIdsToRefresh)]);
     }
 
     revalidatePath("/services");
@@ -707,6 +720,12 @@ export const updateService = async (
     const validatedData = UpdateServiceDataSchema.parse(
       Object.fromEntries(formData),
     );
+    const existingService = await db.query.services.findFirst({
+      where: eq(services.serviceId, serviceId),
+      columns: {
+        staffId: true,
+      },
+    });
     const {
       serviceStatus,
       customLabel,
@@ -893,6 +912,15 @@ export const updateService = async (
 
     await Promise.all(promisesArray);
 
+    try {
+      await refreshStaffStats([
+        existingService?.staffId,
+        validatedData.staffId,
+      ]);
+    } catch (err) {
+      console.error("Failed to update staff stats:", err);
+    }
+
     // Update staff stats and related task if service status changed
     if (
       [
@@ -904,32 +932,21 @@ export const updateService = async (
         "appointment_retry",
       ].includes(serviceStatus)
     ) {
-      const service = await db.query.services.findFirst({
-        where: eq(services.serviceId, serviceId),
-        columns: { staffId: true },
-      });
-      if (service?.staffId) {
-        // Update in background, don't block response
-        updateStaffStats(service.staffId).catch((err) =>
-          console.error("Failed to update staff stats:", err),
-        );
+      // Update task status to match service
+      let newTaskStatus: any = "in_progress";
+      if (serviceStatus === "completed" || serviceStatus === "service_center")
+        newTaskStatus = "completed";
+      else if (
+        serviceStatus === "canceled" ||
+        serviceStatus === "appointment_retry"
+      )
+        newTaskStatus = "cancelled";
+      else if (serviceStatus === "pending") newTaskStatus = "pending";
 
-        // Update task status to match service
-        let newTaskStatus: any = "in_progress";
-        if (serviceStatus === "completed" || serviceStatus === "service_center")
-          newTaskStatus = "completed";
-        else if (
-          serviceStatus === "canceled" ||
-          serviceStatus === "appointment_retry"
-        )
-          newTaskStatus = "cancelled";
-        else if (serviceStatus === "pending") newTaskStatus = "pending";
-
-        db.update(tasks)
-          .set({ status: newTaskStatus })
-          .where(eq(tasks.serviceId, serviceId))
-          .catch((err) => console.error("Failed to update task status:", err));
-      }
+      db.update(tasks)
+        .set({ status: newTaskStatus })
+        .where(eq(tasks.serviceId, serviceId))
+        .catch((err) => console.error("Failed to update task status:", err));
     }
 
     revalidatePath("/services");
@@ -961,6 +978,11 @@ export const reportService = async ({
     await db.insert(serviceStatusHistory).values(serviceStatus);
 
     if (serviceReport) {
+      const serviceRecord = await db.query.services.findFirst({
+        where: eq(services.serviceId, serviceStatus.serviceId),
+        columns: { staffId: true },
+      });
+
       await db
         .update(services)
         .set({
@@ -983,6 +1005,17 @@ export const reportService = async ({
           .update(tasks)
           .set({ status: "cancelled" })
           .where(eq(tasks.serviceId, serviceStatus.serviceId));
+      }
+
+      // Update staff stats
+      try {
+        if (serviceRecord?.staffId) {
+          await refreshStaffStats([serviceRecord.staffId]);
+        } else if (session.userId) {
+          await updateStaffStats(session.userId as string);
+        }
+      } catch (err) {
+        console.error("Failed to update staff stats:", err);
       }
 
       await sendEmail({
@@ -1024,6 +1057,17 @@ export async function deleteService(serviceId: string) {
     const session = await verifySession(false, "admin");
     if (!session) return { success: false, message: "Unauthorized" };
 
+    const existingService = await db.query.services.findFirst({
+      where: eq(services.serviceId, serviceId),
+      columns: {
+        staffId: true,
+        createdFrom: true,
+        productFrontPhotoKey: true,
+        productBackPhotoKey: true,
+        warrantyCardPhotoKey: true,
+      },
+    });
+
     const serviceData = await db
       .delete(services)
       .where(eq(services.serviceId, serviceId))
@@ -1037,6 +1081,14 @@ export async function deleteService(serviceId: string) {
     await db
       .delete(applications)
       .where(eq(applications.applicantId, serviceId));
+
+    if (existingService?.staffId) {
+      try {
+        await refreshStaffStats([existingService.staffId]);
+      } catch (err) {
+        console.error("Failed to update staff stats:", err);
+      }
+    }
 
     if (serviceData[0].createdFrom === "public_form") {
       await Promise.all([
@@ -1086,9 +1138,13 @@ export const staffCancelService = async (serviceId: string) => {
       .where(eq(tasks.serviceId, serviceId));
 
     // Update staff stats
-    updateStaffStats(session.userId as string).catch((err) =>
-      console.error("Failed to update staff stats:", err)
+    const staffIdsToRefresh = [serviceData.staffId].filter((id): id is string =>
+      Boolean(id),
     );
+
+    if (staffIdsToRefresh.length > 0) {
+      await refreshStaffStats([...new Set(staffIdsToRefresh)]);
+    }
 
     revalidatePath("/staff/services");
     revalidatePath("/services/repairs");
@@ -1143,10 +1199,12 @@ export const adminCancelService = async (
       .where(eq(tasks.serviceId, serviceId));
 
     // Update staff stats
-    if (serviceData.staffId) {
-      updateStaffStats(serviceData.staffId).catch((err) =>
-        console.error("Failed to update staff stats:", err)
-      );
+    const staffIdsToRefresh = [serviceData.staffId].filter((id): id is string =>
+      Boolean(id),
+    );
+
+    if (staffIdsToRefresh.length > 0) {
+      await refreshStaffStats([...new Set(staffIdsToRefresh)]);
     }
 
     revalidatePath("/services/repairs");

@@ -124,7 +124,7 @@ export default function ServiceActionButtons({
         >
           <FileText stroke="currentColor" />
         </button>
-        {serviceData.statusHistory?.[0]?.status === "canceled" ? (
+        {serviceData.statusHistory?.[0]?.status === "appointment_retry" ? (
           <button
             title="Reappoint Staff"
             className="text-orange-500 hover:text-orange-600"

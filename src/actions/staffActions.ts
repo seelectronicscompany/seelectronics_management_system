@@ -35,12 +35,12 @@ import {
 } from "@/validationSchemas";
 import bcrypt from "bcrypt";
 import crypto from "crypto";
-import { and, eq, ilike, notInArray, or, sql, desc } from "drizzle-orm";
+import { and, desc, eq, ilike, or, sql } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 import { cookies, headers } from "next/headers";
 import { RedirectType, redirect } from "next/navigation";
 import { v4 as uuidv4 } from "uuid";
-import z, { ZodError, flattenError } from "zod";
+import { ZodError, flattenError } from "zod";
 // import { createApplication } from "./applicationActions";
 // import { deleteAuthToken, saveAuthToken, verifyAuthToken } from "./authActions";
 import { deleteAuthToken, saveAuthToken, verifyAuthToken } from "./authActions";
@@ -221,7 +221,8 @@ export const getAllTeamMembers = async () => {
   try {
     // Public action for team page? No session check here if it's meant for public view.
     // However, it returns phone numbers. Careful.
-    const staffsData = await db.select({
+    const staffsData = await db
+      .select({
         id: staffs.id,
         staffId: staffs.staffId,
         name: staffs.name,
@@ -235,25 +236,32 @@ export const getAllTeamMembers = async () => {
         nidFrontPhotoKey: staffs.nidFrontPhotoKey,
         nidBackPhotoKey: staffs.nidBackPhotoKey,
         role: staffs.role,
-        rating: sql<number>`COALESCE(AVG(${feedbacks.rating}), 0)`.mapWith(Number),
+        rating: sql<number>`COALESCE(AVG(${feedbacks.rating}), 0)`.mapWith(
+          Number,
+        ),
         totalFeedbacks: sql<number>`COUNT(${feedbacks.id})`.mapWith(Number),
-        fiveStarCount: sql<number>`COALESCE(SUM(CASE WHEN ${feedbacks.rating} = 5 THEN 1 ELSE 0 END), 0)`.mapWith(Number),
+        fiveStarCount:
+          sql<number>`COALESCE(SUM(CASE WHEN ${feedbacks.rating} = 5 THEN 1 ELSE 0 END), 0)`.mapWith(
+            Number,
+          ),
         successfulServices: staffs.successfulServices,
         canceledServices: staffs.canceledServices,
         totalServices: staffs.totalServices,
-    })
-    .from(staffs)
-    .leftJoin(services, eq(services.staffId, staffs.staffId))
-    .leftJoin(feedbacks, eq(feedbacks.serviceId, services.serviceId))
-    .where(eq(staffs.isVerified, true))
-    .groupBy(staffs.id)
-    .orderBy(desc(staffs.createdAt));
+      })
+      .from(staffs)
+      .leftJoin(services, eq(services.staffId, staffs.staffId))
+      .leftJoin(feedbacks, eq(feedbacks.serviceId, services.serviceId))
+      .where(eq(staffs.isVerified, true))
+      .groupBy(staffs.id)
+      .orderBy(desc(staffs.createdAt));
     const finalStaffData = await Promise.all(
       staffsData.map(async (staff) => {
         const [photoUrl, nidFrontPhotoUrl, nidBackPhotoUrl] = await Promise.all(
           [
             staff.photoKey ? getObjectUrl(staff.photoKey) : null,
-            staff.nidFrontPhotoKey ? getObjectUrl(staff.nidFrontPhotoKey) : null,
+            staff.nidFrontPhotoKey
+              ? getObjectUrl(staff.nidFrontPhotoKey)
+              : null,
             staff.nidBackPhotoKey ? getObjectUrl(staff.nidBackPhotoKey) : null,
           ],
         );
@@ -264,7 +272,10 @@ export const getAllTeamMembers = async () => {
           nidBackPhotoUrl,
           completedServices: staff.successfulServices || 0,
           canceledServices: staff.canceledServices || 0,
-          activeServices: (staff.totalServices || 0) - (staff.successfulServices || 0) - (staff.canceledServices || 0)
+          activeServices:
+            (staff.totalServices || 0) -
+            (staff.successfulServices || 0) -
+            (staff.canceledServices || 0),
         };
       }),
     );
@@ -314,7 +325,9 @@ export const getStaffs = async ({
         const [photoUrl, nidFrontPhotoUrl, nidBackPhotoUrl] = await Promise.all(
           [
             staff.photoKey ? getObjectUrl(staff.photoKey) : null,
-            staff.nidFrontPhotoKey ? getObjectUrl(staff.nidFrontPhotoKey) : null,
+            staff.nidFrontPhotoKey
+              ? getObjectUrl(staff.nidFrontPhotoKey)
+              : null,
             staff.nidBackPhotoKey ? getObjectUrl(staff.nidBackPhotoKey) : null,
           ],
         );
@@ -397,7 +410,11 @@ export const getStaffById = async (staffId: string) => {
         nidBackPhotoUrl,
         completedServices: staffData.successfulServices || 0,
         pendingServices: staffData.pendingServices || 0,
-        activeServices: (staffData.totalServices || 0) - (staffData.successfulServices || 0) - (staffData.canceledServices || 0)
+        canceledServices: staffData.canceledServices || 0,
+        activeServices:
+          (staffData.totalServices || 0) -
+          (staffData.successfulServices || 0) -
+          (staffData.canceledServices || 0),
       },
     };
   } catch (error) {
@@ -550,7 +567,11 @@ export const createStaff = async (_prevState: any, formData: FormData) => {
       ]);
 
     await Promise.all([
-      putObject({ Key: photoKey, Body: photoBuffer, ContentType: "image/webp" }),
+      putObject({
+        Key: photoKey,
+        Body: photoBuffer,
+        ContentType: "image/webp",
+      }),
       putObject({
         Key: nidFrontPhotoKey,
         Body: nidFrontPhotoBuffer,
@@ -756,9 +777,7 @@ export const deleteStaff = async (staffId: string) => {
         nidFrontPhotoKey: staffs.nidFrontPhotoKey,
         nidBackPhotoKey: staffs.nidBackPhotoKey,
       });
-    await db
-      .delete(applications)
-      .where(eq(applications.applicantId, staffId));
+    await db.delete(applications).where(eq(applications.applicantId, staffId));
     await db.delete(userAgreements).where(eq(userAgreements.userId, staffId));
     await Promise.all([
       deleteObject({ Key: serviceData[0].photoKey }),
@@ -801,8 +820,9 @@ export async function staffLogin(prevState: any, credentials: FormData) {
         success: false,
         isBlocked: true,
         name: staff.name,
-    id: staff.staffId,
-        message: "আপনার অ্যাকাউন্টটি ব্লক করা হয়েছে। অনুগ্রহ করে এডমিনের সাথে যোগাযোগ করুন।",
+        id: staff.staffId,
+        message:
+          "আপনার অ্যাকাউন্টটি ব্লক করা হয়েছে। অনুগ্রহ করে এডমিনের সাথে যোগাযোগ করুন।",
       };
     }
 
@@ -995,10 +1015,7 @@ export async function setStaffCredentials(
     }
 
     const staffMatches = await db.query.staffs.findMany({
-      where: or(
-        eq(staffs.staffId, staffId),
-        eq(staffs.username, username)
-      ),
+      where: or(eq(staffs.staffId, staffId), eq(staffs.username, username)),
       columns: { staffId: true, username: true, name: true, phone: true },
     });
 
@@ -1025,7 +1042,7 @@ export async function setStaffCredentials(
     const loginUrl = `${getBaseUrl()}/staff/login`;
     const message = ApplicationMessages.staff.CREDENTIALS.replace(
       "{staff_name}",
-      staffData.name
+      staffData.name,
     )
       .replace("{username}", username)
       .replace("{password}", password)
@@ -1043,17 +1060,22 @@ export async function setStaffCredentials(
 
 export async function getStaffProfileStats(staffId: string) {
   try {
-    // Executing queries sequentially to avoid ETIMEDOUT errors on parallel fetch requests
-    // with neon-http, especially during cold starts or high latency periods.
-    const servicesStats = await db
-      .select({
-        total: sql<number>`count(*)`,
-        completed: sql<number>`count(*) filter (where status = 'completed')`,
-        canceled: sql<number>`count(*) filter (where status IN ('canceled', 'appointment_retry'))`,
-        pending: sql<number>`count(*) filter (where status not in ('completed', 'canceled', 'appointment_retry'))`,
-      })
-      .from(services)
-      .where(eq(services.staffId, staffId));
+    // Read the counters from the staff row so the dashboard shows the same
+    // numbers that we keep up to date in the mutation layer.
+    const staffStats = await db.query.staffs.findFirst({
+      where: eq(staffs.staffId, staffId),
+      columns: {
+        totalServices: true,
+        successfulServices: true,
+        canceledServices: true,
+        pendingServices: true,
+        rating: true,
+      },
+    });
+
+    if (!staffStats) {
+      return { success: false, message: "Staff not found" };
+    }
 
     const ratingResult = await db
       .select({ avg: sql<number>`AVG(${feedbacks.rating})` })
@@ -1076,7 +1098,6 @@ export async function getStaffProfileStats(staffId: string) {
       .from(payments)
       .where(eq(payments.staffId, staffId));
 
-    const stats = servicesStats[0];
     const sums = paymentSums[0];
     const totalEarnings = Number(sums.added);
     const pendingPayments = Number(sums.requested);
@@ -1084,11 +1105,11 @@ export async function getStaffProfileStats(staffId: string) {
     return {
       success: true,
       data: {
-        totalServices: Number(stats.total),
-        completedServices: Number(stats.completed),
-        canceledServices: Number(stats.canceled),
-        pendingServices: Number(stats.pending),
-        averageRating: Number(ratingResult[0]?.avg || 0),
+        totalServices: Number(staffStats.totalServices || 0),
+        completedServices: Number(staffStats.successfulServices || 0),
+        canceledServices: Number(staffStats.canceledServices || 0),
+        pendingServices: Number(staffStats.pendingServices || 0),
+        averageRating: Number(staffStats.rating ?? ratingResult[0]?.avg ?? 0),
         recentPayments: staffPayments,
         totalEarnings,
         pendingPayments,
@@ -1101,59 +1122,79 @@ export async function getStaffProfileStats(staffId: string) {
   }
 }
 
+export async function refreshStaffStats(
+  staffIds: Array<string | null | undefined>,
+) {
+  const uniqueStaffIds = [
+    ...new Set(staffIds.filter((id): id is string => Boolean(id))),
+  ];
+
+  if (uniqueStaffIds.length === 0) return;
+
+  await Promise.all(uniqueStaffIds.map((staffId) => updateStaffStats(staffId)));
+}
+
 export async function updateStaffStats(staffId: string) {
   try {
-    await db.transaction(async (tx) => {
-      // Recalculate all stats for the staff
-      const totalCount = await tx.$count(
-        services,
-        eq(services.staffId, staffId),
+    const totalResult = await db
+      .select({ count: sql<number>`count(*)` })
+      .from(services)
+      .where(eq(services.staffId, staffId));
+    const totalCount = Number(totalResult[0]?.count || 0);
+
+    const successResult = await db
+      .select({ count: sql<number>`count(*)` })
+      .from(services)
+      .where(
+        and(eq(services.staffId, staffId), eq(services.status, "completed")),
       );
-      const successCount = await tx.$count(
-        services,
+    const successCount = Number(successResult[0]?.count || 0);
+
+    const canceledResult = await db
+      .select({ count: sql<number>`count(*)` })
+      .from(services)
+      .where(
         and(
           eq(services.staffId, staffId),
-          eq(services.status, "completed"),
+          sql`${services.status} in ('canceled', 'appointment_retry')`,
         ),
       );
-      const canceledCount = await tx.$count(
-        services,
+    const canceledCount = Number(canceledResult[0]?.count || 0);
+
+    const pendingResult = await db
+      .select({ count: sql<number>`count(*)` })
+      .from(services)
+      .where(
         and(
           eq(services.staffId, staffId),
-          or(
-            eq(services.status, "canceled"),
-            eq(services.status, "appointment_retry")
-          )
+          sql`${services.status} not in ('completed', 'canceled', 'appointment_retry')`,
         ),
       );
-      const pendingCount = await tx.$count(
-        services,
-        and(
-          eq(services.staffId, staffId),
-          notInArray(services.status, ["completed", "canceled", "appointment_retry"])
-        ),
-      );
+    const pendingCount = Number(pendingResult[0]?.count || 0);
 
-      const ratingResult = await tx
-        .select({ avg: sql<number>`AVG(${feedbacks.rating})` })
-        .from(feedbacks)
-        .innerJoin(services, eq(services.serviceId, feedbacks.serviceId))
-        .where(eq(services.staffId, staffId))
-        .limit(1);
+    const ratingResult = await db
+      .select({ avg: sql<number>`AVG(${feedbacks.rating})` })
+      .from(feedbacks)
+      .innerJoin(services, eq(services.serviceId, feedbacks.serviceId))
+      .where(eq(services.staffId, staffId))
+      .limit(1);
+    const rating = Number(ratingResult[0]?.avg) || 0;
 
-      const rating = Number(ratingResult[0]?.avg) || 0;
+    await db
+      .update(staffs)
+      .set({
+        totalServices: totalCount,
+        successfulServices: successCount,
+        canceledServices: canceledCount,
+        pendingServices: pendingCount,
+        rating: parseFloat(rating.toFixed(2)),
+      })
+      .where(eq(staffs.staffId, staffId));
 
-      await tx
-        .update(staffs)
-        .set({
-          totalServices: totalCount,
-          successfulServices: successCount,
-          canceledServices: canceledCount,
-          pendingServices: pendingCount,
-          rating: parseFloat(rating.toFixed(2)),
-        })
-        .where(eq(staffs.staffId, staffId));
-    });
+    revalidatePath("/staff/profile");
+    revalidatePath("/staff/details");
+    revalidatePath("/staff/services");
+    revalidatePath("/staff/tasks");
 
     return { success: true, message: "Stats updated" };
   } catch (error) {
@@ -1205,7 +1246,6 @@ export const getStaffNotifications = async () => {
       .where(eq(staffNotifications.staffId, session.userId as string))
       .orderBy(desc(staffNotifications.createdAt))
       .limit(10);
-
 
     return { success: true, data: notifications };
   } catch (error) {

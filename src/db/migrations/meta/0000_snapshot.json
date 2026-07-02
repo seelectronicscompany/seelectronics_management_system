@@ -1,5 +1,5 @@
 {
-  "id": "c29161c6-1a1a-49ba-85df-cf6ffbf30bf9",
+  "id": "dc4b58df-0f79-4846-83e4-bbccee7194fc",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -2874,6 +2874,13 @@
         },
         "canceledServices": {
           "name": "canceledServices",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
+          "default": 0
+        },
+        "pendingServices": {
+          "name": "pendingServices",
           "type": "integer",
           "primaryKey": false,
           "notNull": false,
