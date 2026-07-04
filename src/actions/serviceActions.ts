@@ -72,6 +72,11 @@ export const getServices = async ({
           limit: 1,
           orderBy: (statusHistory, { desc }) => [desc(statusHistory.createdAt)],
         },
+        task: {
+          columns: {
+            status: true,
+          },
+        },
       },
       limit: limit ? Number(limit) : undefined,
       offset: offset,

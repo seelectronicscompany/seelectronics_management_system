@@ -1,9 +1,9 @@
 import { getServicesMetadata, getStaffById } from "@/actions";
-import { DelayedLoading, ServiceList, Toolbar } from "@/components";
+import { DelayedLoading, Toolbar } from "@/components";
+import ServiceHistoryList from "@/components/features/services/ServiceHistoryList";
 import { SearchParams } from "@/types";
-import { Suspense } from "react";
 import { notFound } from "next/navigation";
-
+import { Suspense } from "react";
 export default async function StaffServiceHistoryPage({
   params,
   searchParams,
@@ -53,9 +53,6 @@ export default async function StaffServiceHistoryPage({
               <th className="py-4 px-4 text-sm font-bold text-gray-700 whitespace-nowrap">
                 Status
               </th>
-              <th className="py-4 px-4 text-sm font-bold text-gray-700 whitespace-nowrap sticky right-0 bg-gray-50 shadow-[-4px_0_10px_-4px_rgba(0,0,0,0.1)]">
-                Actions
-              </th>
             </tr>
           </thead>
           <tbody>
@@ -75,7 +72,7 @@ export default async function StaffServiceHistoryPage({
                 </tr>
               }
             >
-              <ServiceList {...{ ...sp, staffId, hideStaff: true }} />
+              <ServiceHistoryList {...{ ...sp, staffId, hideStaff: true }} />
             </Suspense>
           </tbody>
         </table>
