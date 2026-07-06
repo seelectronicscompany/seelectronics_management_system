@@ -93,7 +93,7 @@ export default async function generatePDF({
 
     let html = "";
     let options: PDFOptions = {
-      format: "Legal",
+      format: "A4",
       printBackground: true,
       margin: { top: "0", right: "0", bottom: "0", left: "0" },
     };
@@ -236,8 +236,8 @@ export default async function generatePDF({
         let staffInfo:
           | CertificatePayload
           | Awaited<
-            ReturnType<typeof import("@/actions/staffActions").getStaffById>
-          >["data"] = payload as CertificatePayload;
+              ReturnType<typeof import("@/actions/staffActions").getStaffById>
+            >["data"] = payload as CertificatePayload;
 
         if (
           !staffInfo ||
@@ -272,7 +272,9 @@ export default async function generatePDF({
         );
 
         const { qrcode } = await import("@/lib/id-gen");
-        const qrCodeData = await qrcode(((staffInfo as any).staffId || (staffInfo as any).shopId) as string);
+        const qrCodeData = await qrcode(
+          ((staffInfo as any).staffId || (staffInfo as any).shopId) as string,
+        );
 
         const data: CertificateTemplateData = {
           ...(staffInfo as any as CertificateTemplateData),
@@ -282,10 +284,17 @@ export default async function generatePDF({
           memberNumber: (staffInfo as any).memberNumber || "N/A",
           shopName: (staffInfo as any).shopName || "N/A",
           shopId: (staffInfo as any).shopId || "N/A",
-          ownerName: (staffInfo as any).ownerName || (staffInfo as any).name || "N/A",
+          ownerName:
+            (staffInfo as any).ownerName || (staffInfo as any).name || "N/A",
           phone: (staffInfo as any).phone || "N/A",
-          address: (staffInfo as any).address || (staffInfo as any).currentStreetAddress || "N/A",
-          district: (staffInfo as any).district || (staffInfo as any).currentDistrict || "N/A",
+          address:
+            (staffInfo as any).address ||
+            (staffInfo as any).currentStreetAddress ||
+            "N/A",
+          district:
+            (staffInfo as any).district ||
+            (staffInfo as any).currentDistrict ||
+            "N/A",
           issueDate: new Date(),
           qrcode: qrCodeData,
           font1,
@@ -361,7 +370,8 @@ export default async function generatePDF({
           newPosition: c.punishmentNewPosition || undefined,
           adminNote: c.adminNote || undefined,
           signatoryName: c.hearingOfficerName || "মোঃ সাহাব উদ্দিন মাহমুদ",
-          signatoryTitle: c.hearingOfficerDesignation || "চেয়ারম্যান, এস ই ইলেকট্রনিক্স",
+          signatoryTitle:
+            c.hearingOfficerDesignation || "চেয়ারম্যান, এস ই ইলেকট্রনিক্স",
           companyName: "SE Electronics / SE Power IPS",
           elecLogo: elecLogoBase64,
           elecSign: elecSignBase64,
@@ -469,7 +479,12 @@ export default async function generatePDF({
           },
           subject: c.subject,
           adminNote: c.customerNote || c.adminNote || "",
-          punishmentType: (await import("@/constants/complaintData")).PUNISHMENT_TYPES.find(p => p.id === c.punishmentType)?.label || c.punishmentType || "",
+          punishmentType:
+            (await import("@/constants/complaintData")).PUNISHMENT_TYPES.find(
+              (p) => p.id === c.punishmentType,
+            )?.label ||
+            c.punishmentType ||
+            "",
           punishmentStartDate: c.punishmentStartDate || "",
           punishmentEndDate: c.punishmentEndDate || "",
           resolvedDateBn,

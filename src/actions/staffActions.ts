@@ -732,13 +732,13 @@ export const toggleStaffStatus = async (staffId: string, status: boolean) => {
     const { notifyStaff } = await import("./notificationActions");
     if (!status) {
       // Sending block notification SMS
-      const blockMessage = `প্রিয় ${staff.name},\nআপনার অ্যাকাউন্টটি সাময়িকভাবে বন্ধ (Blocked) করা হয়েছে। বিস্তারিত জানতে বা অ্যাকাউন্টটি সক্রিয় করতে এডমিনের সাথে যোগাযোগ করুন। ${contactDetails.customerCare}`;
+      const blockMessage = `প্রিয় ${staff.name},\nআপনার অ্যাকাউন্টটি সাময়িকভাবে বন্ধ (Blocked) করা হয়েছে। বিস্তারিত জানতে বা অ্যাকাউন্টটি সক্রিয় করতে এডমিনের সাথে যোগাযোগ করুন। বিস্তারিত জানতে ${contactDetails.customerCare}`;
       await notifyStaff({
         staffId,
         phoneNumber: staff.phone,
         type: "account_status",
         message: blockMessage,
-        shortMessage: `আপনার অ্যাকাউন্টটি সাময়িকভাবে বন্ধ করা হয়েছে। বিস্তারিত জানতে এডমিনের সাথে যোগাযোগ করুন।`,
+        shortMessage: `আপনার  এস্টাপ অ্যাকাউন্টটি সাময়িকভাবে বন্ধ করা হয়েছে। বিস্তারিত জানতে এডমিনের সাথে যোগাযোগ করুন। বিস্তারিত জানতে 09649355555`,
         link: "/staff/profile",
       });
     } else {

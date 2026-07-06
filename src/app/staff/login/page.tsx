@@ -1,22 +1,21 @@
 "use client";
 
 import { staffLogin } from "@/actions";
-import Image from "next/image";
-import { useState, useEffect } from "react";
-import { AlertTriangle, PhoneCall, ShieldAlert } from "lucide-react";
-import { toast } from "react-toastify";
-import { useActionState } from "react";
 import Modal from "@/components/ui/Modal";
 import { contactDetails } from "@/constants";
+import { PhoneCall, ShieldAlert } from "lucide-react";
+import Image from "next/image";
+import { useActionState, useEffect, useState } from "react";
+import { toast } from "react-toastify";
 
 export default function StaffLoginPage() {
   const [state, loginAction, isPending] = useActionState(staffLogin, undefined);
   const [username, setUsername] = useState("");
   const [showBlockedModal, setShowBlockedModal] = useState(false);
   const [blockedInfo, setBlockedInfo] = useState<{
-  name?: string;
-  id?: string;
-} | null>(null);
+    name?: string;
+    id?: string;
+  } | null>(null);
 
   // useEffect(() => {
   //   if (state && !state.success && (state as any).isBlocked) {
@@ -24,15 +23,15 @@ export default function StaffLoginPage() {
   //   }
   // }, [state]);
   useEffect(() => {
-  if (state && !state.success && (state as any).isBlocked) {
-    setBlockedInfo({
-      name: (state as any).name,
-      id: (state as any).id,
-    });
+    if (state && !state.success && (state as any).isBlocked) {
+      setBlockedInfo({
+        name: (state as any).name,
+        id: (state as any).id,
+      });
 
-    setShowBlockedModal(true);
-  }
-}, [state]);
+      setShowBlockedModal(true);
+    }
+  }, [state]);
 
   const handleSubmit = () => {
     if (!username.trim()) {
@@ -133,15 +132,15 @@ export default function StaffLoginPage() {
             <ShieldAlert size={40} className="text-red-500" />
           </div>
           {blockedInfo && (
-  <div className="mb-6 space-y-2 text-center">
-    <p className="text-sm font-semibold text-gray-700">
-      Name: {blockedInfo.name}
-    </p>
-    <p className="text-sm font-semibold text-gray-700">
-      ID: {blockedInfo.id}
-    </p>
-  </div>
-)}
+            <div className="mb-6 space-y-2 text-center">
+              <p className="text-sm font-semibold text-gray-700">
+                Name: {blockedInfo.name}
+              </p>
+              <p className="text-sm font-semibold text-gray-700">
+                ID: {blockedInfo.id}
+              </p>
+            </div>
+          )}
 
           <h2 className="text-2xl font-black text-gray-900 mb-3 uppercase tracking-tight">
             অ্যাক্সেস সংরক্ষিত
@@ -149,7 +148,7 @@ export default function StaffLoginPage() {
 
           <p className="text-gray-600 font-medium leading-relaxed mb-8 px-4">
             আপনার অ্যাকাউন্টটি বর্তমানে ব্লক করা আছে। পুনরায় সক্রিয় করতে আমাদের
-            এডমিন প্যানেলের সাথে যোগাযোগ করুন।
+            এডমিন প্যানেলের সাথে যোগাযোগ করুন। বিস্তারিত জানতে 09649355555
           </p>
 
           <div className="w-full space-y-3">
