@@ -112,7 +112,7 @@ export default function InvoiceTemplate({
                 </tr>
               ))}
               <tr>
-                <td colSpan={6} className="py-3 px-3 border-black">
+                <td colSpan={6} className="py-3 px-3 border border-black">
                   <div className="flex justify-end items-start">
                     <div className="text-right space-y-2">
                       <div className="text-base">
