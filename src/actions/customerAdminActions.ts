@@ -136,6 +136,34 @@ export const createCustomer = async (data: any, sendLink = false) => {
       bonusEarned: number;
     } | null = null;
 
+    let discountGiven = 0;
+    let bonusEarned = 0;
+    let finalTotal = Number(data.invoice.total) || 0;
+    let finalDue = Number(data.invoice.dueAmount) || 0;
+    let referrer: any = null;
+
+    if (data.referralVipCard) {
+      referrer = await db.query.customers.findFirst({
+        where: and(
+          eq(customers.vipCardNumber, data.referralVipCard),
+          eq(customers.vipStatus, "approved"),
+        ),
+      });
+
+      if (referrer) {
+        discountGiven = finalTotal * 0.04;
+        bonusEarned = finalTotal * 0.02;
+        finalTotal = finalTotal - discountGiven;
+        finalDue = Math.max(0, finalDue - discountGiven);
+
+        referrerInfo = {
+          customerId: referrer.customerId,
+          phone: referrer.phone,
+          bonusEarned,
+        };
+      }
+    }
+
     // Start a transaction
     // 1. Create customer
     await db.insert(customers).values({
@@ -159,8 +187,8 @@ export const createCustomer = async (data: any, sendLink = false) => {
         date: new Date(data.invoice.date),
         paymentType: data.invoice.paymentType,
         subtotal: Number(data.invoice.subtotal) || 0,
-        total: Number(data.invoice.total) || 0,
-        dueAmount: Number(data.invoice.dueAmount) || 0,
+        total: finalTotal,
+        dueAmount: finalDue,
       })
       .returning();
 
@@ -186,59 +214,33 @@ export const createCustomer = async (data: any, sendLink = false) => {
         {
           invoiceNumber,
           date: data.invoice.date,
-          totalPrice: data.invoice.total,
+          totalPrice: finalTotal,
           invoiceType: "customer-invoice",
           customerId: customerId,
         },
       );
     }
 
-    // 4. Handle referral if VIP card number provided
-    if (data.referralVipCard) {
-      const referrer = await db.query.customers.findFirst({
-        where: and(
-          eq(customers.vipCardNumber, data.referralVipCard),
-          eq(customers.vipStatus, "approved"),
-        ),
+    // 4. Handle referral database updates if valid referrer exists
+    if (referrer) {
+      // Log the referral bonus
+      await db.insert(referralBonuses).values({
+        referrerCustomerId: referrer.customerId,
+        referrerVipCard: data.referralVipCard,
+        referredCustomerId: customerId,
+        referredCustomerName: data.name,
+        purchaseAmount: Number(data.invoice.total) || 0,
+        discountGiven,
+        bonusEarned,
       });
 
-      if (referrer) {
-        const purchaseTotal = data.invoice.total;
-        const discountGiven = Number(purchaseTotal) * 0.04;
-        const bonusEarned = Number(purchaseTotal) * 0.02;
-
-        // Log the referral bonus
-        await db.insert(referralBonuses).values({
-          referrerCustomerId: referrer.customerId,
-          referrerVipCard: data.referralVipCard,
-          referredCustomerId: customerId,
-          referredCustomerName: data.name,
-          purchaseAmount: purchaseTotal,
-          discountGiven,
-          bonusEarned,
-        });
-
-        // Credit the referrer's balance
-        await db
-          .update(customers)
-          .set({
-            referralBalance: sql`COALESCE(${customers.referralBalance}, 0) + ${bonusEarned}`,
-          })
-          .where(eq(customers.customerId, referrer.customerId));
-
-        // Apply 5% discount to the invoice total
-        const discountedTotal = Number(purchaseTotal) - discountGiven;
-        await db
-          .update(invoices)
-          .set({ total: discountedTotal })
-          .where(eq(invoices.invoiceNumber, invoiceNumber));
-
-        referrerInfo = {
-          customerId: referrer.customerId,
-          phone: referrer.phone,
-          bonusEarned,
-        };
-      }
+      // Credit the referrer's balance
+      await db
+        .update(customers)
+        .set({
+          referralBalance: sql`COALESCE(${customers.referralBalance}, 0) + ${bonusEarned}`,
+        })
+        .where(eq(customers.customerId, referrer.customerId));
     }
 
     revalidatePath("/customers");
@@ -293,6 +295,72 @@ export const updateCustomer = async (
 
     if (!customer) return { success: false, message: "Customer not found" };
 
+    let discountGiven = 0;
+    let bonusEarned = 0;
+    let finalTotal = Number(data.invoice.total) || 0;
+    let finalDue = Number(data.invoice.dueAmount) || 0;
+
+    if (customer.referredByVipCard) {
+      const referrer = await db.query.customers.findFirst({
+        where: and(
+          eq(customers.vipCardNumber, customer.referredByVipCard),
+          eq(customers.vipStatus, "approved"),
+        ),
+      });
+
+      if (referrer) {
+        discountGiven = finalTotal * 0.04;
+        bonusEarned = finalTotal * 0.02;
+        finalTotal = finalTotal - discountGiven;
+        finalDue = Math.max(0, finalDue - discountGiven);
+
+        // Update referrer balance and the referral bonus record
+        const existingBonus = await db.query.referralBonuses.findFirst({
+          where: and(
+            eq(referralBonuses.referrerCustomerId, referrer.customerId),
+            eq(referralBonuses.referredCustomerId, customerId),
+          ),
+        });
+
+        if (existingBonus) {
+          const diffBonus = bonusEarned - existingBonus.bonusEarned;
+          await db
+            .update(customers)
+            .set({
+              referralBalance: sql`COALESCE(${customers.referralBalance}, 0) + ${diffBonus}`,
+            })
+            .where(eq(customers.customerId, referrer.customerId));
+
+          await db
+            .update(referralBonuses)
+            .set({
+              referredCustomerName: data.name,
+              purchaseAmount: Number(data.invoice.total) || 0,
+              discountGiven,
+              bonusEarned,
+            })
+            .where(eq(referralBonuses.id, existingBonus.id));
+        } else {
+          await db.insert(referralBonuses).values({
+            referrerCustomerId: referrer.customerId,
+            referrerVipCard: customer.referredByVipCard,
+            referredCustomerId: customerId,
+            referredCustomerName: data.name,
+            purchaseAmount: Number(data.invoice.total) || 0,
+            discountGiven,
+            bonusEarned,
+          });
+
+          await db
+            .update(customers)
+            .set({
+              referralBalance: sql`COALESCE(${customers.referralBalance}, 0) + ${bonusEarned}`,
+            })
+            .where(eq(customers.customerId, referrer.customerId));
+        }
+      }
+    }
+
     // 1. Update customer
     await db
       .update(customers)
@@ -313,8 +381,8 @@ export const updateCustomer = async (
         date: new Date(data.invoice.date),
         paymentType: data.invoice.paymentType,
         subtotal: Number(data.invoice.subtotal) || 0,
-        total: Number(data.invoice.total) || 0,
-        dueAmount: Number(data.invoice.dueAmount) || 0,
+        total: finalTotal,
+        dueAmount: finalDue,
       })
       .where(eq(invoices.customerId, customerId));
 
@@ -346,7 +414,7 @@ export const updateCustomer = async (
         {
           invoiceNumber: customer.invoiceNumber,
           date: data.invoice.date,
-          totalPrice: data.invoice.total,
+          totalPrice: finalTotal,
           invoiceType: "customer-invoice",
           customerId: customerId,
         },

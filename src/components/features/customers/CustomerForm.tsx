@@ -20,7 +20,7 @@ export default function CustomerForm({
 }: {
   customerData?: Pick<
     CustomerData,
-    "customerId" | "name" | "phone" | "address"
+    "customerId" | "name" | "phone" | "address" | "referredByVipCard"
   > & {
     invoice: Pick<
       CustomerData["invoice"],
@@ -76,7 +76,12 @@ export default function CustomerForm({
     (sum, item) => sum + (item.unitPrice * item.quantity || 0),
     0,
   );
-  const advanceAmount = totalAmount - customerInfo.invoice.dueAmount;
+  const hasReferral =
+    (mode === "create" && !!vipValidationResult?.success) ||
+    (mode === "update" && !!customerData?.referredByVipCard);
+
+  const actualTotal = hasReferral ? Math.floor(totalAmount * 0.96) : totalAmount;
+  const advanceAmount = actualTotal - customerInfo.invoice.dueAmount;
 
   const fetchProducts = async () => {
     if (!customerData) return;
@@ -142,9 +147,8 @@ export default function CustomerForm({
     }
 
     // 4. Due amount validation
-    const maxTotal =
-      mode === "create" && vipValidationResult?.success
-        ? totalAmount * 0.95
+    const maxTotal = hasReferral
+        ? totalAmount * 0.96
         : totalAmount;
     if (customerInfo.invoice.dueAmount > maxTotal) {
       return toast.error(
@@ -249,7 +253,7 @@ export default function CustomerForm({
     }
   }, [referralVipCard, mode]);
   return (
-    <Modal width="900" isVisible title="Create Customer" onClose={onClose}>
+    <Modal width="900" isVisible title={mode === "update" ? "Update Customer" : "Create Customer"} onClose={onClose}>
       <div className="space-y-6">
         <div className="flex flex-col sm:flex-row gap-4">
           <InputField
@@ -591,23 +595,18 @@ export default function CustomerForm({
                   {totalAmount.toLocaleString()} TK
                 </p>
               </div>
-              {mode === "create" &&
-                referralVipCard.length === 16 &&
-                totalAmount > 0 && (
-                  <div className="flex justify-between text-green-600">
-                    <p className="font-medium">Referral Discount (4%):</p>
-                    <p className="font-medium">
-                      -{Math.floor(totalAmount * 0.04).toLocaleString()} TK
-                    </p>
-                  </div>
-                )}
+              {hasReferral && totalAmount > 0 && (
+                <div className="flex justify-between text-green-600">
+                  <p className="font-medium">Referral Discount (4%):</p>
+                  <p className="font-medium">
+                    -{Math.floor(totalAmount * 0.04).toLocaleString()} TK
+                  </p>
+                </div>
+              )}
               <div className="flex justify-between">
                 <p className=" font-medium">Total:</p>
                 <p className=" font-medium">
-                  {mode === "create" && referralVipCard.length === 16
-                    ? Math.floor(totalAmount * 0.95).toLocaleString()
-                    : totalAmount.toLocaleString()}{" "}
-                  TK
+                  {actualTotal.toLocaleString()} TK
                 </p>
               </div>
               <div className="flex justify-between">
@@ -622,7 +621,7 @@ export default function CustomerForm({
                   className="__input w-48"
                   name="dueAmount"
                   min={0}
-                  max={totalAmount}
+                  max={actualTotal}
                   type="number"
                   placeholder="Due Amount"
                   required={false}
@@ -647,10 +646,7 @@ export default function CustomerForm({
             onClick={handleSumbit}
             disabled={
               isSubmitting ||
-              customerInfo.invoice.dueAmount >
-                (mode === "create" && vipValidationResult?.success
-                  ? totalAmount * 0.95
-                  : totalAmount) ||
+              customerInfo.invoice.dueAmount > actualTotal ||
               !customerInfo.name ||
               !customerInfo.phone ||
               !customerInfo.address ||
