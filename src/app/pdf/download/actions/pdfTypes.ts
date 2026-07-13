@@ -120,8 +120,8 @@ export interface CustomerComplaintTemplateData {
   description: string;
   createdAt: Date;
   logo?: string;
-  elecLogo?: string;
-  elecSign?: string;
+  documentSeal?: string;
+  atikurSign?: string;
 }
 
 export interface HearingNoticeTemplateData {
@@ -144,8 +144,10 @@ export interface HearingNoticeTemplateData {
   receiptNum: string;
   orderNum: string;
   logo?: string;
-  elecLogo?: string;
-  elecSign?: string;
+  documentSeal?: string;
+  atikurSign?: string;
+  ajomSign?: string;
+
   officerName?: string;
   officerDesignation?: string;
 }
@@ -172,8 +174,8 @@ export interface CompletionNoticeTemplateData {
   resolvedDateBn: string;
   receiptNo: string;
   logo?: string;
-  elecLogo?: string;
-  elecSign?: string;
+  documentSeal?: string;
+  chairmanSeal?: string;
   officerName?: string;
   officerDesignation?: string;
 }
@@ -197,8 +199,10 @@ export interface StaffNotGuiltyTemplateData {
   resolvedDateBn: string;
   receiptNo: string;
   logo?: string;
-  elecLogo?: string;
-  elecSign?: string;
+
+  documentSeal?: string;
+  atikurSign?: string;
+  chairmanSign?: string;
   officerName?: string;
   officerDesignation?: string;
 }

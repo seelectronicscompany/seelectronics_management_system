@@ -11,41 +11,46 @@ export default function CompletionNoticeTemplate({
 
   return (
     <div
-      className="relative w-[210mm] mx-auto bg-white p-[20mm] text-[#111] overflow-hidden box-border"
+      className="relative w-[210mm] h-[297mm] mx-auto bg-white p-[16mm] text-[#111] overflow-hidden box-border flex flex-col"
       style={{
         fontFamily: "'SolaimanLipi', sans-serif",
-        lineHeight: "1.6",
-        fontSize: "15px",
+        lineHeight: "1.45",
+        fontSize: "14px",
       }}
     >
-      <div className="mb-4">
-        <h1 className="text-2xl font-black underline underline-offset-4">
+      {/* Title */}
+      <div className="mb-3">
+        <h1 className="text-xl font-black underline underline-offset-4">
           গ্রাহক অবহিতকরণ পত্র (Customer Resolution Notice)
         </h1>
       </div>
 
-      <div className="mb-4 font-bold">
+      {/* Date */}
+      <div className="mb-3 font-bold">
         <p>তারিখঃ {data.resolvedDateBn || today} ইং</p>
       </div>
 
-      <div className="mb-4 text-left">
+      {/* Recipient */}
+      <div className="mb-3 text-left">
         <p>
           প্রিয় সম্মানীত গ্রাহক{" "}
           <span className="font-bold">{data.customer.name}</span>, <br />
           ঠিকানাঃ {data.customer.address} <br />
           মোবাইল নম্বর: <span className="font-bold">{data.customer.phone}</span>
         </p>
-        <p className="mt-2 font-bold">
+        <p className="mt-2 font-bold underline underline-offset-2">
           বিষয়ঃ আপনার দাখিলকৃত অভিযোগের সার্ভিস আইডিঃ {data.complaintId}{" "}
           নিষ্পত্তি ও গৃহীত ব্যবস্থা প্রসঙ্গে।
         </p>
       </div>
 
+      {/* Salutation */}
       <div className="mb-2">
         <p>সম্মানিত গ্রাহক,</p>
       </div>
 
-      <div className="mb-4 text-justify">
+      {/* Apology & Resolution */}
+      <div className="text-justify mb-3">
         <p>
           শুভেচ্ছা নিবেন। প্রথমেই আমাদের প্রতিষ্ঠানের পক্ষ থেকে আন্তরিক দুঃখ
           প্রকাশ করছি যে, গত {data.resolvedDateBn || today} ইং তারিখে আমাদের
@@ -60,14 +65,15 @@ export default function CompletionNoticeTemplate({
         </p>
       </div>
 
-      <div className="mb-4">
-        <p className="font-bold underline mb-2">গৃহীত শাস্তিমূলক ব্যবস্থা</p>
+      {/* Punishment Section */}
+      <div className="mb-3">
+        <p className="font-bold underline mb-1.5">গৃহীত শাস্তিমূলক ব্যবস্থা</p>
         <p className="mb-2 text-justify">
           প্রতিষ্ঠানের শৃঙ্খলা ও সেবার মান বজায় রাখতে উক্ত টেকনিশিয়ানের বিরুদ্ধে
           নিম্নোক্ত শাস্তিমূলক ব্যবস্থা গ্রহণ করা হয়েছে:
         </p>
 
-        <div className="space-y-2">
+        <div className="space-y-1.5">
           <div className="flex gap-2 items-start">
             <span className="font-bold whitespace-nowrap">বিভাগীয় শাস্তি:</span>
             <p className="text-justify">
@@ -98,7 +104,8 @@ export default function CompletionNoticeTemplate({
         </div>
       </div>
 
-      <div className="mb-4 text-justify text-sm">
+      {/* Assurance */}
+      <div className="text-justify mb-3 text-sm">
         <p>
           আমরা আপনাকে নিশ্চিত করছি যে, ভবিষ্যতে আমাদের কোনো প্রতিনিধির কাছ থেকে
           আপনি এমন আচরণের সম্মুখীন হবেন না। আপনার মূল্যবান মতামত আমাদের সেবার
@@ -108,35 +115,37 @@ export default function CompletionNoticeTemplate({
         </p>
       </div>
 
-      <div className="flex justify-between items-end mt-6">
+      {/* Signature Block - pushed to bottom */}
+      <div className="flex justify-between items-end mt-auto pt-2">
         <div className="text-left w-64">
-          {data.elecLogo && (
-            <img
-              src={data.elecLogo}
-              alt="Logo"
-              className="w-[40mm] mb-2 opacity-10 filter grayscale"
-            />
+          {data.documentSeal && (
+            <img src={data.documentSeal} alt="Logo" className="w-[30mm] mb-2" />
           )}
           <p className="font-bold">যোগাযোগের নম্বরঃ ০১৩২২২৪৭৭৭৪</p>
         </div>
 
         <div className="text-center w-64">
-          <div className="h-16 flex items-center justify-center mb-2">
-            {data.elecSign && (
+          <div className="h-14 flex items-center justify-center mb-2">
+            {data.chairmanSeal && (
               <img
-                src={data.elecSign}
+                src={data.chairmanSeal}
                 alt="Signature"
                 className="max-h-full max-w-full object-contain"
               />
             )}
           </div>
           <p className="text-sm">ধন্যবাদান্তে,</p>
-          <div className="border-b border-black w-full my-1"></div>
-          <p className="font-bold underline underline-offset-4 uppercase tracking-tighter">
+
+          <p className="font-bold underline underline-offset-4 uppercase tracking-tighter text-[13px]">
             কাস্টমার রিলেশন বিভাগ
           </p>
           <p className="font-bold">এস ই ইলেকট্রনিক্স</p>
         </div>
+      </div>
+
+      {/* Footer */}
+      <div className="text-[9px] mt-2 text-center text-gray-500 uppercase tracking-widest border-t pt-1.5">
+        SE Electronics / SE Power IPS - সিলেট বিভাগীয় কার্যালয়
       </div>
     </div>
   );

@@ -118,21 +118,24 @@ export default function HearingNoticeTemplate({
 
       <div className="flex justify-between items-end mt-auto">
         <div className="text-left w-64">
-          {data.elecLogo && (
-            <img
-              src={data.elecLogo}
-              alt="Logo"
-              className="w-[40mm] mb-2 opacity-10 filter grayscale"
-            />
+          {data.documentSeal && (
+            <img src={data.documentSeal} alt="Logo" className="w-[30mm] mb-2" />
           )}
           <p className="font-bold text-black">জরুরি যোগাযোগঃ ০১৩২২২৪৭৭৭৪</p>
         </div>
 
         <div className="text-center w-64">
           <div className="h-16 flex items-center justify-center mb-2">
-            {data.elecSign && (
+            {data.atikurSign && (
               <img
-                src={data.elecSign}
+                src={data.atikurSign}
+                alt="Signature"
+                className="max-h-full max-w-full object-contain"
+              />
+            )}
+            {data.ajomSign && (
+              <img
+                src={data.ajomSign}
                 alt="Signature"
                 className="max-h-full max-w-full object-contain"
               />

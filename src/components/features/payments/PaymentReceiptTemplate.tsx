@@ -58,7 +58,7 @@ export default function PaymentReceiptTemplate({
           <table className="w-full border-collapse">
             <tbody>
               <tr>
-                <td className="border border-gray-400 px-4 py-2.5 font-bold w-1/3 bg-gray-50 uppercase text-xs">
+                <td className="border border-gray-400 px-4 py-2.5 font-bold w-1/3 bg-transparent uppercase text-xs">
                   Company Name :
                 </td>
                 <td className="border border-gray-400 px-4 py-2.5 w-2/3 font-semibold text-gray-800 tracking-wide uppercase">
@@ -66,7 +66,7 @@ export default function PaymentReceiptTemplate({
                 </td>
               </tr>
               <tr>
-                <td className="border border-gray-400 px-4 py-2.5 font-bold bg-gray-50 uppercase text-xs">
+                <td className="border border-gray-400 px-4 py-2.5 font-bold bg-transparent uppercase text-xs">
                   Payment Method :
                 </td>
                 <td className="border border-gray-400 px-4 py-2.5 font-semibold text-gray-800 tracking-wide uppercase">
@@ -76,7 +76,7 @@ export default function PaymentReceiptTemplate({
               {data.paymentMethod === "bank" && data.senderBankInfo && (
                 <>
                   <tr>
-                    <td className="border border-gray-400 px-4 py-2.5 font-bold bg-gray-50 uppercase text-xs">
+                    <td className="border border-gray-400 px-4 py-2.5 font-bold bg-transparent uppercase text-xs">
                       Bank Name :
                     </td>
                     <td className="border border-gray-400 px-4 py-2.5">
@@ -84,7 +84,7 @@ export default function PaymentReceiptTemplate({
                     </td>
                   </tr>
                   <tr>
-                    <td className="border border-gray-400 px-4 py-2.5 font-bold bg-gray-50 uppercase text-xs">
+                    <td className="border border-gray-400 px-4 py-2.5 font-bold bg-transparent uppercase text-xs">
                       Account Holder :
                     </td>
                     <td className="border border-gray-400 px-4 py-2.5">
@@ -92,7 +92,7 @@ export default function PaymentReceiptTemplate({
                     </td>
                   </tr>
                   <tr>
-                    <td className="border border-gray-400 px-4 py-2.5 font-bold bg-gray-50 uppercase text-xs">
+                    <td className="border border-gray-400 px-4 py-2.5 font-bold bg-transparent uppercase text-xs">
                       Account Number :
                     </td>
                     <td className="border border-gray-400 px-4 py-2.5">
@@ -104,7 +104,7 @@ export default function PaymentReceiptTemplate({
               {data.paymentMethod !== "bank" && (
                 <>
                   <tr>
-                    <td className="border border-gray-400 px-4 py-2.5 font-bold bg-gray-50 uppercase text-xs">
+                    <td className="border border-gray-400 px-4 py-2.5 font-bold bg-transparent uppercase text-xs">
                       Sender Number :
                     </td>
                     <td className="border border-gray-400 px-4 py-2.5 font-semibold">
@@ -112,10 +112,10 @@ export default function PaymentReceiptTemplate({
                     </td>
                   </tr>
                   <tr>
-                    <td className="border border-gray-400 px-4 py-2.5 font-bold bg-gray-50 uppercase text-xs">
+                    <td className="border border-gray-400 px-4 py-2.5 font-bold bg-transparent uppercase text-xs">
                       Transaction ID :
                     </td>
-                    <td className="border border-gray-400 px-4 py-2.5 font-mono text-gray-700">
+                    <td className="border border-gray-400 px-4 py-2.5 font-bold text-gray-700">
                       {data.transactionId || "N/A"}
                     </td>
                   </tr>
@@ -133,7 +133,7 @@ export default function PaymentReceiptTemplate({
           <table className="w-full border-collapse">
             <tbody>
               <tr>
-                <td className="border border-gray-400 px-4 py-2.5 font-bold w-1/3 bg-gray-50 uppercase text-xs">
+                <td className="border border-gray-400 px-4 py-2.5 font-bold w-1/3 bg-transparent uppercase text-xs">
                   Employee Name :
                 </td>
                 <td className="border border-gray-400 px-4 py-2.5 font-semibold text-gray-800 uppercase tracking-wide">
@@ -141,7 +141,7 @@ export default function PaymentReceiptTemplate({
                 </td>
               </tr>
               <tr>
-                <td className="border border-gray-400 px-4 py-2.5 font-bold bg-gray-50 uppercase text-xs">
+                <td className="border border-gray-400 px-4 py-2.5 font-bold bg-transparent uppercase text-xs">
                   Employee ID :
                 </td>
                 <td className="border border-gray-400 px-4 py-2.5 font-semibold text-gray-800 tracking-wide">
@@ -151,7 +151,7 @@ export default function PaymentReceiptTemplate({
               {data.paymentMethod === "bank" && data.receiverBankInfo && (
                 <>
                   <tr>
-                    <td className="border border-gray-400 px-4 py-2.5 font-bold bg-gray-50 uppercase text-xs">
+                    <td className="border border-gray-400 px-4 py-2.5 font-bold bg-transparent uppercase text-xs">
                       Receiver Bank :
                     </td>
                     <td className="border border-gray-400 px-4 py-2.5">
@@ -159,7 +159,7 @@ export default function PaymentReceiptTemplate({
                     </td>
                   </tr>
                   <tr>
-                    <td className="border border-gray-400 px-4 py-2.5 font-bold bg-gray-50 uppercase text-xs">
+                    <td className="border border-gray-400 px-4 py-2.5 font-bold bg-transparent uppercase text-xs">
                       Bank Account :
                     </td>
                     <td className="border border-gray-400 px-4 py-2.5">
@@ -170,7 +170,7 @@ export default function PaymentReceiptTemplate({
               )}
               {data.paymentMethod !== "bank" && (
                 <tr>
-                  <td className="border border-gray-400 px-4 py-2.5 font-bold bg-gray-50 uppercase text-xs">
+                  <td className="border border-gray-400 px-4 py-2.5 font-bold bg-transparent uppercase text-xs">
                     Receiver Number :
                   </td>
                   <td className="border border-gray-400 px-4 py-2.5 font-semibold">
@@ -179,24 +179,24 @@ export default function PaymentReceiptTemplate({
                 </tr>
               )}
               <tr>
-                <td className="border border-gray-400 px-4 py-2.5 font-bold bg-gray-50 uppercase text-xs">
+                <td className="border border-gray-400 px-4 py-2.5 font-bold bg-transparent uppercase text-xs">
                   Transaction ID :
                 </td>
-                <td className="border border-gray-400 px-4 py-2.5 font-mono text-gray-700">
+                <td className="border border-gray-400 px-4 py-2.5 font-bold text-gray-700">
                   {data.transactionId || "N/A"}
                 </td>
               </tr>
               <tr>
-                <td className="border border-gray-400 px-4 py-3 font-bold bg-gray-50 uppercase text-xs align-top">
+                <td className="border border-gray-400 px-4 py-3 font-bold bg-transparent uppercase text-xs align-top">
                   Description :
                 </td>
-                <td className="border border-gray-400 px-4 py-3 text-sm text-gray-600 italic">
+                <td className="border border-gray-400 px-4 py-3 font-bold text-sm text-gray-600 italic">
                   {data.description ? `: ${data.description}` : "N/A"}
                 </td>
               </tr>
               {data.serviceId && (
                 <tr>
-                  <td className="border border-gray-400 px-4 py-2.5 font-bold bg-gray-50 uppercase text-xs">
+                  <td className="border border-gray-400 px-4 py-2.5 font-bold bg-transparent uppercase text-xs">
                     Service ID :
                   </td>
                   <td className="border border-gray-400 px-4 py-2.5 font-black text-brand tracking-tighter uppercase">

@@ -108,20 +108,24 @@ export default function StaffNotGuiltyTemplate({
 
       <div className="flex justify-between items-end mt-auto pt-2">
         <div className="text-left w-64">
-          {data.elecLogo && (
-            <img
-              src={data.elecLogo}
-              alt="Logo"
-              className="w-[40mm] mb-2 opacity-10 filter grayscale"
-            />
+          {data.documentSeal && (
+            <img src={data.documentSeal} alt="Logo" className="w-[30mm] mb-2" />
           )}
         </div>
 
         <div className="text-center w-64">
           <div className="h-16 flex items-center justify-center mb-2">
-            {data.elecSign && (
+            {data.atikurSign && (
               <img
-                src={data.elecSign}
+                src={data.atikurSign}
+                alt="Signature"
+                className="max-h-full max-w-full object-contain"
+              />
+            )}
+
+            {data.chairmanSign && (
+              <img
+                src={data.chairmanSign}
                 alt="Signature"
                 className="max-h-full max-w-full object-contain"
               />
@@ -133,9 +137,8 @@ export default function StaffNotGuiltyTemplate({
           <p className="font-bold">
             {data.officerName || "মোঃ সাহাব উদ্দিন মাহমুদ"}
           </p>
-          <p className="text-sm">
-            {data.officerDesignation || "চেয়ারম্যান, এস ই ইলেকট্রনিক্স"}
-          </p>
+          <p className="text-sm">চেয়ারম্যান ও অভিযোগ নিষ্পত্তিকারী,</p>
+          <p className="text-sm">এস ই ইলেক্ট্রনিক্স হেড অফিস সিলেট</p>
         </div>
       </div>
       <div className="text-[10px] mt-3 text-center text-gray-500 uppercase tracking-widest border-t pt-2">

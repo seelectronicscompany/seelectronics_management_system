@@ -399,12 +399,28 @@ export default async function generatePDF({
         const receiptNum =
           c.complaintId.replace(/\D/g, "").slice(0, 5) || "14285";
 
-        const elecLogoBase64 = await convertToBase64(
-          path.join(process.cwd(), "src", "assets", "images", "elecLogo.png"),
+        const documentSealBase64 = await convertToBase64(
+          path.join(
+            process.cwd(),
+            "src",
+            "assets",
+            "images",
+            "documentSeal.jpeg",
+          ),
         ).catch(() => undefined);
 
-        const elecSignBase64 = await convertToBase64(
-          path.join(process.cwd(), "src", "assets", "images", "elecSign.png"),
+        const atikurSignBase64 = await convertToBase64(
+          path.join(
+            process.cwd(),
+            "src",
+            "assets",
+            "images",
+            "atikurSign.jpeg",
+          ),
+        ).catch(() => undefined);
+
+        const ajomSignBase64 = await convertToBase64(
+          path.join(process.cwd(), "src", "assets", "images", "ajomSign.jpeg"),
         ).catch(() => undefined);
 
         const data: HearingNoticeTemplateData = {
@@ -427,8 +443,9 @@ export default async function generatePDF({
           receiptNum,
           logo: logoBase64,
           orderNum: receiptNum, // Use receiptNum as orderNum if mapping required
-          elecLogo: elecLogoBase64,
-          elecSign: elecSignBase64,
+          documentSeal: documentSealBase64,
+          atikurSign: atikurSignBase64,
+          ajomSign: ajomSignBase64,
           officerName: c.hearingOfficerName || "",
           officerDesignation: c.hearingOfficerDesignation || "",
         };
@@ -455,14 +472,25 @@ export default async function generatePDF({
         const receiptNo =
           c.complaintId.replace(/\D/g, "").slice(0, 5) || "14285";
 
-        const elecLogoBase64 = await convertToBase64(
-          path.join(process.cwd(), "src", "assets", "images", "elecLogo.png"),
+        const documentSealBase64 = await convertToBase64(
+          path.join(
+            process.cwd(),
+            "src",
+            "assets",
+            "images",
+            "documentSeal.jpeg",
+          ),
         ).catch(() => undefined);
 
-        const elecSignBase64 = await convertToBase64(
-          path.join(process.cwd(), "src", "assets", "images", "elecSign.png"),
+        const chairmanSignBase64 = await convertToBase64(
+          path.join(
+            process.cwd(),
+            "src",
+            "assets",
+            "images",
+            "chairmanSeal.jpeg",
+          ),
         ).catch(() => undefined);
-
         const data: CompletionNoticeTemplateData = {
           complaintId: c.complaintId,
           customer: {
@@ -490,8 +518,8 @@ export default async function generatePDF({
           resolvedDateBn,
           receiptNo,
           logo: logoBase64,
-          elecLogo: elecLogoBase64,
-          elecSign: elecSignBase64,
+          documentSeal: documentSealBase64,
+          chairmanSeal: chairmanSignBase64,
           officerName: c.hearingOfficerName || "",
           officerDesignation: c.hearingOfficerDesignation || "",
         };
@@ -517,12 +545,33 @@ export default async function generatePDF({
         const receiptNo =
           c.complaintId.replace(/\D/g, "").slice(0, 5) || "14285";
 
-        const elecLogoBase64 = await convertToBase64(
-          path.join(process.cwd(), "src", "assets", "images", "elecLogo.png"),
+        const documentSealBase64 = await convertToBase64(
+          path.join(
+            process.cwd(),
+            "src",
+            "assets",
+            "images",
+            "documentSeal.jpeg",
+          ),
+        ).catch(() => undefined);
+        const atikurSignBase64 = await convertToBase64(
+          path.join(
+            process.cwd(),
+            "src",
+            "assets",
+            "images",
+            "atikurSign.jpeg",
+          ),
         ).catch(() => undefined);
 
-        const elecSignBase64 = await convertToBase64(
-          path.join(process.cwd(), "src", "assets", "images", "elecSign.png"),
+        const chairmanSignBase64 = await convertToBase64(
+          path.join(
+            process.cwd(),
+            "src",
+            "assets",
+            "images",
+            "chairmanSeal.jpeg",
+          ),
         ).catch(() => undefined);
 
         const data: StaffNotGuiltyTemplateData = {
@@ -544,8 +593,9 @@ export default async function generatePDF({
           resolvedDateBn,
           receiptNo,
           logo: logoBase64,
-          elecLogo: elecLogoBase64,
-          elecSign: elecSignBase64,
+          documentSeal: documentSealBase64,
+          atikurSign: atikurSignBase64,
+          chairmanSign: chairmanSignBase64,
           officerName: c.hearingOfficerName || "",
           officerDesignation: c.hearingOfficerDesignation || "",
         };
@@ -568,12 +618,24 @@ export default async function generatePDF({
           path.join(process.cwd(), "src", "assets", "images", "logo.jpg"),
         ).catch(() => undefined);
 
-        const elecLogoBase64 = await convertToBase64(
-          path.join(process.cwd(), "src", "assets", "images", "elecLogo.png"),
+        const documentSealBase64 = await convertToBase64(
+          path.join(
+            process.cwd(),
+            "src",
+            "assets",
+            "images",
+            "documentSeal.jpeg",
+          ),
         ).catch(() => undefined);
 
-        const elecSignBase64 = await convertToBase64(
-          path.join(process.cwd(), "src", "assets", "images", "elecSign.png"),
+        const atikurSignBase64 = await convertToBase64(
+          path.join(
+            process.cwd(),
+            "src",
+            "assets",
+            "images",
+            "atikurSign.jpeg",
+          ),
         ).catch(() => undefined);
 
         const data: CustomerComplaintTemplateData = {
@@ -593,8 +655,8 @@ export default async function generatePDF({
           description: c.description,
           createdAt: c.createdAt,
           logo: logoBase64,
-          elecLogo: elecLogoBase64,
-          elecSign: elecSignBase64,
+          documentSeal: documentSealBase64,
+          atikurSign: atikurSignBase64,
         };
 
         html = renderToStaticMarkup(<CustomerComplaintTemplate data={data} />);

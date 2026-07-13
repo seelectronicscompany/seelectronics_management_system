@@ -2,10 +2,9 @@
 
 import { createService } from "@/actions";
 import { contactDetails, productTypes } from "@/constants";
-import { useSideNavContext } from "@/hooks";
 import { ChevronLeft } from "lucide-react";
 import Link from "next/link";
-import { useActionState, useEffect, useState } from "react";
+import { useActionState, useEffect } from "react";
 import { toast } from "react-toastify";
 
 export default function AddServicePage() {
@@ -13,18 +12,6 @@ export default function AddServicePage() {
     createService,
     undefined,
   );
-  const [hasEmptyField, setHasEmptyField] = useState(true);
-  const { openSideNav } = useSideNavContext();
-
-  const checkEmptyField = (event: React.FormEvent<HTMLFormElement>) => {
-    const formData = new FormData(event.currentTarget);
-    const tempServiceInfo = Object.fromEntries(formData);
-    setHasEmptyField(
-      Object.values(tempServiceInfo).some(
-        (value) => value.toString().trim() === "",
-      ),
-    );
-  };
 
   useEffect(() => {
     if (!isPending && response) {
@@ -49,10 +36,7 @@ export default function AddServicePage() {
       </header>
 
       <div className="bg-white rounded-3xl p-8 border border-gray-100 shadow-sm">
-        <form
-          action={createServiceAction}
-          className="space-y-6"
-        >
+        <form action={createServiceAction} className="space-y-6">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
               <label
@@ -141,6 +125,23 @@ export default function AddServicePage() {
                 id="productModel"
               />
             </div>
+            <div>
+              <label
+                htmlFor="type"
+                className="text-sm font-semibold text-gray-700 mb-2 block"
+              >
+                Service Type
+              </label>
+              <select
+                name="type"
+                id="type"
+                required
+                className="w-full px-4 py-3 bg-gray-50 border border-gray-100 rounded-md outline-none focus:ring-2 focus:ring-blue-500 transition-all"
+              >
+                <option value="repair">REPAIR</option>
+                <option value="install">INSTALL</option>
+              </select>
+            </div>
           </div>
 
           <div className="p-4 bg-blue-50 rounded-md border border-blue-100">
@@ -154,10 +155,9 @@ export default function AddServicePage() {
               {contactDetails.customerCare}"
             </p>
           </div>
-
           <button
             type="submit"
-            disabled={isPending || hasEmptyField}
+            disabled={isPending}
             className="w-full py-4 bg-blue-600 text-white rounded-md font-bold shadow-lg shadow-blue-200 hover:bg-blue-700 active:scale-[0.98] transition-all disabled:bg-gray-300 disabled:shadow-none mt-4"
           >
             {isPending ? "Processing..." : "Assign & Send Message"}
