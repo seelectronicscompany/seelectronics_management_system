@@ -110,7 +110,10 @@ export default function HearingNoticeTemplate({
         </p>
       </div>
 
-      <div className="mb-2 text-xs text-black">
+      <div
+        className="mb-2 text-xs text-black font-bold"
+        style={{ fontFamily: "Arial, sans-serif" }}
+      >
         <p>তারিখঃ {data.issueDateBn || today} ইং</p>
         <p>শুনানীর নোটিশ ট্র্যাকিং নাম্বার: {data.complaintId}</p>
         <p>অভিযোগ গ্রহণ নাম্বারঃ {data.receiptNum}</p>
