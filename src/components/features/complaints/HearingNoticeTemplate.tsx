@@ -108,17 +108,13 @@ export default function HearingNoticeTemplate({
           উপস্থিত না হলে তাৎক্ষনিক একপক্ষীয় সিদ্ধান্ত নিয়ে অভিযোগটি সামনে এগিয়ে
           নিতে না পারায় নিস্পত্তি হয়ে যেতে পারে।
         </p>
-      </div>
 
-      <div
-        className="mb-2 text-xs text-black font-bold"
-        style={{ fontFamily: "Arial, sans-serif" }}
-      >
         <p>তারিখঃ {data.issueDateBn || today} ইং</p>
         <p>শুনানীর নোটিশ ট্র্যাকিং নাম্বার: {data.complaintId}</p>
         <p>অভিযোগ গ্রহণ নাম্বারঃ {data.receiptNum}</p>
       </div>
-      <div className="flex justify-between items-end">
+
+      <div className="flex justify-between items-end mt-auto">
         <div className="text-left w-64">
           {data.documentSeal && (
             <img src={data.documentSeal} alt="Logo" className="w-[30mm] mb-2" />
