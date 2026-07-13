@@ -108,7 +108,7 @@ export default function HearingNoticeTemplate({
           উপস্থিত না হলে তাৎক্ষনিক একপক্ষীয় সিদ্ধান্ত নিয়ে অভিযোগটি সামনে এগিয়ে
           নিতে না পারায় নিস্পত্তি হয়ে যেতে পারে।
         </p>
-        <div className="mb-2 text-xs text-black">
+        <div className="mt-2 text-lg text-black font-mono">
           <p>তারিখঃ {data.issueDateBn || today} ইং</p>
           <p>শুনানীর নোটিশ ট্র্যাকিং নাম্বার: {data.complaintId}</p>
           <p>অভিযোগ গ্রহণ নাম্বারঃ {data.receiptNum}</p>
