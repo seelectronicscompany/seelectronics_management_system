@@ -205,6 +205,26 @@ export default function InvoiceWebView({ data }: InvoiceWebViewProps) {
     <table className="w-full text-sm">
       <tbody className="divide-y divide-gray-100">
 
+        {data.subtotal > data.total && (
+          <>
+            <tr className="bg-gradient-to-r from-gray-50 to-white">
+              <td className="p-4 font-black text-gray-500 uppercase text-[13px] tracking-widest border-r border-gray-100">
+                Subtotal
+              </td>
+              <td className="p-4 text-right font-black text-gray-900 text-base">
+                ৳{data.subtotal.toLocaleString()}
+              </td>
+            </tr>
+            <tr className="bg-gradient-to-r from-gray-50 to-white text-red-600">
+              <td className="p-4 font-black uppercase text-[13px] tracking-widest border-r border-gray-100">
+                Referral Discount
+              </td>
+              <td className="p-4 text-right font-black text-base">
+                -৳{(data.subtotal - data.total).toLocaleString()}
+              </td>
+            </tr>
+          </>
+        )}
         {/* Total Bill */}
         <tr className="bg-gradient-to-r from-gray-50 to-white">
           <td className="p-4 font-black text-gray-500 uppercase text-[13px] tracking-widest border-r border-gray-100">

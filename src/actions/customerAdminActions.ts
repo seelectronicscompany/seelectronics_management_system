@@ -130,7 +130,11 @@ export const createCustomer = async (data: any, sendLink = false) => {
     const invoiceNumber = generateInvoiceNumber();
 
     // Track referral info to notify after transaction
-    let referrerInfo: { customerId: string; phone: string; bonusEarned: number } | null = null;
+    let referrerInfo: {
+      customerId: string;
+      phone: string;
+      bonusEarned: number;
+    } | null = null;
 
     // Start a transaction
     // 1. Create customer
@@ -184,7 +188,7 @@ export const createCustomer = async (data: any, sendLink = false) => {
           date: data.invoice.date,
           totalPrice: data.invoice.total,
           invoiceType: "customer-invoice",
-          customerId:customerId
+          customerId: customerId,
         },
       );
     }
@@ -240,7 +244,11 @@ export const createCustomer = async (data: any, sendLink = false) => {
     revalidatePath("/customers");
     revalidatePath("/customer/referral");
     revalidatePath("/referral-payments");
-    const result = { success: true, message: "Customer created successfully", referrerInfo };
+    const result = {
+      success: true,
+      message: "Customer created successfully",
+      referrerInfo,
+    };
 
     // Notify referrer after transaction succeeds
     if (result.success && result.referrerInfo) {
@@ -258,8 +266,6 @@ export const createCustomer = async (data: any, sendLink = false) => {
         console.error("Failed to notify referrer:", e);
       }
     }
-
-    
 
     return result;
   } catch (error) {
@@ -342,7 +348,7 @@ export const updateCustomer = async (
           date: data.invoice.date,
           totalPrice: data.invoice.total,
           invoiceType: "customer-invoice",
-          customerId: customerId
+          customerId: customerId,
         },
       );
     }

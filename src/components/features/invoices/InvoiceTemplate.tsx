@@ -115,6 +115,18 @@ export default function InvoiceTemplate({
                 <td colSpan={6} className="py-3 px-3 border border-black">
                   <div className="flex justify-end items-start">
                     <div className="text-right space-y-2">
+                      {data.subtotal > data.total && (
+                        <>
+                          <div className="text-base">
+                            <span className="font-semibold">Subtotal : </span>
+                            {data.subtotal.toLocaleString()} Tk
+                          </div>
+                          <div className="text-base text-red-600">
+                            <span className="font-semibold">Referral Discount : </span>
+                            -{(data.subtotal - data.total).toLocaleString()} Tk
+                          </div>
+                        </>
+                      )}
                       <div className="text-base">
                         <span className="font-semibold">Total Bill : </span>
                         {data.total.toLocaleString()} Tk

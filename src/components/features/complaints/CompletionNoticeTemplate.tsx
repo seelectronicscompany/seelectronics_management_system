@@ -130,7 +130,8 @@ export default function CompletionNoticeTemplate({
               <img
                 src={data.chairmanSeal}
                 alt="Signature"
-                className="max-h-full max-w-full object-contain"
+                width={160}
+                height={80}
               />
             )}
           </div>
