@@ -110,41 +110,46 @@ export default function HearingNoticeTemplate({
         </p>
       </div>
 
-      <div className="mb-2 text-xs text-black font-mono">
-        <p>তারিখঃ {data.issueDateBn || today} ইং</p>
-        <p>শুনানীর নোটিশ ট্র্যাকিং নাম্বার: {data.complaintId}</p>
-        <p>অভিযোগ গ্রহণ নাম্বারঃ {data.receiptNum}</p>
-      </div>
-
-      <div className="flex justify-between items-end mt-auto">
-        <div className="text-left w-64">
-          {data.documentSeal && (
-            <img src={data.documentSeal} alt="Logo" className="w-[30mm] mb-2" />
-          )}
-          <p className="font-bold text-black">জরুরি যোগাযোগঃ ০১৩২২২৪৭৭৭৪</p>
+      <div className="mt-auto">
+        <div className="mb-2 text-xs text-black font-mono">
+          <p>তারিখঃ {data.issueDateBn || today} ইং</p>
+          <p>শুনানীর নোটিশ ট্র্যাকিং নাম্বার: {data.complaintId}</p>
+          <p>অভিযোগ গ্রহণ নাম্বারঃ {data.receiptNum}</p>
         </div>
-
-        <div className="text-center w-64">
-          <div className="h-16 flex items-center justify-center mb-2">
-            {data.atikurSign && (
+        <div className="flex justify-between items-end">
+          <div className="text-left w-64">
+            {data.documentSeal && (
               <img
-                src={data.atikurSign}
-                alt="Signature"
-                className="max-h-full max-w-full object-contain"
+                src={data.documentSeal}
+                alt="Logo"
+                className="w-[30mm] mb-2"
               />
             )}
-            {data.ajomSign && (
-              <img
-                src={data.ajomSign}
-                alt="Signature"
-                className="max-h-full max-w-full object-contain"
-              />
-            )}
+            <p className="font-bold text-black">জরুরি যোগাযোগঃ ০১৩২২২৪৭৭৭৪</p>
           </div>
-          <p className="text-sm">আদেশ ক্রমে</p>
-          <div className="border-b border-black w-full my-1"></div>
-          <p className="font-bold">এস ই ইলেকট্রনিক্স</p>
-          <p className="text-sm font-bold">সার্ভিস কোয়ালিটি বিভাগ</p>
+
+          <div className="text-center w-64">
+            <div className="h-16 flex items-center justify-center mb-2">
+              {data.atikurSign && (
+                <img
+                  src={data.atikurSign}
+                  alt="Signature"
+                  className="max-h-full max-w-full object-contain"
+                />
+              )}
+              {data.ajomSign && (
+                <img
+                  src={data.ajomSign}
+                  alt="Signature"
+                  className="max-h-full max-w-full object-contain"
+                />
+              )}
+            </div>
+            <p className="text-sm">আদেশ ক্রমে</p>
+            <div className="border-b border-black w-full my-1"></div>
+            <p className="font-bold">এস ই ইলেকট্রনিক্স</p>
+            <p className="text-sm font-bold">সার্ভিস কোয়ালিটি বিভাগ</p>
+          </div>
         </div>
       </div>
     </div>
