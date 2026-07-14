@@ -154,7 +154,7 @@ export const createCustomer = async (data: any, sendLink = false) => {
         discountGiven = finalTotal * 0.04;
         bonusEarned = finalTotal * 0.02;
         finalTotal = finalTotal - discountGiven;
-        finalDue = Math.max(0, finalDue - discountGiven);
+        finalDue = Math.max(0, finalDue);
 
         referrerInfo = {
           customerId: referrer.customerId,
