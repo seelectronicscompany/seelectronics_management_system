@@ -312,7 +312,7 @@ export const updateCustomer = async (
         discountGiven = finalTotal * 0.04;
         bonusEarned = finalTotal * 0.02;
         finalTotal = finalTotal - discountGiven;
-        finalDue = Math.max(0, finalDue - discountGiven);
+        finalDue = Math.max(0, finalDue);
 
         // Update referrer balance and the referral bonus record
         const existingBonus = await db.query.referralBonuses.findFirst({
