@@ -108,9 +108,12 @@ export default function HearingNoticeTemplate({
           উপস্থিত না হলে তাৎক্ষনিক একপক্ষীয় সিদ্ধান্ত নিয়ে অভিযোগটি সামনে এগিয়ে
           নিতে না পারায় নিস্পত্তি হয়ে যেতে পারে।
         </p>
-        <div className="mt-2 text-lg text-black font-mono">
+        <div className="mt-2 text-xs text-black">
           <p>তারিখঃ {data.issueDateBn || today} ইং</p>
-          <p>শুনানীর নোটিশ ট্র্যাকিং নাম্বার: {data.complaintId}</p>
+          <p>
+            শুনানীর নোটিশ ট্র্যাকিং নাম্বার:{" "}
+            <span className="font-mono">{data.complaintId}</span>
+          </p>
           <p>অভিযোগ গ্রহণ নাম্বারঃ {data.receiptNum}</p>
         </div>
       </div>
@@ -118,7 +121,7 @@ export default function HearingNoticeTemplate({
       <div className="flex justify-between items-end mt-auto">
         <div className="text-left w-64">
           {data.documentSeal && (
-            <img src={data.documentSeal} alt="Logo" className="w-[30mm] mb-2" />
+            <img src={data.documentSeal} alt="Logo" className="w-[35mm] mb-2" />
           )}
           <p className="font-bold text-black">জরুরি যোগাযোগঃ ০১৩২২২৪৭৭৭৪</p>
         </div>
