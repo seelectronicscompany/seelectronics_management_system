@@ -132,14 +132,16 @@ export default function HearingNoticeTemplate({
               <img
                 src={data.atikurSign}
                 alt="Signature"
-                className="max-h-full max-w-full object-contain"
+                    width={160}
+              height={80}
               />
             )}
             {data.ajomSign && (
               <img
                 src={data.ajomSign}
                 alt="Signature"
-                className="max-h-full max-w-full object-contain"
+                    width={160}
+              height={80}
               />
             )}
           </div>
