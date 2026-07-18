@@ -136,11 +136,11 @@ export type StaffsType = {
   staffId: string;
   phone: string;
   photoKey: string;
-  photoUrl?: string;
+  photoUrl?: string | null;
   nidFrontPhotoKey: string;
-  nidFrontPhotoUrl?: string;
+  nidFrontPhotoUrl?: string | null;
   nidBackPhotoKey: string;
-  nidBackPhotoUrl?: string;
+  nidBackPhotoUrl?: string | null;
   hasRepairExperience: boolean;
   repairExperienceYears: number | null;
   bankInfo: BankInfo | null;

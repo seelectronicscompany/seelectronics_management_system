@@ -3,8 +3,10 @@ import { verifyCustomerSession } from "@/actions/customerActions";
 import { MobilePageHeader } from "@/components/layout";
 import { formatDate } from "@/utils";
 import { ArrowLeft, CheckCircle, Download, ShieldAlert } from "lucide-react";
+import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { getObjectUrl } from "@/lib/s3";
 
 export default async function ComplaintDocPage({
   params,
@@ -22,6 +24,10 @@ export default async function ComplaintDocPage({
   if (complaint.customerId !== session.customer.customerId) notFound();
   const eleclogo = "/elecLogo.png";
   const elecSign = "/elecSign.png";
+
+  const evidencePhotoUrl = complaint.evidencePhotoKey
+    ? await getObjectUrl(complaint.evidencePhotoKey)
+    : null;
 
   const isProcessing =
     complaint.status === "processing" ||
@@ -273,8 +279,8 @@ export default async function ComplaintDocPage({
                 </h2>
 
                 <p className="text-sm text-gray-600 text-center mb-6">
-                  আপনার অভিযোগটি পর্যালোচনা ও নিষ্পত্তির জন্য নিম্নলিখিত কর্মকর্তার
-                  কাছে প্রেরণ করা হয়েছে।
+                  আপনার অভিযোগটি পর্যালোচনা ও নিষ্পত্তির জন্য নিম্নলিখিত
+                  কর্মকর্তার কাছে প্রেরণ করা হয়েছে।
                 </p>
 
                 <div className="max-w-md mx-auto">
@@ -283,7 +289,8 @@ export default async function ComplaintDocPage({
                       তদন্তকারী কর্মকর্তা (Investigation Officer)
                     </p>
                     <p className="text-xl font-black text-emerald-900 mb-1">
-                      {complaint.hearingOfficerName || "মোঃ সাহাব উদ্দিন মাহমুদ"}
+                      {complaint.hearingOfficerName ||
+                        "মোঃ সাহাব উদ্দিন মাহমুদ"}
                     </p>
                     <p className="font-bold text-emerald-600 mb-3">
                       {complaint.hearingOfficerPhone || "০১৩১০৬৭৩৬০০"}
@@ -291,9 +298,12 @@ export default async function ComplaintDocPage({
 
                     <div className="pt-3 border-t border-gray-100 flex flex-col items-center">
                       <p className="text-sm font-bold text-gray-700">
-                        {complaint.hearingOfficerDesignation || "দায়িত্বরত কর্মকর্তা, প্রশাসনিক শাখা"}
+                        {complaint.hearingOfficerDesignation ||
+                          "দায়িত্বরত কর্মকর্তা, প্রশাসনিক শাখা"}
                       </p>
-                      <p className="text-xs text-gray-500">সিলেট বিভাগীয় কার্যালয়, এস ই ইলেকট্রনিক্স</p>
+                      <p className="text-xs text-gray-500">
+                        সিলেট বিভাগীয় কার্যালয়, এস ই ইলেকট্রনিক্স
+                      </p>
                     </div>
                   </div>
                 </div>
@@ -308,7 +318,10 @@ export default async function ComplaintDocPage({
                     </p>
                     {complaint.punishmentStartDate && (
                       <p className="text-xs font-bold text-red-500 mt-1">
-                        সময়কালঃ {complaint.punishmentStartDate} {complaint.punishmentEndDate ? `- ${complaint.punishmentEndDate}` : ''}
+                        সময়কালঃ {complaint.punishmentStartDate}{" "}
+                        {complaint.punishmentEndDate
+                          ? `- ${complaint.punishmentEndDate}`
+                          : ""}
                       </p>
                     )}
                   </div>
@@ -339,16 +352,17 @@ export default async function ComplaintDocPage({
               </h3>
 
               <p
-                className={`font-bold ${isCompleted
-                  ? "text-green-600"
-                  : isHearing
-                    ? "text-amber-600"
-                    : isProcessing
-                      ? "text-blue-600"
-                      : complaint.status === "under_trial"
-                        ? "text-emerald-300"
-                        : "text-gray-500"
-                  }`}
+                className={`font-bold ${
+                  isCompleted
+                    ? "text-green-600"
+                    : isHearing
+                      ? "text-amber-600"
+                      : isProcessing
+                        ? "text-blue-600"
+                        : complaint.status === "under_trial"
+                          ? "text-emerald-300"
+                          : "text-gray-500"
+                }`}
               >
                 অভিযোগটি{" "}
                 {isCompleted
@@ -476,43 +490,37 @@ export default async function ComplaintDocPage({
               </p>
             </div>
 
-
             {/* স্বাক্ষর */}
             <div className="flex justify-end ">
               <div className="grid grid-cols-2 gap-4 text-sm mt-4">
-              <div className="space-y-2">
-                <div className="w-16 h-16 rounded-full border border-brand/20 flex flex-col items-center justify-center -ml-2 mb-4">
-                  <img src={eleclogo} alt="" />
-                </div>
-                <p>
-                  <span className="font-semibold">তারিখঃ</span>{" "}
-                  <span className="font-mono">
-                    {new Date(complaint.createdAt).toLocaleDateString("bn-BD")}
-                  </span>
-                </p>
-                <p>
-                  <span className="font-semibold">
-                    অভিযোগ ট্র্যাকিং নাম্বার:
-                  </span>{" "}
-                  <span className="font-mono">{complaint.complaintId}</span>
-                </p>
-                <p>
-                  <span className="font-semibold">অভিযোগ গ্রহন নাম্বার:</span>{" "}
-                  <span className="font-mono">
-                    SE{" "}
-                    {complaint.complaintId.replace(/\D/g, "").slice(0, 5) ||
-                      "14285"}
-                  </span>
-                </p>
-              </div>
-              <div></div>
-              <div className="flex flex-col   ">
-                <div className="flex  mt-4 text-sm">
-                  <img src={elecSign}
-                  className="w-full h-full object-contain" alt="" />
+                <div className="space-y-2">
+                  <div className="w-16 h-16 rounded-full border border-brand/20 flex flex-col items-center justify-center -ml-2 mb-4">
+                    <img src={eleclogo} alt="" />
+                  </div>
+                  <p>
+                    <span className="font-semibold">তারিখঃ</span>{" "}
+                    <span className="font-mono">
+                      {new Date(complaint.createdAt).toLocaleDateString(
+                        "bn-BD",
+                      )}
+                    </span>
+                  </p>
+                  <p>
+                    <span className="font-semibold">
+                      অভিযোগ ট্র্যাকিং নাম্বার:
+                    </span>{" "}
+                    <span className="font-mono">{complaint.complaintId}</span>
+                  </p>
+                  <p>
+                    <span className="font-semibold">অভিযোগ গ্রহন নাম্বার:</span>{" "}
+                    <span className="font-mono">
+                      SE{" "}
+                      {complaint.complaintId.replace(/\D/g, "").slice(0, 5) ||
+                        "14285"}
+                    </span>
+                  </p>
                 </div>
               </div>
-            </div>
               <div className="text-center">
                 <p className="font-bold mb-2">বিনীত নিবেদন</p>
                 <div className="border-b border-gray-400 w-32 mx-auto mb-2 opacity-50"></div>
@@ -559,6 +567,26 @@ export default async function ComplaintDocPage({
               </div>
             </div> */}
           </div>
+
+          {/* EVIDENCE PHOTOS */}
+          {evidencePhotoUrl && (
+            <div className="bg-white rounded-[1rem] shadow-sm border border-gray-200 p-6 sm:p-10 mb-10 text-center print:hidden">
+              <h3 className="font-black text-gray-900 text-lg mb-6 pb-2 border-b border-gray-100 flex items-center justify-center gap-2">
+                <span className="bg-brand/10 text-brand p-1.5 rounded-lg">📸</span>
+                সংযুক্ত প্রমাণাদি (Submitted Evidence)
+              </h3>
+              <div className="max-w-xl mx-auto space-y-3">
+                <p className="text-sm font-bold text-gray-600">দাখিলকৃত প্রমাণের ছবি:</p>
+                <div className="border border-gray-200 rounded-2xl overflow-hidden bg-gray-50 flex items-center justify-center p-2 shadow-inner">
+                  <img
+                    src={evidencePhotoUrl}
+                    alt="Evidence"
+                    className="object-contain max-h-[500px] w-full rounded-xl hover:scale-[1.02] transition-transform duration-300"
+                  />
+                </div>
+              </div>
+            </div>
+          )}
         </div>
       </div>
     </div>

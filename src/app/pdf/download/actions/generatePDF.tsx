@@ -13,6 +13,7 @@ import {
   IdCardTemplateData,
   InvoiceTemplateData,
   PaymentReceiptTemplateData,
+  PunishmentTemplateData,
   StaffNotGuiltyTemplateData,
 } from "./pdfTypes";
 
@@ -326,18 +327,38 @@ export default async function generatePDF({
         const complaintDate = new Date(c.createdAt).toLocaleDateString("bn-BD");
         const orderNumber = `SE/HR/${new Date().getFullYear()}/${c.complaintId.replace(/\D/g, "").slice(0, 5)}`;
 
-        // Determine punishment type from adminNote or status
-        const elecLogoBase64 = await convertToBase64(
-          path.join(process.cwd(), "src", "assets", "images", "elecLogo.png"),
+        const documentSealBase64 = await convertToBase64(
+          path.join(
+            process.cwd(),
+            "src",
+            "assets",
+            "images",
+            "documentSeal.jpeg",
+          ),
         ).catch(() => undefined);
 
-        const elecSignBase64 = await convertToBase64(
-          path.join(process.cwd(), "src", "assets", "images", "elecSign.png"),
+        const atikurSignBase64 = await convertToBase64(
+          path.join(
+            process.cwd(),
+            "src",
+            "assets",
+            "images",
+            "atikurSign.jpeg",
+          ),
+        ).catch(() => undefined);
+        const chairmanSignBase64 = await convertToBase64(
+          path.join(
+            process.cwd(),
+            "src",
+            "assets",
+            "images",
+            "chairmanSeal.jpeg",
+          ),
         ).catch(() => undefined);
 
         // Determine punishment type from adminNote or status
         // Handle punishment type from dynamic DB fields or fallback to adminNote detection
-        let punishment: "warning" | "suspension" | "demotion" | "termination" =
+        let punishment: "warning" | "fine" | "suspension" | "demotion" | "termination" =
           (c.punishmentType as any) || "warning";
 
         if (!c.punishmentType && c.adminNote) {
@@ -348,10 +369,12 @@ export default async function generatePDF({
             punishment = "suspension";
           } else if (note.includes("demote") || note.includes("অবনমন")) {
             punishment = "demotion";
+          } else if (note.includes("fine") || note.includes("জরিমানা")) {
+            punishment = "fine";
           }
         }
 
-        const data = {
+        const data: PunishmentTemplateData = {
           orderNumber,
           customerName: c.customer?.name || "",
           customerId: c.customer?.customerId || "",
@@ -373,8 +396,9 @@ export default async function generatePDF({
           signatoryTitle:
             c.hearingOfficerDesignation || "চেয়ারম্যান, এস ই ইলেকট্রনিক্স",
           companyName: "SE Electronics / SE Power IPS",
-          elecLogo: elecLogoBase64,
-          elecSign: elecSignBase64,
+          documentSeal: documentSealBase64,
+          atikurSign: atikurSignBase64,
+          chairmanSign: chairmanSignBase64,
         };
 
         html = renderToStaticMarkup(<PunishmentTemplate data={data} />);

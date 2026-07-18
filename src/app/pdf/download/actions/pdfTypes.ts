@@ -206,3 +206,30 @@ export interface StaffNotGuiltyTemplateData {
   officerName?: string;
   officerDesignation?: string;
 }
+
+export interface PunishmentTemplateData {
+  orderNumber?: string;
+  customerName: string;
+  customerId: string;
+  complaintDate: string;
+  staffName: string;
+  staffId: string;
+  staffRole?: string;
+  staffOffice?: string;
+  trackingNumber: string;
+  subject: string;
+  description: string;
+  investigationResult?: string;
+  punishment: "warning" | "fine" | "suspension" | "demotion" | "termination";
+  punishmentStartDate?: string;
+  punishmentEndDate?: string;
+  fineAmount?: string;
+  newPosition?: string;
+  adminNote?: string;
+  signatoryName?: string;
+  signatoryTitle?: string;
+  companyName?: string;
+  documentSeal?: string;
+  atikurSign?: string;
+  chairmanSign?: string;
+}

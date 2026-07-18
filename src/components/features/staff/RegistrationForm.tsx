@@ -432,7 +432,7 @@ export default function RegistrationForm({
           {nidDocsImages ? (
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
               <InputField
-                src={staffData?.photoUrl}
+                src={staffData?.photoUrl || undefined}
                 label="আপনার ছবি"
                 name="photo"
                 type="file"

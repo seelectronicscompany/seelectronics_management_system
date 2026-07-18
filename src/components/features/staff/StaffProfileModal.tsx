@@ -92,7 +92,7 @@ export default function StaffProfileModal({
       ) : (
         <>
           <div className="size-48 rounded-full overflow-hidden __center mx-auto">
-            <ImageWithLightbox src={staffData.photoUrl} />
+            <ImageWithLightbox src={staffData.photoUrl || undefined} />
           </div>
           <div className="flex flex-col gap-6 mt-10">
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-10">

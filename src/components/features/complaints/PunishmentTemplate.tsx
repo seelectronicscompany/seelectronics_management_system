@@ -1,29 +1,7 @@
+import { PunishmentTemplateData } from "@/app/pdf/download/actions/pdfTypes";
+
 type ComplaintTemplateProps = {
-  data: {
-    orderNumber?: string;
-    customerName: string;
-    customerId: string;
-    complaintDate: string;
-    staffName: string;
-    staffId: string;
-    staffRole?: string;
-    staffOffice?: string;
-    trackingNumber: string;
-    subject: string;
-    description: string;
-    investigationResult?: string;
-    punishment: "warning" | "fine" | "suspension" | "demotion" | "termination";
-    punishmentStartDate?: string;
-    punishmentEndDate?: string;
-    fineAmount?: string;
-    newPosition?: string;
-    adminNote?: string;
-    signatoryName?: string;
-    signatoryTitle?: string;
-    companyName?: string;
-    elecLogo?: string;
-    elecSign?: string;
-  };
+  data: PunishmentTemplateData;
 };
 
 export default function ComplaintTemplate({ data }: ComplaintTemplateProps) {
@@ -179,19 +157,22 @@ export default function ComplaintTemplate({ data }: ComplaintTemplateProps) {
       {/* SIGNATURE SECTION */}
       <div className="flex justify-between items-end mt-4">
         <div className="text-left">
-          {data.elecLogo && (
-            <img
-              src={data.elecLogo}
-              alt="Logo"
-              className="w-[40mm] mb-2 opacity-20 filter grayscale"
-            />
+          {data.documentSeal && (
+            <img src={data.documentSeal} alt="Logo" className="w-[40mm] mb-2" />
           )}
         </div>
         <div className="text-center w-64">
           <div className="h-16 flex items-center justify-center mb-2">
-            {data.elecSign && (
+            {data.atikurSign && (
               <img
-                src={data.elecSign}
+                src={data.atikurSign}
+                alt="Signature"
+                className="max-h-full max-w-full object-contain"
+              />
+            )}
+            {data.chairmanSign && (
+              <img
+                src={data.chairmanSign}
                 alt="Signature"
                 className="max-h-full max-w-full object-contain"
               />

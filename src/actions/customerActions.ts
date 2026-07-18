@@ -116,7 +116,13 @@ export async function markCustomerNotificationAsRead(id: string) {
     }
 }
 
-export async function verifyCustomerSession() {
+export async function verifyCustomerSession(): Promise<{
+    isAuth: boolean;
+    userId?: string;
+    username?: string;
+    role?: string;
+    customer?: any;
+}> {
     const session = await verifySession(false, 'customer');
     if (!session || !session.isAuth) {
         return { isAuth: false };
@@ -132,9 +138,9 @@ export async function verifyCustomerSession() {
 
     return { 
         isAuth: true, 
-        userId: session.userId, 
-        username: session.username, 
-        role: session.role,
+        userId: session.userId as string, 
+        username: session.username as string, 
+        role: session.role as string,
         customer 
     };
 }

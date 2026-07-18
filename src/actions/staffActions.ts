@@ -272,7 +272,7 @@ export const getAllTeamMembers = async () => {
           nidBackPhotoUrl,
           completedServices: staff.successfulServices || 0,
           canceledServices: staff.canceledServices || 0,
-          activeServices:
+          pendingServices:
             (staff.totalServices || 0) -
             (staff.successfulServices || 0) -
             (staff.canceledServices || 0),

@@ -34,6 +34,7 @@ export default function CustomerActionButtons({
       },
       {
         invoiceNumber: customerData.invoiceNumber,
+        customerId: customerData.customerId,
         date: customerData.invoice.date,
         totalPrice: customerData.invoice.total,
         invoiceType: "customer-invoice",
