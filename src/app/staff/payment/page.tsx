@@ -124,11 +124,11 @@ export default async function StaffPaymentHubPage() {
                           <span
                             className={clsx(
                               "px-3 py-0.5 rounded-md text-[10px] lg:text-xs font-black uppercase tracking-wider",
-                              payment.status === "completed"
+                              payment.status === "completed" || payment.status === "credited"
                                 ? "bg-[#dcf8de] text-[#4CAF50]"
                                 : payment.status === "rejected"
                                   ? "bg-rose-50 text-rose-700"
-                                  : "bg-[#4CAF50]/10 text-[#4CAF50]",
+                                  : "bg-blue-50 text-blue-700",
                             )}
                           >
                             {payment.status === "completed"

@@ -5,8 +5,9 @@ import {
   sendInvoiceDownloadLink,
   updatePayment,
   updatePaymentStatus,
+  completePayoutRequest,
 } from "@/actions";
-import { Modal } from "@/components/ui";
+import { Modal, InputField } from "@/components/ui";
 import { paymentInvoiceDownloadLinkMessagePreview } from "@/constants";
 import { CheckCircle, Loader2, X } from "lucide-react";
 import { useRef, useState } from "react";
@@ -21,6 +22,7 @@ export default function PaymentActionButtons({
 }) {
   const [showEditModal, setShowEditModal] = useState(false);
   const [showPaymentInfoModal, setShowPaymentInfoModal] = useState(false);
+  const [showAddPaymentModal, setShowAddPaymentModal] = useState(false);
   const [isUpdating, setIsUpdating] = useState(false);
   const [isStatusUpdating, setIsStatusUpdating] = useState(false);
   const [phoneNumber, setPhoneNumber] = useState(paymentData.staff?.phone!);
@@ -71,7 +73,13 @@ export default function PaymentActionButtons({
   };
 
   const handleStatusUpdate = async (
-    newStatus: "requested" | "pending" | "processing" | "approved" | "rejected" | "completed",
+    newStatus:
+      | "requested"
+      | "pending"
+      | "processing"
+      | "approved"
+      | "rejected"
+      | "completed",
   ) => {
     const confirmed = window.confirm(`Change status to "${newStatus}"?`);
     if (!confirmed) return;
@@ -97,7 +105,6 @@ export default function PaymentActionButtons({
   // Determine next status in the flow
   const getNextStatus = () => {
     if (paymentData.status === "requested") return "approved";
-    if (paymentData.status === "approved") return "completed";
     return null;
   };
 
@@ -105,7 +112,6 @@ export default function PaymentActionButtons({
   const statusLabels: Record<string, string> = {
     requested: "Requested",
     approved: "Approved",
-    completed: "Mark Completed",
   };
 
   return (
@@ -115,7 +121,7 @@ export default function PaymentActionButtons({
         <button
           onClick={() => handleStatusUpdate(nextStatus as any)}
           disabled={isStatusUpdating}
-          title={nextStatus === "approved" ? "Approve Payment Request" : "Mark as Completed"}
+          title="Approve Payment Request"
           className="text-gray-400 hover:text-green-600"
         >
           {isStatusUpdating ? (
@@ -125,8 +131,34 @@ export default function PaymentActionButtons({
           )}
         </button>
       )}
+      {/* Add Payment Button (only for uncompleted withdrawal requests) */}
+      {["requested", "pending", "approved"].includes(paymentData.status) && (
+        <button
+          onClick={() => setShowAddPaymentModal(true)}
+          title="Add Payment details to complete payout"
+          className="text-blue-500 hover:text-blue-600"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            strokeWidth={1.5}
+            stroke="currentColor"
+            className="size-6"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              d="M12 4.5v15m7.5-7.5h-15"
+            />
+          </svg>
+        </button>
+      )}
       {paymentData.status === "completed" && (
-        <span className="text-green-500 cursor-default" title="Payment Completed">
+        <span
+          className="text-green-500 cursor-default"
+          title="Payment Completed"
+        >
           <CheckCircle className="size-6" />
         </span>
       )}
@@ -157,6 +189,12 @@ export default function PaymentActionButtons({
           mode="update"
           paymentInfo={paymentData}
           onClose={() => setShowEditModal(false)}
+        />
+      )}
+      {showAddPaymentModal && (
+        <AddPaymentModal
+          paymentData={paymentData}
+          onClose={() => setShowAddPaymentModal(false)}
         />
       )}
       {showSentLinkModal && (
@@ -291,3 +329,144 @@ export default function PaymentActionButtons({
     </div>
   );
 }
+
+const AddPaymentModal = ({
+  paymentData,
+  onClose,
+}: {
+  paymentData: any;
+  onClose: () => void;
+}) => {
+  const [amount, setAmount] = useState<number>(paymentData.amount || 0);
+  const [paymentDate, setPaymentDate] = useState<string>(
+    new Date().toISOString().split("T")[0]
+  );
+  const [transactionId, setTransactionId] = useState<string>("");
+  const [senderWalletNumber, setSenderWalletNumber] = useState<string>("");
+  const [description, setDescription] = useState<string>("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const paymentMethod = paymentData.paymentMethod || paymentData.staff?.paymentPreference || "bkash";
+  const receiverWallet = paymentData.receiverWalletNumber || paymentData.staff?.walletNumber || "";
+  const receiverBank = paymentData.receiverBankInfo || paymentData.staff?.bankInfo || null;
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+
+    const res = await completePayoutRequest(paymentData.paymentId, {
+      amount,
+      date: new Date(paymentDate),
+      transactionId: paymentMethod !== "cash" && paymentMethod !== "bank" ? transactionId : undefined,
+      senderWalletNumber: paymentMethod !== "cash" && paymentMethod !== "bank" ? senderWalletNumber : undefined,
+      description: description || `Payout completed for withdrawal request`,
+    });
+
+    toast(res.message, { type: res.success ? "success" : "error" });
+    if (res.success) {
+      onClose();
+    }
+    setIsSubmitting(false);
+  };
+
+  return (
+    <Modal isVisible title="Complete Payment (Payout)" onClose={onClose}>
+      <form onSubmit={handleSubmit} className="space-y-4 max-h-[75vh] overflow-y-auto px-1">
+        {/* Staff Details */}
+        <div className="bg-gray-50 p-3 rounded-md border text-sm space-y-1">
+          <div className="font-semibold text-gray-700">Staff Details:</div>
+          <div>Name: <span className="font-medium">{paymentData.staff?.name || "N/A"}</span></div>
+          <div>Phone: <span className="font-medium">{paymentData.staff?.phone || "N/A"}</span></div>
+        </div>
+
+        {/* Pre-populated fields */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <InputField
+            label="Payment Method"
+            disabled
+            value={paymentMethod.toUpperCase()}
+          />
+          {paymentMethod === "bank" ? (
+            <InputField
+              label="Receiver Bank Name"
+              disabled
+              value={receiverBank?.bankName || "N/A"}
+            />
+          ) : (
+            paymentMethod !== "cash" && (
+              <InputField
+                label="Receiver Wallet Number"
+                disabled
+                value={receiverWallet}
+              />
+            )
+          )}
+        </div>
+
+        {paymentMethod === "bank" && receiverBank && (
+          <div className="bg-gray-50 p-3 rounded-md border text-sm space-y-1">
+            <div className="font-semibold text-gray-700">Bank Details:</div>
+            <div>Account Holder: {receiverBank.accountHolderName}</div>
+            <div>Account Number: {receiverBank.accountNumber}</div>
+            <div>Branch: {receiverBank.branchName}</div>
+          </div>
+        )}
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <InputField
+            label="Amount (৳)"
+            type="number"
+            required
+            value={amount}
+            onChange={(e) => setAmount(Number(e.target.value))}
+          />
+          <InputField
+            label="Payment Date"
+            type="date"
+            required
+            value={paymentDate}
+            onChange={(e) => setPaymentDate(e.target.value)}
+          />
+        </div>
+
+        {/* Wallet payment specifics */}
+        {paymentMethod !== "cash" && paymentMethod !== "bank" && (
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <InputField
+              label="Sender Wallet Number"
+              type="tel"
+              required
+              value={senderWalletNumber}
+              onChange={(e) => setSenderWalletNumber(e.target.value)}
+            />
+            <InputField
+              label="Transaction ID"
+              type="text"
+              required
+              value={transactionId}
+              onChange={(e) => setTransactionId(e.target.value)}
+            />
+          </div>
+        )}
+
+        <div className="flex flex-col">
+          <label className="text-sm font-semibold mb-1">Task Description / Note</label>
+          <textarea
+            className="__input p-2 h-20"
+            placeholder="Enter payment or task details"
+            value={description}
+            onChange={(e) => setDescription(e.target.value)}
+          />
+        </div>
+
+        <button
+          type="submit"
+          disabled={isSubmitting}
+          className="__btn w-full disabled:bg-opacity-50"
+        >
+          {isSubmitting ? "Completing Payment..." : "Complete Payment"}
+        </button>
+      </form>
+    </Modal>
+  );
+};

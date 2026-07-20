@@ -5,6 +5,8 @@ import {
   deleteService,
   getServiceMediaUrls,
   updateService,
+  addVirtualBalance,
+  checkServicePaymentExists,
 } from "@/actions";
 import geoData from "@/assets/data/geo-data.json";
 import { StaffMembersModal } from "@/components/features/staff";
@@ -47,7 +49,19 @@ export default function ServiceActionButtons({
   const [showEditModal, setShowEditModal] = useState(false);
   const [showServiceReport, setShowServiceReport] = useState(false);
   const [showViewModal, setShowViewModal] = useState(false);
+  const [showAddBalanceModal, setShowAddBalanceModal] = useState(false);
+  const [hasPaymentCredited, setHasPaymentCredited] = useState(false);
   const toastId = useRef<Id | null>(null);
+
+  useEffect(() => {
+    if (serviceData.status === "completed") {
+      checkServicePaymentExists(serviceData.serviceId).then((res) => {
+        if (res.success && res.exists) {
+          setHasPaymentCredited(true);
+        }
+      });
+    }
+  }, [serviceData.status, serviceData.serviceId]);
 
   const deleteServiceInfo = async () => {
     const confirmed = window.confirm(
@@ -88,6 +102,13 @@ export default function ServiceActionButtons({
           serviceReport={serviceData.staffReport}
           serviceType={serviceData.type}
           onClose={() => setShowServiceReport(false)}
+        />
+      )}
+      {showAddBalanceModal && (
+        <AddBalanceModal
+          serviceData={serviceData}
+          onClose={() => setShowAddBalanceModal(false)}
+          onSuccess={() => setHasPaymentCredited(true)}
         />
       )}
       <div className="flex gap-4">
@@ -208,6 +229,28 @@ export default function ServiceActionButtons({
             />
           </svg>
         </button>
+        {serviceData.status === "completed" && !hasPaymentCredited && (
+          <button
+            title="Add Balance"
+            onClick={() => setShowAddBalanceModal(true)}
+            className="text-green-600 hover:text-green-700"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              strokeWidth={1.5}
+              stroke="currentColor"
+              className="size-6"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M12 6v12m-3-2.818.879.659c1.171.879 3.07.879 4.242 0 1.172-.879 1.172-2.303 0-3.182C13.536 12.219 12.768 12 12 12c-.725 0-1.45-.22-2.003-.659-1.106-.879-1.106-2.303 0-3.182s2.9-.879 4.006 0l.415.33M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
+              />
+            </svg>
+          </button>
+        )}
       </div>
     </>
   );
@@ -257,6 +300,17 @@ const ServiceReportModal = ({
                 {serviceReport?.travelCost} টাকা
               </div>
             </div>
+
+            {serviceReport?.totalCost !== undefined && (
+              <div className="pb-3 border-b">
+                <div className="text-sm text-gray-500 mb-1">
+                  সর্বমোট খরচ কত হয়েছে?
+                </div>
+                <div className="font-medium">
+                  {serviceReport?.totalCost} টাকা
+                </div>
+              </div>
+            )}
           </>
         ) : (
           <div className="pb-3 border-b">
@@ -312,7 +366,11 @@ const AppointModel = ({
     return (
       <StaffMembersModal
         role={serviceData.type === "repair" ? "technician" : "electrician"}
-        canceledStaffId={serviceData.statusHistory?.[0]?.status === "canceled" ? serviceData.staffId : undefined}
+        canceledStaffId={
+          serviceData.statusHistory?.[0]?.status === "canceled"
+            ? serviceData.staffId
+            : undefined
+        }
         headerComponent={
           <button
             onClick={() => {
@@ -734,7 +792,7 @@ const ServiceEditModal = ({
                 </label>
               </div>
               <InputField
-                defaultValue={serviceData.customerAddressPostOffice ?? ''}
+                defaultValue={serviceData.customerAddressPostOffice ?? ""}
                 label="পোস্ট অফিস"
                 name="customerAddressPostOffice"
                 required={false}
@@ -742,7 +800,7 @@ const ServiceEditModal = ({
             </div>
             <div className="flex flex-col sm:flex-row gap-4">
               <InputField
-                defaultValue={serviceData.memoNumber ?? ''}
+                defaultValue={serviceData.memoNumber ?? ""}
                 label="মেমো নং"
                 name="memoNumber"
                 required={false}
@@ -825,7 +883,7 @@ const ServiceEditModal = ({
                 <div className="flex-1 text-start">
                   {selectedProductType === "others" ? (
                     <InputField
-                      defaultValue={serviceData.powerRating ?? ''}
+                      defaultValue={serviceData.powerRating ?? ""}
                       label="পণ্যের ওয়াট/ভিএ"
                       name="powerRating"
                       required={false}
@@ -858,7 +916,7 @@ const ServiceEditModal = ({
                 <label className="text-sm">
                   পণ্যের সমস্যা
                   <textarea
-                    defaultValue={serviceData.reportedIssue ?? ''}
+                    defaultValue={serviceData.reportedIssue ?? ""}
                     name="reportedIssue"
                     placeholder="পণ্যের সমস্যা বিস্তারিত বর্ণনা করুন"
                     className="__input h-32 mt-1"
@@ -1046,6 +1104,76 @@ const ServiceEditModal = ({
           className="__btn w-full disabled:bg-opacity-50"
         >
           {isUpdating ? "Updating..." : "Update"}
+        </button>
+      </form>
+    </Modal>
+  );
+};
+
+const AddBalanceModal = ({
+  serviceData,
+  onClose,
+  onSuccess,
+}: {
+  serviceData: ServicesType;
+  onClose: () => void;
+  onSuccess?: () => void;
+}) => {
+  const [amount, setAmount] = useState<string>("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!serviceData.staffId) {
+      toast.error("No staff assigned to this service.");
+      return;
+    }
+    const parsedAmount = parseFloat(amount);
+    if (isNaN(parsedAmount) || parsedAmount <= 0) {
+      toast.error("Please enter a valid amount greater than 0.");
+      return;
+    }
+
+    setIsSubmitting(true);
+    const res = await addVirtualBalance(
+      serviceData.staffId,
+      parsedAmount,
+      `Service charge added for job #${serviceData.serviceId}`,
+      serviceData.serviceId,
+    );
+
+    toast(res.message, { type: res.success ? "success" : "error" });
+    if (res.success) {
+      if (onSuccess) onSuccess();
+      onClose();
+    }
+    setIsSubmitting(false);
+  };
+
+  return (
+    <Modal isVisible title="Add Balance to Staff" onClose={onClose}>
+      <form onSubmit={handleSubmit} className="space-y-4">
+        <InputField label="Service ID" disabled value={serviceData.serviceId} />
+        <InputField
+          label="Assigned Staff"
+          disabled
+          value={serviceData.staffName || serviceData.staffId || "Unassigned"}
+        />
+        <InputField
+          label="Amount"
+          type="number"
+          required
+          min="1"
+          placeholder="Enter service charge amount"
+          value={amount}
+          onChange={(e) => setAmount(e.target.value)}
+        />
+        <button
+          type="submit"
+          disabled={isSubmitting}
+          className="__btn w-full disabled:bg-opacity-50"
+        >
+          {isSubmitting ? "Adding..." : "Add Balance"}
         </button>
       </form>
     </Modal>

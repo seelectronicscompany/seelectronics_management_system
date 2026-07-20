@@ -79,16 +79,18 @@ export default async function StaffInvoiceDetailsPage({
             <div
               className={clsx(
                 "px-4 py-2 rounded-md text-sm font-black uppercase tracking-[0.2em] shadow-sm border",
-                payment.status === "completed"
+                payment.status === "completed" || payment.status === "credited"
                   ? "bg-emerald-50 text-emerald-700 border-emerald-100"
-                  : payment.status === "processing"
-                    ? "bg-blue-50 text-blue-700 border-blue-100"
-                    : payment.status === "rejected"
-                      ? "bg-rose-50 text-rose-700 border-rose-100"
-                      : "bg-amber-50 text-amber-700 border-amber-100",
+                  : payment.status === "rejected"
+                    ? "bg-rose-50 text-rose-700 border-rose-100"
+                    : "bg-blue-50 text-blue-700 border-blue-100",
               )}
             >
-              {payment.status}
+              {payment.status === "completed"
+                ? "Paid"
+                : payment.status === "credited"
+                  ? "Received"
+                  : payment.status}
             </div>
           </div>
 
@@ -419,16 +421,18 @@ export default async function StaffInvoiceDetailsPage({
             <span
               className={clsx(
                 "text-[13px] font-black uppercase tracking-widest px-2.5 py-1 rounded-md shadow-sm border",
-                payment.status === "completed"
+                payment.status === "completed" || payment.status === "credited"
                   ? "bg-emerald-50 text-emerald-700 border-emerald-100"
-                  : payment.status === "processing"
-                    ? "bg-blue-50 text-blue-700 border-blue-100"
-                    : payment.status === "rejected"
-                      ? "bg-rose-50 text-rose-700 border-rose-100"
-                      : "bg-amber-50 text-amber-700 border-amber-100",
+                  : payment.status === "rejected"
+                    ? "bg-rose-50 text-rose-700 border-rose-100"
+                    : "bg-blue-50 text-blue-700 border-blue-100",
               )}
             >
-              {payment.status}
+              {payment.status === "completed"
+                ? "Paid"
+                : payment.status === "credited"
+                  ? "Received"
+                  : payment.status}
             </span>
           </div>
           <p className="text-sm text-gray-400 font-bold">

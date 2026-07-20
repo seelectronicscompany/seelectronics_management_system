@@ -51,8 +51,10 @@ export default async function PaymentHistoryPage() {
     : "PROCESSING";
 
               const statusStyle =
-                payment.status === "completed"
+                payment.status === "completed" || payment.status === "credited"
                   ? "bg-green-100 text-green-700 border border-green-700"
+                  : payment.status === "rejected"
+                  ? "bg-red-100 text-red-700 border border-red-700"
                   : payment.status === "requested"
                   ? "bg-blue-100 text-blue-700 border border-blue-700"
                   : "bg-yellow-100 text-yellow-700 border border-yellow-700";

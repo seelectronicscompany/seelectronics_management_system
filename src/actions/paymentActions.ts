@@ -341,3 +341,94 @@ export const deletePayment = async (paymentId: string) => {
     return { success: false, message: "Something went wrong" };
   }
 };
+
+export async function completePayoutRequest(
+  paymentId: string,
+  data: {
+    transactionId?: string;
+    senderWalletNumber?: string;
+    senderBankInfo?: any;
+    date: Date;
+    description?: string;
+    amount?: number;
+  }
+) {
+  try {
+    const session = await verifySession(false, "admin");
+    if (!session) return { success: false, message: "Unauthorized" };
+
+    const paymentData = await db.query.payments.findFirst({
+      where: eq(payments.paymentId, paymentId),
+      with: {
+        staff: true,
+      },
+    });
+
+    if (!paymentData) return { success: false, message: "Payment not found" };
+
+    const updateData: any = {
+      status: "completed",
+      date: data.date,
+      description: data.description || paymentData.description,
+    };
+
+    if (data.amount !== undefined) {
+      updateData.amount = data.amount;
+    }
+    if (data.transactionId !== undefined) {
+      updateData.transactionId = data.transactionId;
+    }
+    if (data.senderWalletNumber !== undefined) {
+      updateData.senderWalletNumber = data.senderWalletNumber;
+    }
+    if (data.senderBankInfo !== undefined) {
+      updateData.senderBankInfo = data.senderBankInfo;
+    }
+
+    await db
+      .update(payments)
+      .set(updateData)
+      .where(eq(payments.paymentId, paymentId));
+
+    // Send Notification and SMS
+    const { notifyStaff } = await import("./notificationActions");
+    const amountToNotify = data.amount !== undefined ? data.amount : paymentData.amount;
+    const methodToNotify = paymentData.paymentMethod;
+    const txIdToNotify = data.transactionId || "";
+    
+    const shortSMS = `আপনার পেমেন্ট রিকোয়েস্ট 01310673600 ${methodToNotify} থেকে ${txIdToNotify} (৳${amountToNotify}) সম্পন্ন হয়েছে। ধন্যাবাদ।`;
+    
+    await notifyStaff({
+      staffId: paymentData.staffId,
+      phoneNumber: paymentData.staff.phone!,
+      type: "payment_update",
+      message: `Your payment of ৳${amountToNotify} has been completed!`,
+      shortMessage: shortSMS,
+      link: "/staff/payment",
+    });
+
+    revalidatePath("/payments");
+    revalidatePath("/staff/profile");
+    revalidatePath("/staff/payment");
+    return { success: true, message: "Payment request completed successfully" };
+  } catch (error) {
+    console.error(error);
+    return { success: false, message: "Something went wrong" };
+  }
+}
+
+export async function checkServicePaymentExists(serviceId: string) {
+  try {
+    const session = await verifySession(false);
+    if (!session) return { success: false, exists: false };
+
+    const paymentRecord = await db.query.payments.findFirst({
+      where: eq(payments.serviceId, serviceId),
+    });
+
+    return { success: true, exists: !!paymentRecord };
+  } catch (error) {
+    console.error(error);
+    return { success: false, exists: false };
+  }
+}
