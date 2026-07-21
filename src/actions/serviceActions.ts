@@ -1243,11 +1243,15 @@ export const adminSubmitServiceReport = async ({
 
     const serviceData = await db.query.services.findFirst({
       where: eq(services.serviceId, serviceId),
-      columns: { staffId: true, customerName: true, customerPhone: true, type: true },
+      columns: { staffId: true, customerName: true, customerPhone: true, type: true, status: true },
     });
 
     if (!serviceData) {
       return { success: false, message: "Service not found" };
+    }
+
+    if (serviceData.status !== "service_center") {
+      return { success: false, message: "Only services from the official service center can be reported by admin." };
     }
 
     const report = {

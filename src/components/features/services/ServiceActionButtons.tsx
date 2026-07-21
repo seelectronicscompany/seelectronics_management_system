@@ -148,6 +148,7 @@ export default function ServiceActionButtons({
         <button
           title={serviceData.staffReport ? "View Report" : "Add Report"}
           className="disabled:opacity-30 flex items-center justify-center"
+          disabled={!serviceData.staffReport && serviceData.status !== "service_center"}
           onClick={() => {
             if (serviceData.staffReport) {
               setShowServiceReport(true);
