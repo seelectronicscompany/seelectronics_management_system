@@ -1,11 +1,14 @@
-import { getSubscribersMetadata } from "@/actions";
+import { getSubscribers, getSubscribersMetadata } from "@/actions";
 import { DelayedLoading, SubscriberList, Toolbar } from "@/components";
 import { SearchParams } from "@/types";
 import { Suspense } from "react";
 
 export default async function Subscribers({ searchParams }: { searchParams?: Promise<SearchParams> }) {
   const params = await searchParams
-  const pagination = await getSubscribersMetadata({ ...params })
+  const paginationPromise = getSubscribersMetadata({ ...params })
+  const subscribersPromise = getSubscribers({ ...params })
+
+  const pagination = await paginationPromise
 
   return <div className="flex-1 overflow-hidden flex flex-col gap-4">
     <Toolbar title="Subscribers" pagination={pagination} />
@@ -31,7 +34,7 @@ export default async function Subscribers({ searchParams }: { searchParams?: Pro
               </td>
             </tr>
           }>
-            <SubscriberList {...params} />
+            <SubscriberList {...params} subscribersPromise={subscribersPromise} />
           </Suspense>
         </tbody>
       </table>

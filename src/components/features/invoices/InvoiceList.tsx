@@ -4,8 +4,11 @@ import { SearchParams } from "@/types";
 import { formatDate } from "@/utils";
 import InvoiceActionButtons from "./InvoiceActionButtons";
 
-export default async function InvoiceList(params: SearchParams) {
-  const response = await getInvoices(params);
+export default async function InvoiceList(params: SearchParams & {
+  invoicesPromise?: Promise<{ success: boolean; data?: any[]; message?: string }>;
+}) {
+  const { invoicesPromise, ...p } = params;
+  const response = invoicesPromise ? await invoicesPromise : await getInvoices(p);
 
   if (!response.success) {
     return (

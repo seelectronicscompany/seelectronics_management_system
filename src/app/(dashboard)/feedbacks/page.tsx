@@ -1,4 +1,4 @@
-import { getFeedbacksMetadata } from "@/actions";
+import { getFeedbacks, getFeedbacksMetadata } from "@/actions";
 import { DelayedLoading, FeedbackList, Toolbar } from "@/components";
 import { SearchParams } from "@/types";
 import { Suspense } from "react";
@@ -9,7 +9,10 @@ export default async function Feedback({
   searchParams?: Promise<SearchParams>;
 }) {
   const params = await searchParams;
-  const pagination = await getFeedbacksMetadata({ ...params });
+  const paginationPromise = getFeedbacksMetadata({ ...params });
+  const feedbacksPromise = getFeedbacks({ ...params });
+
+  const pagination = await paginationPromise;
 
   return (
     <div className="flex-1 overflow-hidden flex flex-col gap-4">
@@ -40,7 +43,7 @@ export default async function Feedback({
                 </tr>
               }
             >
-              <FeedbackList {...params} />
+              <FeedbackList {...params} feedbacksPromise={feedbacksPromise} />
             </Suspense>
           </tbody>
         </table>

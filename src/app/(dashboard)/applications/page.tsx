@@ -1,4 +1,4 @@
-import { getApplicationsMetadata } from "@/actions";
+import { getApplications, getApplicationsMetadata } from "@/actions/applicationActions";
 import {
   ApplicationFilter,
   ApplicationList,
@@ -14,7 +14,10 @@ export default async function Applications({
   searchParams?: Promise<SearchParams & { type?: ApplicationTypes }>;
 }) {
   const params = await searchParams;
-  const pagination = await getApplicationsMetadata({ ...params });
+  const paginationPromise = getApplicationsMetadata({ ...params });
+  const applicationsPromise = getApplications({ ...params });
+
+  const pagination = await paginationPromise;
 
   return (
     <div className="flex-1 overflow-hidden flex flex-col gap-4">
@@ -48,7 +51,7 @@ export default async function Applications({
                 </tr>
               }
             >
-              <ApplicationList {...params} />
+              <ApplicationList {...params} applicationsPromise={applicationsPromise} />
             </Suspense>
           </tbody>
         </table>

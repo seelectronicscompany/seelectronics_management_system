@@ -1,4 +1,4 @@
-import { getServicesMetadata } from "@/actions";
+import { getServices, getServicesMetadata } from "@/actions";
 import { DelayedLoading, ServiceList, Spinner, Toolbar } from "@/components";
 import { Suspense } from "react";
 
@@ -17,7 +17,11 @@ export default async function Services({
   const sp = await searchParams;
   const type = prms.type === "repairs" ? "repair" : "install";
   const title = prms.type === "repairs" ? "Repairs" : "Installations";
-  const pagination = await getServicesMetadata({ ...sp, type: type });
+  
+  const paginationPromise = getServicesMetadata({ ...sp, type: type });
+  const servicesPromise = getServices({ ...sp, type: type });
+
+  const pagination = await paginationPromise;
 
   return (
     <div className="flex-1 overflow-hidden flex flex-col gap-4">
@@ -75,7 +79,7 @@ export default async function Services({
                 </tr>
               }
             >
-              <ServiceList {...{ ...sp, type: type }} />
+              <ServiceList {...{ ...sp, type: type }} servicesPromise={servicesPromise} />
             </Suspense>
           </tbody>
         </table>

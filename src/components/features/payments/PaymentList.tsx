@@ -20,10 +20,14 @@ const statusColors: Record<string, string> = {
 };
 
 async function PaymentList(
-  params: SearchParams & { staffId?: string; hideStaff?: boolean },
+  params: SearchParams & {
+    staffId?: string;
+    hideStaff?: boolean;
+    paymentsPromise?: Promise<{ success: boolean; data?: any[]; message?: string }>;
+  },
 ) {
-  const { hideStaff = false, ...p } = params;
-  const response = await getPayments(p);
+  const { hideStaff = false, paymentsPromise, ...p } = params;
+  const response = paymentsPromise ? await paymentsPromise : await getPayments(p);
   if (!response.success) {
     return (
       <tr>

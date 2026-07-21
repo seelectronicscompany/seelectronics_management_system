@@ -10,10 +10,11 @@ export default async function ServiceList(
     type?: "repair" | "install";
     staffId?: string;
     hideStaff?: boolean;
+    servicesPromise?: Promise<{ success: boolean; data?: any[]; message?: string }>;
   },
 ) {
-  const { hideStaff = false, ...p } = params;
-  const response = await getServices(p);
+  const { hideStaff = false, servicesPromise, ...p } = params;
+  const response = servicesPromise ? await servicesPromise : await getServices(p);
 
   if (!response.success) {
     return (

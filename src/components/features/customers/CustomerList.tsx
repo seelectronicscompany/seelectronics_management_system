@@ -7,8 +7,11 @@ import { Crown } from "lucide-react";
 import InvoicePreviewButton from "../../features/invoices/InvoicePreviewButton";
 import CustomerActionButtons from "./CustomerActionButtons";
 
-export default async function CustomerList(params: SearchParams) {
-  const response = await getCustomers(params);
+export default async function CustomerList(params: SearchParams & {
+  customersPromise?: Promise<{ success: boolean; data?: any[]; message?: string }>;
+}) {
+  const { customersPromise, ...p } = params;
+  const response = customersPromise ? await customersPromise : await getCustomers(p);
 
   if (!response.success) {
     return (

@@ -1,4 +1,4 @@
-import { getInvoicesMetadata } from "@/actions";
+import { getInvoices, getInvoicesMetadata } from "@/actions";
 import {
   AddCustomerButton,
   DelayedLoading,
@@ -16,7 +16,10 @@ export default async function Invoices({
   }>;
 }) {
   const params = await searchParams;
-  const pagination = await getInvoicesMetadata({ ...params });
+  const paginationPromise = getInvoicesMetadata({ ...params });
+  const invoicesPromise = getInvoices({ ...params });
+
+  const pagination = await paginationPromise;
 
   return (
     <div className="flex-1 overflow-hidden flex flex-col gap-4">
@@ -72,7 +75,7 @@ export default async function Invoices({
                 </tr>
               }
             >
-              <InvoiceList {...params} />
+              <InvoiceList {...params} invoicesPromise={invoicesPromise} />
             </Suspense>
           </tbody>
         </table>

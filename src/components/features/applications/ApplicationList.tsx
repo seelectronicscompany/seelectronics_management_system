@@ -5,8 +5,11 @@ import { SearchParams } from "@/types";
 import { formatDate } from "@/utils";
 import ApplicationActionButtons from "./ApplicationActionButtons";
 
-export default async function ApplicationList(params: SearchParams) {
-  const response = await getApplications(params);
+export default async function ApplicationList(params: SearchParams & {
+  applicationsPromise?: Promise<{ success: boolean; data?: any[]; message?: string }>;
+}) {
+  const { applicationsPromise, ...p } = params;
+  const response = applicationsPromise ? await applicationsPromise : await getApplications(p);
   if (!response.success) {
     return (
       <tr>
@@ -39,7 +42,7 @@ export default async function ApplicationList(params: SearchParams) {
       <td className="text-left py-4 px-2">{application.applicantPhone}</td>
       <td className="text-left py-4 px-2">{application.applicantDistrict}</td>
       <td className="py-4 px-2 whitespace-nowrap">
-        {ApplicationTypes[application.type]}
+        {ApplicationTypes[application.type as keyof typeof ApplicationTypes]}
       </td>
       <td className="py-4 px-2 whitespace-nowrap">
         {formatDate(application.createdAt!)}

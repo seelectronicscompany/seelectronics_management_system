@@ -1060,43 +1060,40 @@ export async function setStaffCredentials(
 
 export async function getStaffProfileStats(staffId: string) {
   try {
-    // Read the counters from the staff row so the dashboard shows the same
-    // numbers that we keep up to date in the mutation layer.
-    const staffStats = await db.query.staffs.findFirst({
-      where: eq(staffs.staffId, staffId),
-      columns: {
-        totalServices: true,
-        successfulServices: true,
-        canceledServices: true,
-        pendingServices: true,
-        rating: true,
-      },
-    });
+    const [staffStats, ratingResult, staffPayments, paymentSums] = await Promise.all([
+      db.query.staffs.findFirst({
+        where: eq(staffs.staffId, staffId),
+        columns: {
+          totalServices: true,
+          successfulServices: true,
+          canceledServices: true,
+          pendingServices: true,
+          rating: true,
+        },
+      }),
+      db
+        .select({ avg: sql<number>`AVG(${feedbacks.rating})` })
+        .from(feedbacks)
+        .innerJoin(services, eq(services.serviceId, feedbacks.serviceId))
+        .where(eq(services.staffId, staffId))
+        .limit(1),
+      db.query.payments.findMany({
+        where: eq(payments.staffId, staffId),
+        orderBy: (payments, { desc }) => [desc(payments.date)],
+        limit: 10,
+      }),
+      db
+        .select({
+          added: sql<number>`COALESCE(SUM(${payments.amount}) FILTER (WHERE status = 'credited'), 0)`,
+          requested: sql<number>`COALESCE(SUM(${payments.amount}) FILTER (WHERE status IN ('requested', 'pending', 'approved', 'completed')), 0)`,
+        })
+        .from(payments)
+        .where(eq(payments.staffId, staffId)),
+    ]);
 
     if (!staffStats) {
       return { success: false, message: "Staff not found" };
     }
-
-    const ratingResult = await db
-      .select({ avg: sql<number>`AVG(${feedbacks.rating})` })
-      .from(feedbacks)
-      .innerJoin(services, eq(services.serviceId, feedbacks.serviceId))
-      .where(eq(services.staffId, staffId))
-      .limit(1);
-
-    const staffPayments = await db.query.payments.findMany({
-      where: eq(payments.staffId, staffId),
-      orderBy: (payments, { desc }) => [desc(payments.date)],
-      limit: 10,
-    });
-
-    const paymentSums = await db
-      .select({
-        added: sql<number>`COALESCE(SUM(${payments.amount}) FILTER (WHERE status = 'credited'), 0)`,
-        requested: sql<number>`COALESCE(SUM(${payments.amount}) FILTER (WHERE status IN ('requested', 'pending', 'approved', 'completed')), 0)`,
-      })
-      .from(payments)
-      .where(eq(payments.staffId, staffId));
 
     const sums = paymentSums[0];
     const totalEarnings = Number(sums.added);
@@ -1136,48 +1133,53 @@ export async function refreshStaffStats(
 
 export async function updateStaffStats(staffId: string) {
   try {
-    const totalResult = await db
-      .select({ count: sql<number>`count(*)` })
-      .from(services)
-      .where(eq(services.staffId, staffId));
+    const [
+      totalResult,
+      successResult,
+      canceledResult,
+      pendingResult,
+      ratingResult,
+    ] = await Promise.all([
+      db
+        .select({ count: sql<number>`count(*)` })
+        .from(services)
+        .where(eq(services.staffId, staffId)),
+      db
+        .select({ count: sql<number>`count(*)` })
+        .from(services)
+        .where(
+          and(eq(services.staffId, staffId), eq(services.status, "completed")),
+        ),
+      db
+        .select({ count: sql<number>`count(*)` })
+        .from(services)
+        .where(
+          and(
+            eq(services.staffId, staffId),
+            sql`${services.status} in ('canceled', 'appointment_retry')`,
+          ),
+        ),
+      db
+        .select({ count: sql<number>`count(*)` })
+        .from(services)
+        .where(
+          and(
+            eq(services.staffId, staffId),
+            sql`${services.status} not in ('completed', 'canceled', 'appointment_retry')`,
+          ),
+        ),
+      db
+        .select({ avg: sql<number>`AVG(${feedbacks.rating})` })
+        .from(feedbacks)
+        .innerJoin(services, eq(services.serviceId, feedbacks.serviceId))
+        .where(eq(services.staffId, staffId))
+        .limit(1),
+    ]);
+
     const totalCount = Number(totalResult[0]?.count || 0);
-
-    const successResult = await db
-      .select({ count: sql<number>`count(*)` })
-      .from(services)
-      .where(
-        and(eq(services.staffId, staffId), eq(services.status, "completed")),
-      );
     const successCount = Number(successResult[0]?.count || 0);
-
-    const canceledResult = await db
-      .select({ count: sql<number>`count(*)` })
-      .from(services)
-      .where(
-        and(
-          eq(services.staffId, staffId),
-          sql`${services.status} in ('canceled', 'appointment_retry')`,
-        ),
-      );
     const canceledCount = Number(canceledResult[0]?.count || 0);
-
-    const pendingResult = await db
-      .select({ count: sql<number>`count(*)` })
-      .from(services)
-      .where(
-        and(
-          eq(services.staffId, staffId),
-          sql`${services.status} not in ('completed', 'canceled', 'appointment_retry')`,
-        ),
-      );
     const pendingCount = Number(pendingResult[0]?.count || 0);
-
-    const ratingResult = await db
-      .select({ avg: sql<number>`AVG(${feedbacks.rating})` })
-      .from(feedbacks)
-      .innerJoin(services, eq(services.serviceId, feedbacks.serviceId))
-      .where(eq(services.staffId, staffId))
-      .limit(1);
     const rating = Number(ratingResult[0]?.avg) || 0;
 
     await db

@@ -1,4 +1,4 @@
-import { getCustomersMetadata } from "@/actions";
+import { getCustomers, getCustomersMetadata } from "@/actions";
 import {
   AddCustomerButton,
   CustomerList,
@@ -14,7 +14,10 @@ export default async function Customers({
   searchParams?: Promise<SearchParams>;
 }) {
   const params = await searchParams;
-  const pagination = await getCustomersMetadata({ ...params });
+  const paginationPromise = getCustomersMetadata({ ...params });
+  const customersPromise = getCustomers({ ...params });
+
+  const pagination = await paginationPromise;
 
   return (
     <div className="flex-1 overflow-hidden flex flex-col gap-4">
@@ -70,7 +73,7 @@ export default async function Customers({
                 </tr>
               }
             >
-              <CustomerList {...params} />
+              <CustomerList {...params} customersPromise={customersPromise} />
             </Suspense>
           </tbody>
         </table>

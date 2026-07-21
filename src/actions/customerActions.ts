@@ -201,62 +201,71 @@ export async function applyForVipCard() {
 
 export async function getCustomerProfileStats(customerId: string) {
     try {
-        const [customerData] = await db.select({ phone: customers.phone, invoiceNumber: customers.invoiceNumber })
-            .from(customers)
-            .where(eq(customers.customerId, customerId))
-            .limit(1);
+        const [customerDataResult, serviceCount] = await Promise.all([
+            db.select({ phone: customers.phone, invoiceNumber: customers.invoiceNumber })
+                .from(customers)
+                .where(eq(customers.customerId, customerId))
+                .limit(1),
+            db.select({ count: count() })
+                .from(services)
+                .where(eq(services.customerId, customerId))
+        ]);
 
+        const customerData = customerDataResult[0];
         if (!customerData) return { success: false, message: "Customer not found" };
 
-        const serviceCount = await db.select({ count: count() })
-            .from(services)
-            .where(eq(services.customerId, customerId));
-
-        const subscriptionCount = await db.select({ count: count() })
+        const subscriptionCountPromise = db.select({ count: count() })
             .from(subscriptions)
             .where(and(
                 eq(subscriptions.phone, customerData.phone),
                 eq(subscriptions.isActive, true)
             ));
 
+        const { invoices, products } = await import("@/db/schema");
+        const invoiceDataPromise = customerData.invoiceNumber
+            ? db.select({ id: invoices.id, due: invoices.dueAmount })
+                .from(invoices)
+                .where(eq(invoices.invoiceNumber, customerData.invoiceNumber))
+                .limit(1)
+            : Promise.resolve([]);
+
+        const [subscriptionCount, invoiceDataResult] = await Promise.all([
+            subscriptionCountPromise,
+            invoiceDataPromise
+        ]);
+
         let dueAmount = 0;
         let isWarrantyExpired = false;
         let warrantyExpiryDate: Date | null = null;
 
-        if (customerData.invoiceNumber) {
-            const { invoices, products } = await import("@/db/schema");
-            const [invoiceData] = await db.select({ id: invoices.id, due: invoices.dueAmount })
-                .from(invoices)
-                .where(eq(invoices.invoiceNumber, customerData.invoiceNumber))
-                .limit(1);
-            if (invoiceData) {
-                if (invoiceData.due) dueAmount = invoiceData.due;
+        const invoiceData = invoiceDataResult[0];
+        if (invoiceData) {
+            if (invoiceData.due) dueAmount = invoiceData.due;
 
-                const dbProducts = await db.select({
-                    warrantyStartDate: products.warrantyStartDate,
-                    warrantyDurationMonths: products.warrantyDurationMonths
-                }).from(products)
-                .where(eq(products.invoiceId, invoiceData.id));
+            const dbProducts = await db.select({
+                warrantyStartDate: products.warrantyStartDate,
+                warrantyDurationMonths: products.warrantyDurationMonths
+            }).from(products)
+            .where(eq(products.invoiceId, invoiceData.id));
 
-                if (dbProducts.length > 0) {
-                    let hasActive = false;
-                    const now = new Date();
-                    for (const p of dbProducts) {
-                        const expiry = new Date(p.warrantyStartDate);
-                        expiry.setMonth(expiry.getMonth() + p.warrantyDurationMonths);
-                        
-                        if (warrantyExpiryDate === null || expiry > warrantyExpiryDate) {
-                            warrantyExpiryDate = expiry;
-                        }
-
-                        if (expiry >= now) {
-                            hasActive = true;
-                        }
+            if (dbProducts.length > 0) {
+                let hasActive = false;
+                const now = new Date();
+                for (const p of dbProducts) {
+                    const expiry = new Date(p.warrantyStartDate);
+                    expiry.setMonth(expiry.getMonth() + p.warrantyDurationMonths);
+                    
+                    if (warrantyExpiryDate === null || expiry > warrantyExpiryDate) {
+                        warrantyExpiryDate = expiry;
                     }
-                    isWarrantyExpired = !hasActive;
-                } else {
-                    isWarrantyExpired = true;
+
+                    if (expiry >= now) {
+                        hasActive = true;
+                    }
                 }
+                isWarrantyExpired = !hasActive;
+            } else {
+                isWarrantyExpired = true;
             }
         }
 

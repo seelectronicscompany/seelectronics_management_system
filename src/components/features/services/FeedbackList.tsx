@@ -7,8 +7,11 @@ import {
 import { SearchParams } from "@/types";
 import { formatDate } from "@/utils";
 
-async function FeedbackList(params: SearchParams) {
-  const response = await getFeedbacks(params);
+async function FeedbackList(params: SearchParams & {
+  feedbacksPromise?: Promise<{ success: boolean; data?: any[]; message?: string }>;
+}) {
+  const { feedbacksPromise, ...p } = params;
+  const response = feedbacksPromise ? await feedbacksPromise : await getFeedbacks(p);
 
   if (!response.success) {
     return (

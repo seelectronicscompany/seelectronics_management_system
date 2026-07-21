@@ -6,8 +6,11 @@ import SubscriberActionButtons from './SubscriberActionButtons';
 import { CopyButton, StatusBadge } from '@/components/ui';
 import ServiceCounter from './ServiceCounter';
 
-export default async function SubscriberList(params: SearchParams) {
-  const response = await getSubscribers(params);
+export default async function SubscriberList(params: SearchParams & {
+  subscribersPromise?: Promise<{ success: boolean; data?: any[]; message?: string }>;
+}) {
+  const { subscribersPromise, ...p } = params;
+  const response = subscribersPromise ? await subscribersPromise : await getSubscribers(p);
 
   if (!response.success) {
     return <tr>

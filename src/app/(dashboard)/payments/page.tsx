@@ -1,4 +1,4 @@
-import { getPaymentsMetadata } from "@/actions";
+import { getPayments, getPaymentsMetadata } from "@/actions";
 import {
   AddBalanceButton,
   AddPaymentButton,
@@ -15,7 +15,10 @@ export default async function Payments({
   searchParams?: Promise<SearchParams>;
 }) {
   const params = await searchParams;
-  const pagination = await getPaymentsMetadata({ ...params });
+  const paginationPromise = getPaymentsMetadata({ ...params });
+  const paymentsPromise = getPayments({ ...params });
+
+  const pagination = await paginationPromise;
 
   return (
     <div className="flex-1 overflow-hidden flex flex-col gap-4">
@@ -48,7 +51,7 @@ export default async function Payments({
                 </tr>
               }
             >
-              <PaymentList {...params} />
+              <PaymentList {...params} paymentsPromise={paymentsPromise} />
             </Suspense>
           </tbody>
         </table>
