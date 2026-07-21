@@ -24,6 +24,11 @@ export default async function Payments({
     <div className="flex-1 overflow-hidden flex flex-col gap-4">
       <Toolbar
         title="Payments"
+        actions={
+          <div className="flex items-center gap-2">
+            <AddPaymentButton />
+          </div>
+        }
         pagination={pagination}
       />
       <div className="overflow-auto flex-1">
