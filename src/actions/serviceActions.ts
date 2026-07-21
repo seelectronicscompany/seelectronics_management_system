@@ -743,6 +743,22 @@ export const updateService = async (
       ...restData
     } = validatedData;
 
+    const reportResolvedStr = formData.get("reportResolved") as string | null;
+    const reportExplanation = formData.get("reportExplanation") as string | null;
+    const reportTravelCostStr = formData.get("reportTravelCost") as string | null;
+    const reportTotalCostStr = formData.get("reportTotalCost") as string | null;
+
+    let staffReport = undefined;
+    if (reportResolvedStr !== null) {
+      const resolved = reportResolvedStr === "true";
+      staffReport = {
+        resolved,
+        explanation: resolved ? reportExplanation || "" : undefined,
+        travelCost: resolved && reportTravelCostStr ? Number(reportTravelCostStr) : undefined,
+        totalCost: resolved && reportTotalCostStr ? Number(reportTotalCostStr) : undefined,
+      };
+    }
+
     const currentServiceStatus = (
       await db.query.serviceStatusHistory.findFirst({
         where: eq(serviceStatusHistory.serviceId, serviceId),
@@ -759,6 +775,10 @@ export const updateService = async (
             status: serviceStatus as any,
             resolvedBy: serviceStatus === "completed" ? "service_center" : null,
           }),
+        ...(staffReport !== undefined && {
+          staffReport,
+          ...(staffReport.resolved && { resolvedBy: "service_center" }),
+        }),
       })
       .where(eq(services.serviceId, serviceId))
       .returning({
