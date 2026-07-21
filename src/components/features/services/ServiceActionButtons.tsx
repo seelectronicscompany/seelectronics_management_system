@@ -7,6 +7,7 @@ import {
   updateService,
   addVirtualBalance,
   checkServicePaymentExists,
+  adminSubmitServiceReport,
 } from "@/actions";
 import geoData from "@/assets/data/geo-data.json";
 import { StaffMembersModal } from "@/components/features/staff";
@@ -50,6 +51,7 @@ export default function ServiceActionButtons({
   const [showServiceReport, setShowServiceReport] = useState(false);
   const [showViewModal, setShowViewModal] = useState(false);
   const [showAddBalanceModal, setShowAddBalanceModal] = useState(false);
+  const [showAddReportModal, setShowAddReportModal] = useState(false);
   const [hasPaymentCredited, setHasPaymentCredited] = useState(false);
   const toastId = useRef<Id | null>(null);
 
@@ -144,10 +146,16 @@ export default function ServiceActionButtons({
           </svg>
         </button>
         <button
-          title="View Report"
+          title={serviceData.staffReport ? "View Report" : "Add Report"}
           className="disabled:opacity-30 flex items-center justify-center"
-          disabled={!serviceData.staffReport}
-          onClick={() => setShowServiceReport(true)}
+          disabled={!serviceData.staffReport && serviceData.status !== "service_center"}
+          onClick={() => {
+            if (serviceData.staffReport) {
+              setShowServiceReport(true);
+            } else {
+              setShowAddReportModal(true);
+            }
+          }}
         >
           <FileText stroke="currentColor" size={20} className="sm:w-6 sm:h-6" />
         </button>
@@ -1264,3 +1272,118 @@ const AddBalanceModal = ({
     </Modal>
   );
 };
+
+const AddReportModal = ({
+  serviceData,
+  onClose,
+}: {
+  serviceData: ServicesType;
+  onClose: () => void;
+}) => {
+  const [resolved, setResolved] = useState<boolean>(true);
+  const [explanation, setExplanation] = useState("");
+  const [travelCost, setTravelCost] = useState("");
+  const [totalCost, setTotalCost] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (resolved && (!explanation || !travelCost || !totalCost)) {
+      toast.error("অনুগ্রহ করে প্রয়োজনীয় তথ্য গুলো পূরণ করুন।");
+      return;
+    }
+    setIsSubmitting(true);
+    const res = await adminSubmitServiceReport({
+      serviceId: serviceData.serviceId,
+      resolved,
+      explanation: resolved ? explanation : undefined,
+      travelCost: resolved ? Number(travelCost) : undefined,
+      totalCost: resolved ? Number(totalCost) : undefined,
+    });
+    setIsSubmitting(false);
+    toast(res.message, { type: res.success ? "success" : "error" });
+    if (res.success) {
+      onClose();
+    }
+  };
+
+  return (
+    <Modal isVisible title="Add Service Report" onClose={onClose}>
+      <form onSubmit={handleSubmit} className="space-y-4">
+        <div>
+          <label className="block text-sm font-medium mb-1">
+            কাস্টমারের পণ্যের সার্ভিসটি কি সম্পন্ন হয়েছে?
+          </label>
+          <div className="flex gap-4">
+            <label className="flex items-center gap-2 cursor-pointer">
+              <input
+                type="radio"
+                name="resolved"
+                checked={resolved === true}
+                onChange={() => setResolved(true)}
+                className="size-4"
+              />
+              হ্যাঁ
+            </label>
+            <label className="flex items-center gap-2 cursor-pointer">
+              <input
+                type="radio"
+                name="resolved"
+                checked={resolved === false}
+                onChange={() => setResolved(false)}
+                className="size-4"
+              />
+              না
+            </label>
+          </div>
+        </div>
+
+        {resolved && (
+          <>
+            <div>
+              <label className="block text-sm font-medium mb-1">
+                প্রোডাক্ট এর কি সমস্যা ছিল এবং কি কি পার্টস ঠিক বা পরিবর্তন করতে হয়েছে?
+                <span className="text-red-500 ml-1">*</span>
+              </label>
+              <textarea
+                value={explanation}
+                onChange={(e) => setExplanation(e.target.value)}
+                placeholder="সমস্যা ও সমাধানের বিবরণ লিখুন..."
+                className="w-full bg-white border rounded-md p-3 text-sm focus:border-brand focus:ring-0 h-28 outline-none"
+                required
+              />
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <InputField
+                label="যাতায়াত খরচ কত হয়েছে?"
+                type="number"
+                required
+                placeholder="0.00"
+                value={travelCost}
+                onChange={(e) => setTravelCost(e.target.value)}
+              />
+              <InputField
+                label="সর্বমোট খরচ কত হয়েছে?"
+                type="number"
+                required
+                placeholder="0.00"
+                value={totalCost}
+                onChange={(e) => setTotalCost(e.target.value)}
+              />
+            </div>
+          </>
+        )}
+
+        <button
+          type="submit"
+          disabled={isSubmitting}
+          className="__btn w-full disabled:bg-opacity-50"
+        >
+          {isSubmitting ? "সাবমিট হচ্ছে..." : "রিপোর্ট সাবমিট করুন"}
+        </button>
+      </form>
+    </Modal>
+  );
+};
+

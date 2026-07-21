@@ -27,7 +27,9 @@ import { useRouter } from "next/navigation";
 
 export default function ServiceReport({
   serviceData,
+  isUnregistered = false,
 }: {
+  isUnregistered?: boolean;
   serviceData: {
     serviceId: string;
     serviceType: "install" | "repair";
@@ -285,18 +287,23 @@ export default function ServiceReport({
               {/* Close */}
               <button
                 onClick={() => setCurrentScreen("journey")}
-                className="flex-1 py-3 rounded-xl font-bold text-sm bg-gray-100 text-gray-700 hover:bg-gray-200 active:scale-95 transition-all"
+                className={clsx(
+                  "py-3 rounded-xl font-bold text-sm bg-gray-100 text-gray-700 hover:bg-gray-200 active:scale-95 transition-all",
+                  isUnregistered ? "w-full" : "flex-1"
+                )}
               >
                 Close
               </button>
 
               {/* Go Dashboard */}
-              <button
-                onClick={() => router.push("/staff/profile")}
-                className="flex-1 py-3 rounded-xl font-bold text-sm bg-gradient-to-r from-green-500 to-emerald-500 text-white shadow-md hover:from-green-600 hover:to-emerald-600 active:scale-95 transition-all"
-              >
-                Dashboard
-              </button>
+              {!isUnregistered && (
+                <button
+                  onClick={() => router.push("/staff/profile")}
+                  className="flex-1 py-3 rounded-xl font-bold text-sm bg-gradient-to-r from-green-500 to-emerald-500 text-white shadow-md hover:from-green-600 hover:to-emerald-600 active:scale-95 transition-all"
+                >
+                  Dashboard
+                </button>
+              )}
             </div>
           </div>
         </div>

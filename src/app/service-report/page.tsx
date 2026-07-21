@@ -33,60 +33,118 @@ export default async function ServiceReportPage({ searchParams }: { searchParams
     const statusArray = serviceData.statusHistory.map(status => status.status)
 
     if (statusHistory.status === 'completed' || statusHistory.status === 'canceled') {
-        return (
-            <StaffLayout balance={stats?.availableBalance || 0}>
-                <div className="flex flex-col items-center text-center px-4 py-16">
-                    <div className={clsx(
-                        "p-4 rounded-full mb-6",
-                        statusHistory.status === 'completed' ? 'bg-green-100 text-green-600' : 'bg-red-100 text-red-500'
-                    )}>
-                        {statusHistory.status === 'completed' ? (
-                            <CheckCircle2 size={80} strokeWidth={1.5} />
-                        ) : (
-                            <XCircle size={80} strokeWidth={1.5} />
-                        )}
-                    </div>
-                    <h2 className="text-2xl font-bold text-gray-800 mb-2">
-                        {statusHistory.status === 'completed' ? 'সার্ভিসিং তথ্য প্রেরণ করা হয়েছে' : 'সার্ভিসটি বাতিল করা হয়েছে'}
-                    </h2>
-                    <p className="text-gray-500 font-medium mb-8">
-                        {statusHistory.status === 'completed' 
-                            ? 'ধন্যবাদ! আপনার রিপোর্ট সফলভাবে গ্রহণ করা হয়েছে।' 
-                            : 'এই সার্ভিসের রিপোর্ট আর প্রদান করা সম্ভব নয়।'}
-                    </p>
+        const content = (
+            <div className="flex flex-col items-center text-center px-4 py-16">
+                <div className={clsx(
+                    "p-4 rounded-full mb-6",
+                    statusHistory.status === 'completed' ? 'bg-green-100 text-green-600' : 'bg-red-100 text-red-500'
+                )}>
+                    {statusHistory.status === 'completed' ? (
+                        <CheckCircle2 size={80} strokeWidth={1.5} />
+                    ) : (
+                        <XCircle size={80} strokeWidth={1.5} />
+                    )}
+                </div>
+                <h2 className="text-2xl font-bold text-gray-800 mb-2">
+                    {statusHistory.status === 'completed' ? 'সার্ভিসিং তথ্য প্রেরণ করা হয়েছে' : 'সার্ভিসটি বাতিল করা হয়েছে'}
+                </h2>
+                <p className="text-gray-500 font-medium mb-8">
+                    {statusHistory.status === 'completed' 
+                        ? 'ধন্যবাদ! আপনার রিপোর্ট সফলভাবে গ্রহণ করা হয়েছে।' 
+                        : 'এই সার্ভিসের রিপোর্ট আর প্রদান করা সম্ভব নয়।'}
+                </p>
+                {session.isAuth && (
                     <Link 
                         href="/staff/profile" 
                         className="bg-brand text-white px-8 py-3 rounded-md font-bold shadow-lg hover:bg-brand-800 transition-all active:scale-95"
                     >
                         Back to Dashboard
                     </Link>
+                )}
+            </div>
+        );
+
+        if (session.isAuth) {
+            return (
+                <StaffLayout balance={stats?.availableBalance || 0}>
+                    {content}
+                </StaffLayout>
+            );
+        } else {
+            return (
+                <div className="min-h-screen bg-gray-50 flex flex-col">
+                    <header className="sticky top-0 z-50 bg-[#0A1A3A] text-white shadow-lg">
+                        <div className="max-w-4xl mx-auto px-4 h-14 md:h-16 flex items-center justify-between">
+                            <h1 className="font-bold text-sm sm:text-base p-1">Service Report</h1>
+                            <div className="w-8 h-8 sm:w-10 sm:h-10 bg-white/20 rounded-md flex items-center justify-center border border-white/20">
+                                <span className="text-base font-bold">SE</span>
+                            </div>
+                        </div>
+                    </header>
+                    <main className="flex-1 w-full max-w-4xl mx-auto p-4">
+                        {content}
+                    </main>
                 </div>
-            </StaffLayout>
-        )
+            );
+        }
     }
 
-    return (
-        <StaffLayout balance={stats?.availableBalance || 0}>
-            <div className="p-4 space-y-6">
-                 {/* Page Title */}
-                <div className="flex items-center gap-3 mb-2">
-                    <div className="p-2 bg-brand/10 rounded-md text-brand">
-                        <Wrench size={20} />
+    if (session.isAuth) {
+        return (
+            <StaffLayout balance={stats?.availableBalance || 0}>
+                <div className="p-4 space-y-6">
+                    <div className="flex items-center gap-3 mb-2">
+                        <div className="p-2 bg-brand/10 rounded-md text-brand">
+                            <Wrench size={20} />
+                        </div>
+                        <h1 className="text-xl font-bold text-gray-800">Submit Service Report</h1>
                     </div>
-                    <h1 className="text-xl font-bold text-gray-800">Submit Service Report</h1>
-                </div>
 
-                <ServiceReport
-                    serviceData={{
-                        serviceId: serviceData.serviceId,
-                        serviceType: serviceData.type ?? 'repair',
-                        serviceStatus: statusHistory.status ?? 'pending',
-                        statusArray: statusArray.map(s => s ?? '').filter(Boolean),
-                        customerName: serviceData.customerName,
-                        customerPhone: serviceData.customerPhone
-                    }}
-                />
+                    <ServiceReport
+                        isUnregistered={false}
+                        serviceData={{
+                            serviceId: serviceData.serviceId,
+                            serviceType: serviceData.type ?? 'repair',
+                            serviceStatus: statusHistory.status ?? 'pending',
+                            statusArray: statusArray.map(s => s ?? '').filter(Boolean),
+                            customerName: serviceData.customerName,
+                            customerPhone: serviceData.customerPhone
+                        }}
+                    />
+                </div>
+            </StaffLayout>
+        );
+    } else {
+        return (
+            <div className="min-h-screen bg-gray-50 flex flex-col">
+                <header className="sticky top-0 z-50 bg-[#0A1A3A] text-white shadow-lg">
+                    <div className="max-w-4xl mx-auto px-4 h-14 md:h-16 flex items-center justify-between">
+                        <h1 className="font-bold text-sm sm:text-base p-1">Submit Service Report</h1>
+                        <div className="w-8 h-8 sm:w-10 sm:h-10 bg-white/20 rounded-md flex items-center justify-center border border-white/20">
+                            <span className="text-base font-bold">SE</span>
+                        </div>
+                    </div>
+                </header>
+                <main className="flex-1 w-full max-w-4xl mx-auto p-4 pb-20">
+                    <div className="flex items-center gap-3 mb-4">
+                        <div className="p-2 bg-brand/10 rounded-md text-brand">
+                            <Wrench size={20} />
+                        </div>
+                        <h1 className="text-xl font-bold text-gray-800">Submit Service Report</h1>
+                    </div>
+                    <ServiceReport
+                        isUnregistered={true}
+                        serviceData={{
+                            serviceId: serviceData.serviceId,
+                            serviceType: serviceData.type ?? 'repair',
+                            serviceStatus: statusHistory.status ?? 'pending',
+                            statusArray: statusArray.map(s => s ?? '').filter(Boolean),
+                            customerName: serviceData.customerName,
+                            customerPhone: serviceData.customerPhone
+                        }}
+                    />
+                </main>
             </div>
-        </StaffLayout>
-    )
+        );
+    }
 }

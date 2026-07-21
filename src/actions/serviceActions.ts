@@ -998,7 +998,15 @@ export const reportService = async ({
 }: z.infer<typeof ServiceReportDataSchema>) => {
   try {
     const session = await verifySession(false, "staff");
-    if (!session) return { success: false, message: "Unauthorized" };
+    if (!session) {
+      const serviceRecord = await db.query.services.findFirst({
+        where: eq(services.serviceId, serviceStatus.serviceId),
+        columns: { serviceId: true, status: true },
+      });
+      if (!serviceRecord || serviceRecord.status === "completed" || serviceRecord.status === "canceled") {
+        return { success: false, message: "Unauthorized" };
+      }
+    }
 
     await db.insert(serviceStatusHistory).values(serviceStatus);
 
