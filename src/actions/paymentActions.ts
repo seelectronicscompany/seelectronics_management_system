@@ -222,6 +222,10 @@ export const createPayment = async (
     const paymentId = generateRandomId();
     const invoiceNumber = generateInvoiceNumber();
 
+    if (validatedPaymentInfo.staffId === "unregistered") {
+      await ensureUnregisteredStaffExists();
+    }
+
     await db.insert(payments).values({
       paymentId,
       invoiceNumber,
@@ -430,5 +434,32 @@ export async function checkServicePaymentExists(serviceId: string) {
   } catch (error) {
     console.error(error);
     return { success: false, exists: false };
+  }
+}
+
+export async function ensureUnregisteredStaffExists() {
+  const existing = await db.query.staffs.findFirst({
+    where: eq(staffs.staffId, "unregistered"),
+  });
+  if (!existing) {
+    await db.insert(staffs).values({
+      staffId: "unregistered",
+      name: "Unregistered Staff",
+      fatherName: "N/A",
+      phone: "00000000000",
+      currentStreetAddress: "N/A",
+      currentDistrict: "N/A",
+      permanentStreetAddress: "N/A",
+      permanentDistrict: "N/A",
+      photoKey: "default",
+      nidFrontPhotoKey: "default",
+      nidBackPhotoKey: "default",
+      role: "technician",
+      isVerified: true,
+      isActiveStaff: false,
+      profileCompleted: true,
+      paymentPreference: "cash",
+      createdFrom: "dashboard",
+    });
   }
 }

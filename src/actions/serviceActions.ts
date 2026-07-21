@@ -1044,7 +1044,7 @@ export const reportService = async ({
       try {
         if (serviceRecord?.staffId) {
           await refreshStaffStats([serviceRecord.staffId]);
-        } else if (session.userId) {
+        } else if (session?.userId) {
           await updateStaffStats(session.userId as string);
         }
       } catch (err) {

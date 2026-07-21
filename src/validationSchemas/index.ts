@@ -315,9 +315,14 @@ const BankPaymentSchema = BasePaymentSchema.extend({
   receiverBankInfo: BankInfo,
 });
 
+const CashPaymentSchema = BasePaymentSchema.extend({
+  paymentMethod: z.literal("cash"),
+});
+
 export const PaymentDataSchema = z.union([
   WalletPaymentSchema,
   BankPaymentSchema,
+  CashPaymentSchema,
 ]);
 
 export const InvoiceDataSchema = z.object({

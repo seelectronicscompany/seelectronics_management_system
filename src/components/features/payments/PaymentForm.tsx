@@ -32,18 +32,20 @@ export default function PaymentForm({
   const paymentMethod = paymentData.paymentMethod || "bkash";
 
   const inputChangeHandler = (
-    event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+    event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>,
     key: string,
   ) => {
     const value = event.target.value;
 
-    if (key.startsWith("senderBankInfo")) {
-      const field = key.split(".")[1];
+    if (key.startsWith("senderBankInfo") || key.startsWith("receiverBankInfo")) {
+      const parts = key.split(".");
+      const mainKey = parts[0] as "senderBankInfo" | "receiverBankInfo";
+      const field = parts[1];
 
       setPaymentData((prev) => ({
         ...prev,
-        senderBankInfo: {
-          ...(prev.senderBankInfo || {}),
+        [mainKey]: {
+          ...(prev[mainKey] || {}),
           [field]: value,
         } as any,
       }));
@@ -117,9 +119,10 @@ export default function PaymentForm({
             <label className="text-sm">
               Payment Method
               <select
-                disabled={true}
+                disabled={paymentData.staffId !== "unregistered"}
                 value={paymentMethod}
-                className="__input p-0 px-2 mt-1 appearance-none bg-gray-50 opacity-70 cursor-not-allowed"
+                onChange={(e) => inputChangeHandler(e, "paymentMethod")}
+                className={`__input p-0 px-2 mt-1 appearance-none ${paymentData.staffId !== "unregistered" ? "bg-gray-50 opacity-70 cursor-not-allowed" : ""}`}
               >
                 <option value="bkash">বিকাশ</option>
                 <option value="nagad">নগদ</option>
@@ -145,8 +148,9 @@ export default function PaymentForm({
           <>
             <div className="flex flex-col sm:flex-row gap-4">
               <InputField
-                readOnly
+                readOnly={paymentData.staffId !== "unregistered"}
                 value={paymentData?.receiverBankInfo?.bankName ?? ""}
+                onChange={(e) => inputChangeHandler(e, "receiverBankInfo.bankName")}
                 label="Receiver Bank Name"
               />
 
@@ -161,8 +165,9 @@ export default function PaymentForm({
 
             <div className="flex flex-col sm:flex-row gap-4">
               <InputField
-                readOnly
+                readOnly={paymentData.staffId !== "unregistered"}
                 value={paymentData?.receiverBankInfo?.accountHolderName ?? ""}
+                onChange={(e) => inputChangeHandler(e, "receiverBankInfo.accountHolderName")}
                 label="Receiver Account Name"
               />
 
@@ -177,8 +182,9 @@ export default function PaymentForm({
 
             <div className="flex flex-col sm:flex-row gap-4">
               <InputField
-                readOnly
+                readOnly={paymentData.staffId !== "unregistered"}
                 value={paymentData?.receiverBankInfo?.accountNumber ?? ""}
+                onChange={(e) => inputChangeHandler(e, "receiverBankInfo.accountNumber")}
                 label="Receiver Account Number"
               />
 
@@ -193,8 +199,9 @@ export default function PaymentForm({
 
             <div className="flex flex-col sm:flex-row gap-4">
               <InputField
-                readOnly
+                readOnly={paymentData.staffId !== "unregistered"}
                 value={paymentData?.receiverBankInfo?.branchName ?? ""}
+                onChange={(e) => inputChangeHandler(e, "receiverBankInfo.branchName")}
                 label="Receiver Branch Name"
               />
 
@@ -211,8 +218,9 @@ export default function PaymentForm({
           /* WALLET PAYMENT */
           <div className="flex flex-col sm:flex-row gap-4">
             <InputField
-              readOnly
+              readOnly={paymentData.staffId !== "unregistered"}
               value={paymentData?.receiverWalletNumber ?? ""}
+              onChange={(e) => inputChangeHandler(e, "receiverWalletNumber")}
               label="Receiver Wallet Number"
               type="tel"
             />
