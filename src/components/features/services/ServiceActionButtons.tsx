@@ -148,7 +148,9 @@ export default function ServiceActionButtons({
         <button
           title={serviceData.staffReport ? "View Report" : "Add Report"}
           className="disabled:opacity-30 flex items-center justify-center"
-          disabled={!serviceData.staffReport && serviceData.status !== "service_center"}
+          disabled={
+            !serviceData.staffReport && serviceData.status !== "service_center"
+          }
           onClick={() => {
             if (serviceData.staffReport) {
               setShowServiceReport(true);
@@ -1118,9 +1120,11 @@ const ServiceEditModal = ({
             </div>
           </div>
         )}
-        {!serviceData.staffReport && (
+        {!serviceData.staffReport && currentServiceStatus === "completed" && (
           <div className="border-t pt-4 mt-6 space-y-4">
-            <h4 className="font-bold text-gray-800 text-sm">Service Report (সার্ভিস রিপোর্ট)</h4>
+            <h4 className="font-bold text-gray-800 text-sm">
+              Service Report (সার্ভিস রিপোর্ট)
+            </h4>
             <div>
               <label className="block text-sm font-medium mb-1">
                 কাস্টমারের পণ্যের সার্ভিসটি কি সম্পন্ন হয়েছে?
@@ -1155,7 +1159,8 @@ const ServiceEditModal = ({
               <>
                 <div>
                   <label className="block text-sm font-medium mb-1">
-                    প্রোডাক্ট এর কি সমস্যা ছিল এবং কি কি পার্টস ঠিক বা পরিবর্তন করতে হয়েছে?
+                    প্রোডাক্ট এর কি সমস্যা ছিল এবং কি কি পার্টস ঠিক বা পরিবর্তন
+                    করতে হয়েছে?
                     <span className="text-red-500 ml-1">*</span>
                   </label>
                   <textarea
@@ -1342,7 +1347,8 @@ const AddReportModal = ({
           <>
             <div>
               <label className="block text-sm font-medium mb-1">
-                প্রোডাক্ট এর কি সমস্যা ছিল এবং কি কি পার্টস ঠিক বা পরিবর্তন করতে হয়েছে?
+                প্রোডাক্ট এর কি সমস্যা ছিল এবং কি কি পার্টস ঠিক বা পরিবর্তন করতে
+                হয়েছে?
                 <span className="text-red-500 ml-1">*</span>
               </label>
               <textarea
@@ -1386,4 +1392,3 @@ const AddReportModal = ({
     </Modal>
   );
 };
-
