@@ -1221,3 +1221,100 @@ export const adminCancelService = async (
     return { success: false, message: "Something went wrong" };
   }
 };
+
+export const adminSubmitServiceReport = async ({
+  serviceId,
+  resolved,
+  explanation,
+  travelCost,
+  totalCost,
+}: {
+  serviceId: string;
+  resolved: boolean;
+  explanation?: string;
+  travelCost?: number;
+  totalCost?: number;
+}) => {
+  try {
+    const session = await verifySession(false);
+    if (!session || session.role !== "admin") {
+      return { success: false, message: "Unauthorized" };
+    }
+
+    const serviceData = await db.query.services.findFirst({
+      where: eq(services.serviceId, serviceId),
+      columns: { staffId: true, customerName: true, customerPhone: true, type: true },
+    });
+
+    if (!serviceData) {
+      return { success: false, message: "Service not found" };
+    }
+
+    const report = {
+      resolved,
+      explanation,
+      travelCost: travelCost !== undefined ? Number(travelCost) : undefined,
+      totalCost: totalCost !== undefined ? Number(totalCost) : undefined,
+    };
+
+    const nextStatus = resolved ? "completed" : "service_center";
+
+    await db
+      .update(services)
+      .set({
+        staffReport: report,
+        status: nextStatus,
+        ...(resolved && { resolvedBy: "service_center" }),
+      })
+      .where(eq(services.serviceId, serviceId));
+
+    await db.insert(serviceStatusHistory).values({
+      serviceId,
+      status: nextStatus,
+      statusType: "system",
+    });
+
+    if (nextStatus === "completed" || nextStatus === "service_center") {
+      await db
+        .update(tasks)
+        .set({ status: "completed" })
+        .where(eq(tasks.serviceId, serviceId));
+    }
+
+    if (serviceData.staffId) {
+      try {
+        await refreshStaffStats([serviceData.staffId]);
+      } catch (err) {
+        console.error("Failed to update staff stats:", err);
+      }
+    }
+
+    if (resolved) {
+      try {
+        const messageContent = renderText(
+          serviceData.type === "install"
+            ? ServiceMessages.COMPLETION_INSTALL
+            : ServiceMessages.COMPLETION_REPAIR,
+          {
+            customer_name: serviceData.customerName,
+            service_id: serviceId,
+            feedback_url: generateUrl("feedback", {
+              serviceId,
+            }),
+          },
+        );
+        await sendSMS(serviceData.customerPhone, messageContent);
+      } catch (smsErr) {
+        console.error("Failed to send completion SMS:", smsErr);
+      }
+    }
+
+    revalidatePath("/services/repairs");
+    revalidatePath("/services/installations");
+
+    return { success: true, message: "Service report submitted successfully" };
+  } catch (error) {
+    console.error(error);
+    return { success: false, message: "Something went wrong" };
+  }
+};

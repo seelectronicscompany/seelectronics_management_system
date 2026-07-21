@@ -73,7 +73,7 @@ export default function ServiceReport({
   const [reason, setReason] = useState("");
   const [otherReason, setOtherReason] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
-   const router = useRouter();
+  const router = useRouter();
 
   const handleJourneyNext = async () => {
     if (journeyStatus && journeyStatus !== serviceStatus) {
@@ -97,7 +97,6 @@ export default function ServiceReport({
       }
     }
   };
-  
 
   const handleNoteSubmit = async () => {
     if (!note) {
@@ -176,57 +175,57 @@ export default function ServiceReport({
   // };
 
   const handleFinalSubmit = async () => {
-  const data: StaffServiveReport = {
-    resolved: answer === "হ্যাঁ",
-  };
+    const data: StaffServiveReport = {
+      resolved: answer === "হ্যাঁ",
+    };
 
-  if (answer === "হ্যাঁ") {
-    if (!explanation || !travelCost || !totalCost) {
-      toast.error("অনুগ্রহ করে প্রয়োজনীয় তথ্য গুলো পূরণ করুন।");
-      return;
+    if (answer === "হ্যাঁ") {
+      if (!explanation || !travelCost || !totalCost) {
+        toast.error("অনুগ্রহ করে প্রয়োজনীয় তথ্য গুলো পূরণ করুন।");
+        return;
+      }
+      data.explanation = explanation;
+      data.travelCost = Number(travelCost);
+      data.totalCost = Number(totalCost);
+    } else if (answer === "না") {
+      if (!reason || (reason === "others" && !otherReason)) {
+        toast.error("অনুগ্রহ করে প্রয়োজনীয় তথ্য গুলো পূরণ করুন।");
+        return;
+      }
+      data.reason = reason === "others" ? otherReason : reason;
     }
-    data.explanation = explanation;
-    data.travelCost = Number(travelCost);
-    data.totalCost = Number(totalCost);
-  } else if (answer === "না") {
-    if (!reason || (reason === "others" && !otherReason)) {
-      toast.error("অনুগ্রহ করে প্রয়োজনীয় তথ্য গুলো পূরণ করুন।");
-      return;
-    }
-    data.reason = reason === "others" ? otherReason : reason;
-  }
 
-  setIsSubmitting(true);
+    setIsSubmitting(true);
 
-  const res = await reportService({
-    serviceStatus: {
-      serviceId,
-      status: data.resolved
-        ? "completed"
-        : serviceType === "install"
-          ? "canceled"
-          : "service_center",
-      statusType: "system",
-    },
-    serviceReport: data,
-    ...(data.resolved && {
-      messageData: {
-        messageType: serviceType,
-        customerName,
-        customerPhone,
+    const res = await reportService({
+      serviceStatus: {
+        serviceId,
+        status: data.resolved
+          ? "completed"
+          : serviceType === "install"
+            ? "canceled"
+            : "service_center",
+        statusType: "system",
       },
-    }),
-  });
+      serviceReport: data,
+      ...(data.resolved && {
+        messageData: {
+          messageType: serviceType,
+          customerName,
+          customerPhone,
+        },
+      }),
+    });
 
-  setIsSubmitting(false);
+    setIsSubmitting(false);
 
-  if (res?.success) {
-    //THIS IS YOUR SUCCESS POPUP SCREEN
-    setCurrentScreen("success");
-  } else {
-    toast.error(res?.message || "Something went wrong");
-  }
-};
+    if (res?.success) {
+      //THIS IS YOUR SUCCESS POPUP SCREEN
+      setCurrentScreen("success");
+    } else {
+      toast.error(res?.message || "Something went wrong");
+    }
+  };
   // if (currentScreen === "success") {
   //   return (
   //     <div className="flex flex-col items-center text-center py-12 px-4 animate-in fade-in zoom-in-95 duration-500">
@@ -252,58 +251,56 @@ export default function ServiceReport({
 
   return (
     <div className="space-y-6 pb-20">
-                        {currentScreen === "success" && (
-  <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-[999] px-4 animate-in fade-in duration-300">
-    
-    <div className="w-full max-w-sm bg-white rounded shadow-2xl p-6 text-center relative animate-in zoom-in-95 duration-300">
+      {currentScreen === "success" && (
+        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-[999] px-4 animate-in fade-in duration-300">
+          <div className="w-full max-w-sm bg-white rounded shadow-2xl p-6 text-center relative animate-in zoom-in-95 duration-300">
+            {/* glow background */}
+            <div className="absolute -top-10 -right-10 w-32 h-32 bg-green-200 blur-3xl opacity-40 rounded-full" />
+            <div className="absolute -bottom-10 -left-10 w-32 h-32 bg-emerald-200 blur-3xl opacity-40 rounded-full" />
 
-      {/* glow background */}
-      <div className="absolute -top-10 -right-10 w-32 h-32 bg-green-200 blur-3xl opacity-40 rounded-full" />
-      <div className="absolute -bottom-10 -left-10 w-32 h-32 bg-emerald-200 blur-3xl opacity-40 rounded-full" />
+            {/* icon */}
+            <div className="w-20 h-20 mx-auto rounded-full bg-gradient-to-br from-green-100 to-emerald-200 flex items-center justify-center shadow-inner mb-5">
+              <CheckCircle2 className="text-green-600" size={40} />
+            </div>
 
-      {/* icon */}
-      <div className="w-20 h-20 mx-auto rounded-full bg-gradient-to-br from-green-100 to-emerald-200 flex items-center justify-center shadow-inner mb-5">
-        <CheckCircle2 className="text-green-600" size={40} />
-      </div>
+            {/* title */}
+            <h2 className="text-xl font-black text-gray-800 mb-2">
+              রিপোর্ট সফল হয়েছে
+            </h2>
 
-      {/* title */}
-      <h2 className="text-xl font-black text-gray-800 mb-2">
-        রিপোর্ট সফল হয়েছে 
-      </h2>
+            {/* subtitle */}
+            <p className="text-sm text-gray-500 mb-5 leading-relaxed">
+              আপনার সার্ভিস রিপোর্ট সফলভাবে সাবমিট করা হয়েছে। সিস্টেমে এটি এখন
+              আপডেট হয়েছে।
+            </p>
 
-      {/* subtitle */}
-      <p className="text-sm text-gray-500 mb-5 leading-relaxed">
-        আপনার সার্ভিস রিপোর্ট সফলভাবে সাবমিট করা হয়েছে।
-        সিস্টেমে এটি এখন আপডেট হয়েছে।
-      </p>
+            {/* fake / id box */}
+            <div className="bg-gray-50 border border-dashed rounded-lg py-2 px-3 mb-5 text-xs font-mono text-gray-600">
+              Report ID: #
+              {Math.random().toString(36).slice(2, 10).toUpperCase()}
+            </div>
 
-      {/* fake / id box */}
-      <div className="bg-gray-50 border border-dashed rounded-lg py-2 px-3 mb-5 text-xs font-mono text-gray-600">
-        Report ID: #{Math.random().toString(36).slice(2, 10).toUpperCase()}
-      </div>
+            {/* buttons */}
+            <div className="flex gap-3">
+              {/* Close */}
+              <button
+                onClick={() => setCurrentScreen("journey")}
+                className="flex-1 py-3 rounded-xl font-bold text-sm bg-gray-100 text-gray-700 hover:bg-gray-200 active:scale-95 transition-all"
+              >
+                Close
+              </button>
 
-      {/* buttons */}
-      <div className="flex gap-3">
-        
-        {/* Close */}
-        <button
-          onClick={() => setCurrentScreen("journey")}
-          className="flex-1 py-3 rounded-xl font-bold text-sm bg-gray-100 text-gray-700 hover:bg-gray-200 active:scale-95 transition-all"
-        >
-          Close
-        </button>
-
-        {/* Go Dashboard */}
-        <button
-          onClick={() => router.push("/staff/profile")}
-          className="flex-1 py-3 rounded-xl font-bold text-sm bg-gradient-to-r from-green-500 to-emerald-500 text-white shadow-md hover:from-green-600 hover:to-emerald-600 active:scale-95 transition-all"
-        >
-          Dashboard
-        </button>
-      </div>
-    </div>
-  </div>
-)}
+              {/* Go Dashboard */}
+              <button
+                onClick={() => router.push("/staff/profile")}
+                className="flex-1 py-3 rounded-xl font-bold text-sm bg-gradient-to-r from-green-500 to-emerald-500 text-white shadow-md hover:from-green-600 hover:to-emerald-600 active:scale-95 transition-all"
+              >
+                Dashboard
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
       {/* Service Identity Card */}
       <div className="bg-brand rounded-md p-5 text-white shadow-xl relative overflow-hidden">
         <div className="absolute top-0 right-0 p-8 opacity-10">
@@ -556,20 +553,20 @@ export default function ServiceReport({
                           className="w-full bg-gray-50 border-2 border-gray-200 rounded-md p-4 text-sm font-bold focus:border-brand focus:ring-0  h-32 outline-none transition-all"
                         />
                       </div>
-<div className="space-y-2">
-  <label className="text-[13px] font-bold text-gray-400 uppercase tracking-widest p-1">
-  পার্টস + সার্ভিস মজুরি মোট খরচ (টাকা)
-    <span className="text-red-500 ml-1">*</span>
-  </label>
+                      <div className="space-y-2">
+                        <label className="text-[13px] font-bold text-gray-400 uppercase tracking-widest p-1">
+                          পার্টস + সার্ভিস মজুরি মোট খরচ (টাকা)
+                          <span className="text-red-500 ml-1">*</span>
+                        </label>
 
-  <input
-    type="number"
-    value={totalCost}
-    onChange={(e) => setTotalCost(e.target.value)}
-    placeholder="0.00"
-    className="w-full bg-gray-50 border-2 border-gray-200 rounded-md p-4 text-sm font-bold focus:border-brand focus:ring-0 outline-none transition-all"
-  />
-</div>
+                        <input
+                          type="number"
+                          value={totalCost}
+                          onChange={(e) => setTotalCost(e.target.value)}
+                          placeholder="0.00"
+                          className="w-full bg-gray-50 border-2 border-gray-200 rounded-md p-4 text-sm font-bold focus:border-brand focus:ring-0 outline-none transition-all"
+                        />
+                      </div>
                       <div className="space-y-2">
                         <label className="text-[13px] font-bold text-gray-400 uppercase tracking-widest px-1">
                           যাতায়াত খরচ(টাকা)
@@ -593,7 +590,6 @@ export default function ServiceReport({
                       </button>
                     </div>
                   )}
-
 
                   {answer === "না" && (
                     <div className="space-y-4 pt-4 overflow-hidden animate-in fade-in slide-in-from-top-2 duration-300">

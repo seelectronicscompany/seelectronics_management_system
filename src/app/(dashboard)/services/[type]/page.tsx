@@ -27,7 +27,7 @@ export default async function Services({
     <div className="flex-1 overflow-hidden flex flex-col gap-4">
       <Toolbar title={title} pagination={pagination} />
       <div className="overflow-x-auto overflow-y-auto flex-1 bg-white rounded-md border border-gray-100 shadow-sm custom-scrollbar">
-        <table className="w-full text-sm text-left">
+        <table className="w-full text-sm text-left min-w-[1100px] whitespace-nowrap">
           <thead className="sticky top-0 z-20">
             <tr className="bg-gray-50">
               <th className="py-4 px-4 font-bold text-gray-700 text-sm whitespace-nowrap">
