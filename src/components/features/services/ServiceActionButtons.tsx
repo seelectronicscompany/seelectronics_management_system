@@ -23,6 +23,8 @@ import {
   serviceStatuses,
   stabilizerBrands,
   stabilizerPowerRatings,
+  installCancelationReasons,
+  serviceCancelationReasons,
 } from "@/constants";
 import { ProductTypes, ServicesType } from "@/types";
 import { FileText } from "lucide-react";
@@ -146,18 +148,10 @@ export default function ServiceActionButtons({
           </svg>
         </button>
         <button
-          title={serviceData.staffReport ? "View Report" : "Add Report"}
+          title="View Report"
           className="disabled:opacity-30 flex items-center justify-center"
-          disabled={
-            !serviceData.staffReport && serviceData.status !== "service_center"
-          }
-          onClick={() => {
-            if (serviceData.staffReport) {
-              setShowServiceReport(true);
-            } else {
-              setShowAddReportModal(true);
-            }
-          }}
+          disabled={!serviceData.staffReport}
+          onClick={() => setShowServiceReport(true)}
         >
           <FileText stroke="currentColor" size={20} className="sm:w-6 sm:h-6" />
         </button>
@@ -545,10 +539,29 @@ const ServiceEditModal = ({
   const [shouldSendSMS, setShouldSendSMS] = useState(false);
   const [hasUpdates, setHasUpdates] = useState(false);
 
-  const [reportResolved, setReportResolved] = useState<boolean>(true);
-  const [reportExplanation, setReportExplanation] = useState("");
-  const [reportTravelCost, setReportTravelCost] = useState("");
-  const [reportTotalCost, setReportTotalCost] = useState("");
+  const [reportResolved, setReportResolved] = useState<boolean>(
+    serviceData.staffReport ? serviceData.staffReport.resolved : true
+  );
+  const [reportExplanation, setReportExplanation] = useState(
+    serviceData.staffReport?.explanation || ""
+  );
+  const [reportTravelCost, setReportTravelCost] = useState(
+    serviceData.staffReport?.travelCost?.toString() || ""
+  );
+  const [reportTotalCost, setReportTotalCost] = useState(
+    serviceData.staffReport?.totalCost?.toString() || ""
+  );
+
+  const initialReason = serviceData.staffReport?.reason || "";
+  const cancellationReasons = serviceData.type === "install" ? installCancelationReasons : serviceCancelationReasons;
+  const isPredefinedReason = cancellationReasons.includes(initialReason);
+
+  const [reportReason, setReportReason] = useState<string>(
+    initialReason ? (isPredefinedReason ? initialReason : "others") : ""
+  );
+  const [reportOtherReason, setReportOtherReason] = useState<string>(
+    initialReason && !isPredefinedReason ? initialReason : ""
+  );
   const statusHistory = serviceData.statusHistory[0];
   const [currentServiceStatus, setServiceStatus] = useState(
     statusHistory.statusType === "custom" ? "custom" : statusHistory.status,
@@ -1120,7 +1133,7 @@ const ServiceEditModal = ({
             </div>
           </div>
         )}
-        {!serviceData.staffReport && currentServiceStatus === "completed" && (
+        {currentServiceStatus === "completed" && (
           <div className="border-t pt-4 mt-6 space-y-4">
             <h4 className="font-bold text-gray-800 text-sm">
               Service Report (সার্ভিস রিপোর্ট)
@@ -1194,6 +1207,60 @@ const ServiceEditModal = ({
                   />
                 </div>
               </>
+            )}
+
+            {!reportResolved && (
+              <div className="space-y-4 pt-2">
+                <label className="block text-sm font-medium mb-1">
+                  অসম্পূর্ণ থাকার কারণ
+                  <span className="text-red-500 ml-1">*</span>
+                </label>
+                <div className="grid gap-2">
+                  {cancellationReasons.map((r, index) => (
+                    <button
+                      key={r + index}
+                      type="button"
+                      onClick={() => {
+                        setReportReason(r);
+                        setReportOtherReason("");
+                      }}
+                      className={`p-3 rounded-md border text-sm font-bold text-left transition-all ${
+                        reportReason === r
+                          ? "bg-brand/5 border-brand text-brand"
+                          : "bg-gray-50 border-gray-100 text-gray-500"
+                      }`}
+                    >
+                      {r}
+                    </button>
+                  ))}
+                  <button
+                    type="button"
+                    onClick={() => setReportReason("others")}
+                    className={`p-3 rounded-md border text-sm font-bold text-left transition-all ${
+                      reportReason === "others"
+                        ? "bg-brand/5 border-brand text-brand"
+                        : "bg-gray-50 border-gray-100 text-gray-500"
+                    }`}
+                  >
+                    অন্যান্য কারণ
+                  </button>
+                </div>
+
+                <input type="hidden" name="reportReason" value={reportReason} />
+
+                {reportReason === "others" && (
+                  <div>
+                    <textarea
+                      name="reportOtherReason"
+                      value={reportOtherReason}
+                      onChange={(e) => setReportOtherReason(e.target.value)}
+                      placeholder="বিস্তারিত কারণ এখানে লিখুন..."
+                      className="w-full bg-gray-50 border border-gray-200 rounded-md p-4 text-sm font-medium focus:ring-2 focus:ring-brand h-24 outline-none transition-all"
+                      required
+                    />
+                  </div>
+                )}
+              </div>
             )}
           </div>
         )}

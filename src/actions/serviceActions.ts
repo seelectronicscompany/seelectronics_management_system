@@ -729,6 +729,7 @@ export const updateService = async (
       where: eq(services.serviceId, serviceId),
       columns: {
         staffId: true,
+        staffReport: true,
       },
     });
     const {
@@ -747,15 +748,19 @@ export const updateService = async (
     const reportExplanation = formData.get("reportExplanation") as string | null;
     const reportTravelCostStr = formData.get("reportTravelCost") as string | null;
     const reportTotalCostStr = formData.get("reportTotalCost") as string | null;
+    const reportReason = formData.get("reportReason") as string | null;
+    const reportOtherReason = formData.get("reportOtherReason") as string | null;
 
     let staffReport = undefined;
     if (reportResolvedStr !== null) {
       const resolved = reportResolvedStr === "true";
+      const reasonVal = reportReason === "others" ? reportOtherReason : reportReason;
       staffReport = {
         resolved,
         explanation: resolved ? reportExplanation || "" : undefined,
         travelCost: resolved && reportTravelCostStr ? Number(reportTravelCostStr) : undefined,
         totalCost: resolved && reportTotalCostStr ? Number(reportTotalCostStr) : undefined,
+        reason: !resolved ? (reasonVal || existingService?.staffReport?.reason || "") : undefined,
       };
     }
 
@@ -1016,12 +1021,20 @@ export const reportService = async ({
         columns: { staffId: true },
       });
 
+      const isServiceCenter = serviceStatus.status === "service_center";
+
       await db
         .update(services)
         .set({
           staffReport: serviceReport,
           status: serviceStatus.status,
           ...(serviceReport.resolved && { resolvedBy: "staff_member" }),
+          ...(isServiceCenter && {
+            staffId: null,
+            staffName: null,
+            staffPhone: null,
+            staffRole: null,
+          }),
         })
         .where(eq(services.serviceId, serviceStatus.serviceId));
 

@@ -1,3 +1,4 @@
+CREATE SCHEMA IF NOT EXISTS "public";--> statement-breakpoint
 CREATE TYPE "public"."agreementTypes" AS ENUM('application_declaration');--> statement-breakpoint
 CREATE TYPE "public"."applicationStatus" AS ENUM('pending', 'processing', 'approved', 'rejected', 'expired');--> statement-breakpoint
 CREATE TYPE "public"."applicationTypes" AS ENUM('service_application', 'staff_application', 'subscription_application', 'vip_card_application');--> statement-breakpoint
