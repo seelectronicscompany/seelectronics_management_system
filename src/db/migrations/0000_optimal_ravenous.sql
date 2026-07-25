@@ -1,24 +1,100 @@
 CREATE SCHEMA IF NOT EXISTS "public";--> statement-breakpoint
-CREATE TYPE "public"."agreementTypes" AS ENUM('application_declaration');--> statement-breakpoint
-CREATE TYPE "public"."applicationStatus" AS ENUM('pending', 'processing', 'approved', 'rejected', 'expired');--> statement-breakpoint
-CREATE TYPE "public"."applicationTypes" AS ENUM('service_application', 'staff_application', 'subscription_application', 'vip_card_application');--> statement-breakpoint
-CREATE TYPE "public"."serviceSourceTypes" AS ENUM('public_form', 'dashboard');--> statement-breakpoint
-CREATE TYPE "public"."noticePriority" AS ENUM('low', 'normal', 'high', 'urgent');--> statement-breakpoint
-CREATE TYPE "public"."noticeTarget" AS ENUM('single', 'multiple', 'all');--> statement-breakpoint
-CREATE TYPE "public"."paymentStatus" AS ENUM('requested', 'pending', 'processing', 'approved', 'rejected', 'completed', 'credited');--> statement-breakpoint
-CREATE TYPE "public"."paymentTypes" AS ENUM('cash', 'bkash', 'nagad', 'rocket', 'bank');--> statement-breakpoint
-CREATE TYPE "public"."productType" AS ENUM('ips', 'battery', 'stabilizer', 'others');--> statement-breakpoint
-CREATE TYPE "public"."reportStatus" AS ENUM('pending', 'processing', 'resolved', 'dismissed', 'under_trial', 'hearing', 'completed');--> statement-breakpoint
-CREATE TYPE "public"."resolvedByTypes" AS ENUM('staff_member', 'service_center');--> statement-breakpoint
-CREATE TYPE "public"."serviceStatus" AS ENUM('pending', 'in_progress', 'appointment_retry', 'staff_departed', 'staff_arrived', 'service_center', 'service_center_received', 'completed', 'canceled');--> statement-breakpoint
-CREATE TYPE "public"."serviceType" AS ENUM('install', 'repair');--> statement-breakpoint
-CREATE TYPE "public"."smsFrequency" AS ENUM('immediate', 'daily_digest');--> statement-breakpoint
-CREATE TYPE "public"."smsLogStatus" AS ENUM('sent', 'failed');--> statement-breakpoint
-CREATE TYPE "public"."staffRole" AS ENUM('technician', 'electrician');--> statement-breakpoint
-CREATE TYPE "public"."statusTypes" AS ENUM('system', 'custom');--> statement-breakpoint
-CREATE TYPE "public"."subscriberStatus" AS ENUM('active', 'inactive', 'expired');--> statement-breakpoint
-CREATE TYPE "public"."subscriptionTypes" AS ENUM('battery_maintenance', 'ips_and_battery_maintenance', 'full_maintenance');--> statement-breakpoint
-CREATE TABLE "adminNotifications" (
+DO $$ BEGIN
+    CREATE TYPE "public"."agreementTypes" AS ENUM('application_declaration');
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;--> statement-breakpoint
+DO $$ BEGIN
+    CREATE TYPE "public"."applicationStatus" AS ENUM('pending', 'processing', 'approved', 'rejected', 'expired');
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;--> statement-breakpoint
+DO $$ BEGIN
+    CREATE TYPE "public"."applicationTypes" AS ENUM('service_application', 'staff_application', 'subscription_application', 'vip_card_application');
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;--> statement-breakpoint
+DO $$ BEGIN
+    CREATE TYPE "public"."serviceSourceTypes" AS ENUM('public_form', 'dashboard');
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;--> statement-breakpoint
+DO $$ BEGIN
+    CREATE TYPE "public"."noticePriority" AS ENUM('low', 'normal', 'high', 'urgent');
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;--> statement-breakpoint
+DO $$ BEGIN
+    CREATE TYPE "public"."noticeTarget" AS ENUM('single', 'multiple', 'all');
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;--> statement-breakpoint
+DO $$ BEGIN
+    CREATE TYPE "public"."paymentStatus" AS ENUM('requested', 'pending', 'processing', 'approved', 'rejected', 'completed', 'credited');
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;--> statement-breakpoint
+DO $$ BEGIN
+    CREATE TYPE "public"."paymentTypes" AS ENUM('cash', 'bkash', 'nagad', 'rocket', 'bank');
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;--> statement-breakpoint
+DO $$ BEGIN
+    CREATE TYPE "public"."productType" AS ENUM('ips', 'battery', 'stabilizer', 'others');
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;--> statement-breakpoint
+DO $$ BEGIN
+    CREATE TYPE "public"."reportStatus" AS ENUM('pending', 'processing', 'resolved', 'dismissed', 'under_trial', 'hearing', 'completed');
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;--> statement-breakpoint
+DO $$ BEGIN
+    CREATE TYPE "public"."resolvedByTypes" AS ENUM('staff_member', 'service_center');
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;--> statement-breakpoint
+DO $$ BEGIN
+    CREATE TYPE "public"."serviceStatus" AS ENUM('pending', 'in_progress', 'appointment_retry', 'staff_departed', 'staff_arrived', 'service_center', 'service_center_received', 'completed', 'canceled');
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;--> statement-breakpoint
+DO $$ BEGIN
+    CREATE TYPE "public"."serviceType" AS ENUM('install', 'repair');
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;--> statement-breakpoint
+DO $$ BEGIN
+    CREATE TYPE "public"."smsFrequency" AS ENUM('immediate', 'daily_digest');
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;--> statement-breakpoint
+DO $$ BEGIN
+    CREATE TYPE "public"."smsLogStatus" AS ENUM('sent', 'failed');
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;--> statement-breakpoint
+DO $$ BEGIN
+    CREATE TYPE "public"."staffRole" AS ENUM('technician', 'electrician');
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;--> statement-breakpoint
+DO $$ BEGIN
+    CREATE TYPE "public"."statusTypes" AS ENUM('system', 'custom');
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;--> statement-breakpoint
+DO $$ BEGIN
+    CREATE TYPE "public"."subscriberStatus" AS ENUM('active', 'inactive', 'expired');
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;--> statement-breakpoint
+DO $$ BEGIN
+    CREATE TYPE "public"."subscriptionTypes" AS ENUM('battery_maintenance', 'ips_and_battery_maintenance', 'full_maintenance');
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;--> statement-breakpoint
+CREATE TABLE IF NOT EXISTS "adminNotifications" (
 	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
 	"type" varchar(50) NOT NULL,
 	"message" text NOT NULL,
@@ -27,7 +103,7 @@ CREATE TABLE "adminNotifications" (
 	"createdAt" timestamp with time zone DEFAULT now() NOT NULL
 );
 --> statement-breakpoint
-CREATE TABLE "admins" (
+CREATE TABLE IF NOT EXISTS "admins" (
 	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
 	"username" varchar(255) NOT NULL,
 	"password" text NOT NULL,
@@ -36,7 +112,7 @@ CREATE TABLE "admins" (
 	CONSTRAINT "admins_username_unique" UNIQUE("username")
 );
 --> statement-breakpoint
-CREATE TABLE "agreements" (
+CREATE TABLE IF NOT EXISTS "agreements" (
 	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
 	"type" "agreementTypes" NOT NULL,
 	"title" varchar(255),
@@ -47,7 +123,7 @@ CREATE TABLE "agreements" (
 	"updatedAt" timestamp with time zone DEFAULT now() NOT NULL
 );
 --> statement-breakpoint
-CREATE TABLE "applications" (
+CREATE TABLE IF NOT EXISTS "applications" (
 	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
 	"applicationId" varchar(255) NOT NULL,
 	"applicantId" varchar(255) NOT NULL,
@@ -60,7 +136,7 @@ CREATE TABLE "applications" (
 	CONSTRAINT "applications_applicantId_unique" UNIQUE("applicantId")
 );
 --> statement-breakpoint
-CREATE TABLE "authTokens" (
+CREATE TABLE IF NOT EXISTS "authTokens" (
 	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
 	"token" text NOT NULL,
 	"payload" json,
@@ -70,7 +146,7 @@ CREATE TABLE "authTokens" (
 	CONSTRAINT "authTokens_token_unique" UNIQUE("token")
 );
 --> statement-breakpoint
-CREATE TABLE "contactMessages" (
+CREATE TABLE IF NOT EXISTS "contactMessages" (
 	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
 	"messageId" varchar(255) NOT NULL,
 	"customerId" varchar(255) NOT NULL,
@@ -83,7 +159,7 @@ CREATE TABLE "contactMessages" (
 	CONSTRAINT "contactMessages_messageId_unique" UNIQUE("messageId")
 );
 --> statement-breakpoint
-CREATE TABLE "customerNotifications" (
+CREATE TABLE IF NOT EXISTS "customerNotifications" (
 	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
 	"customerId" varchar(255) NOT NULL,
 	"type" varchar(50) NOT NULL,
@@ -93,7 +169,7 @@ CREATE TABLE "customerNotifications" (
 	"createdAt" timestamp with time zone DEFAULT now() NOT NULL
 );
 --> statement-breakpoint
-CREATE TABLE "customers" (
+CREATE TABLE IF NOT EXISTS "customers" (
 	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
 	"customerId" varchar(255) NOT NULL,
 	"name" varchar(255) NOT NULL,
@@ -114,7 +190,7 @@ CREATE TABLE "customers" (
 	CONSTRAINT "customers_vipCardNumber_unique" UNIQUE("vipCardNumber")
 );
 --> statement-breakpoint
-CREATE TABLE "feedbacks" (
+CREATE TABLE IF NOT EXISTS "feedbacks" (
 	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
 	"serviceId" varchar(255) NOT NULL,
 	"customerId" varchar(255),
@@ -125,7 +201,7 @@ CREATE TABLE "feedbacks" (
 	CONSTRAINT "feedbacks_serviceId_unique" UNIQUE("serviceId")
 );
 --> statement-breakpoint
-CREATE TABLE "invoices" (
+CREATE TABLE IF NOT EXISTS "invoices" (
 	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
 	"invoiceNumber" varchar(255) NOT NULL,
 	"customerId" varchar(255) NOT NULL,
@@ -142,7 +218,7 @@ CREATE TABLE "invoices" (
 	CONSTRAINT "invoices_invoiceNumber_unique" UNIQUE("invoiceNumber")
 );
 --> statement-breakpoint
-CREATE TABLE "noticeRecipients" (
+CREATE TABLE IF NOT EXISTS "noticeRecipients" (
 	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
 	"noticeId" uuid NOT NULL,
 	"staffId" varchar(255),
@@ -154,7 +230,7 @@ CREATE TABLE "noticeRecipients" (
 	"createdAt" timestamp with time zone DEFAULT now() NOT NULL
 );
 --> statement-breakpoint
-CREATE TABLE "notices" (
+CREATE TABLE IF NOT EXISTS "notices" (
 	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
 	"noticeId" varchar(255) NOT NULL,
 	"title" varchar(255) NOT NULL,
@@ -170,7 +246,7 @@ CREATE TABLE "notices" (
 	CONSTRAINT "notices_noticeId_unique" UNIQUE("noticeId")
 );
 --> statement-breakpoint
-CREATE TABLE "payments" (
+CREATE TABLE IF NOT EXISTS "payments" (
 	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
 	"paymentId" varchar(255) NOT NULL,
 	"staffId" varchar(255) NOT NULL,
@@ -193,7 +269,7 @@ CREATE TABLE "payments" (
 	CONSTRAINT "payments_transactionId_unique" UNIQUE("transactionId")
 );
 --> statement-breakpoint
-CREATE TABLE "products" (
+CREATE TABLE IF NOT EXISTS "products" (
 	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
 	"invoiceId" uuid NOT NULL,
 	"type" "productType" NOT NULL,
@@ -206,7 +282,7 @@ CREATE TABLE "products" (
 	"updatedAt" timestamp with time zone DEFAULT now() NOT NULL
 );
 --> statement-breakpoint
-CREATE TABLE "referralBonuses" (
+CREATE TABLE IF NOT EXISTS "referralBonuses" (
 	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
 	"referrerCustomerId" varchar(255) NOT NULL,
 	"referrerVipCard" varchar(16) NOT NULL,
@@ -218,7 +294,7 @@ CREATE TABLE "referralBonuses" (
 	"createdAt" timestamp with time zone DEFAULT now() NOT NULL
 );
 --> statement-breakpoint
-CREATE TABLE "referralPaymentRequests" (
+CREATE TABLE IF NOT EXISTS "referralPaymentRequests" (
 	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
 	"requestId" varchar(255) NOT NULL,
 	"customerId" varchar(255) NOT NULL,
@@ -236,7 +312,7 @@ CREATE TABLE "referralPaymentRequests" (
 	CONSTRAINT "referralPaymentRequests_requestId_unique" UNIQUE("requestId")
 );
 --> statement-breakpoint
-CREATE TABLE "serviceStatusHistory" (
+CREATE TABLE IF NOT EXISTS "serviceStatusHistory" (
 	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
 	"serviceId" varchar(255) NOT NULL,
 	"status" "serviceStatus",
@@ -248,7 +324,7 @@ CREATE TABLE "serviceStatusHistory" (
 	"updatedAt" timestamp with time zone DEFAULT now() NOT NULL
 );
 --> statement-breakpoint
-CREATE TABLE "services" (
+CREATE TABLE IF NOT EXISTS "services" (
 	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
 	"serviceId" varchar(255) NOT NULL,
 	"customerId" varchar(255),
@@ -284,7 +360,7 @@ CREATE TABLE "services" (
 	CONSTRAINT "services_serviceId_unique" UNIQUE("serviceId")
 );
 --> statement-breakpoint
-CREATE TABLE "smsLogs" (
+CREATE TABLE IF NOT EXISTS "smsLogs" (
 	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
 	"staffId" varchar(255),
 	"phoneNumber" varchar(255) NOT NULL,
@@ -295,7 +371,7 @@ CREATE TABLE "smsLogs" (
 	"createdAt" timestamp with time zone DEFAULT now() NOT NULL
 );
 --> statement-breakpoint
-CREATE TABLE "staffComplaints" (
+CREATE TABLE IF NOT EXISTS "staffComplaints" (
 	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
 	"complaintId" varchar(255) NOT NULL,
 	"customerId" varchar(255) NOT NULL,
@@ -320,7 +396,7 @@ CREATE TABLE "staffComplaints" (
 	CONSTRAINT "staffComplaints_complaintId_unique" UNIQUE("complaintId")
 );
 --> statement-breakpoint
-CREATE TABLE "staffNotifications" (
+CREATE TABLE IF NOT EXISTS "staffNotifications" (
 	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
 	"staffId" varchar(255) NOT NULL,
 	"type" varchar(50) NOT NULL,
@@ -330,7 +406,7 @@ CREATE TABLE "staffNotifications" (
 	"createdAt" timestamp with time zone DEFAULT now() NOT NULL
 );
 --> statement-breakpoint
-CREATE TABLE "staffs" (
+CREATE TABLE IF NOT EXISTS "staffs" (
 	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
 	"staffId" varchar(255) NOT NULL,
 	"username" varchar(255),
@@ -381,7 +457,7 @@ CREATE TABLE "staffs" (
 	CONSTRAINT "staffs_username_unique" UNIQUE("username")
 );
 --> statement-breakpoint
-CREATE TABLE "subscriptions" (
+CREATE TABLE IF NOT EXISTS "subscriptions" (
 	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
 	"subscriptionId" varchar(255) NOT NULL,
 	"customerId" varchar(255),
@@ -415,7 +491,7 @@ CREATE TABLE "subscriptions" (
 	CONSTRAINT "subscriptions_subscriptionId_unique" UNIQUE("subscriptionId")
 );
 --> statement-breakpoint
-CREATE TABLE "tasks" (
+CREATE TABLE IF NOT EXISTS "tasks" (
 	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
 	"taskId" varchar(255) NOT NULL,
 	"staffId" varchar(255) NOT NULL,
@@ -432,7 +508,7 @@ CREATE TABLE "tasks" (
 	CONSTRAINT "tasks_taskId_unique" UNIQUE("taskId")
 );
 --> statement-breakpoint
-CREATE TABLE "userAgreements" (
+CREATE TABLE IF NOT EXISTS "userAgreements" (
 	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
 	"userId" varchar(255) NOT NULL,
 	"agreementId" uuid NOT NULL,
@@ -442,72 +518,202 @@ CREATE TABLE "userAgreements" (
 	"createdAt" timestamp with time zone DEFAULT now() NOT NULL
 );
 --> statement-breakpoint
-ALTER TABLE "contactMessages" ADD CONSTRAINT "contactMessages_customerId_customers_customerId_fk" FOREIGN KEY ("customerId") REFERENCES "public"."customers"("customerId") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
-ALTER TABLE "customerNotifications" ADD CONSTRAINT "customerNotifications_customerId_customers_customerId_fk" FOREIGN KEY ("customerId") REFERENCES "public"."customers"("customerId") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
-ALTER TABLE "feedbacks" ADD CONSTRAINT "feedbacks_serviceId_services_serviceId_fk" FOREIGN KEY ("serviceId") REFERENCES "public"."services"("serviceId") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
-ALTER TABLE "feedbacks" ADD CONSTRAINT "feedbacks_customerId_customers_customerId_fk" FOREIGN KEY ("customerId") REFERENCES "public"."customers"("customerId") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
-ALTER TABLE "invoices" ADD CONSTRAINT "invoices_customerId_customers_customerId_fk" FOREIGN KEY ("customerId") REFERENCES "public"."customers"("customerId") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
-ALTER TABLE "noticeRecipients" ADD CONSTRAINT "noticeRecipients_noticeId_notices_id_fk" FOREIGN KEY ("noticeId") REFERENCES "public"."notices"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
-ALTER TABLE "noticeRecipients" ADD CONSTRAINT "noticeRecipients_staffId_staffs_staffId_fk" FOREIGN KEY ("staffId") REFERENCES "public"."staffs"("staffId") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
-ALTER TABLE "noticeRecipients" ADD CONSTRAINT "noticeRecipients_customerId_customers_customerId_fk" FOREIGN KEY ("customerId") REFERENCES "public"."customers"("customerId") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
-ALTER TABLE "notices" ADD CONSTRAINT "notices_createdBy_admins_id_fk" FOREIGN KEY ("createdBy") REFERENCES "public"."admins"("id") ON DELETE set null ON UPDATE no action;--> statement-breakpoint
-ALTER TABLE "payments" ADD CONSTRAINT "payments_staffId_staffs_staffId_fk" FOREIGN KEY ("staffId") REFERENCES "public"."staffs"("staffId") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
-ALTER TABLE "payments" ADD CONSTRAINT "payments_serviceId_services_serviceId_fk" FOREIGN KEY ("serviceId") REFERENCES "public"."services"("serviceId") ON DELETE set null ON UPDATE no action;--> statement-breakpoint
-ALTER TABLE "products" ADD CONSTRAINT "products_invoiceId_invoices_id_fk" FOREIGN KEY ("invoiceId") REFERENCES "public"."invoices"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
-ALTER TABLE "referralBonuses" ADD CONSTRAINT "referralBonuses_referrerCustomerId_customers_customerId_fk" FOREIGN KEY ("referrerCustomerId") REFERENCES "public"."customers"("customerId") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
-ALTER TABLE "referralBonuses" ADD CONSTRAINT "referralBonuses_referredCustomerId_customers_customerId_fk" FOREIGN KEY ("referredCustomerId") REFERENCES "public"."customers"("customerId") ON DELETE set null ON UPDATE no action;--> statement-breakpoint
-ALTER TABLE "referralPaymentRequests" ADD CONSTRAINT "referralPaymentRequests_customerId_customers_customerId_fk" FOREIGN KEY ("customerId") REFERENCES "public"."customers"("customerId") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
-ALTER TABLE "serviceStatusHistory" ADD CONSTRAINT "serviceStatusHistory_serviceId_services_serviceId_fk" FOREIGN KEY ("serviceId") REFERENCES "public"."services"("serviceId") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
-ALTER TABLE "services" ADD CONSTRAINT "services_customerId_customers_customerId_fk" FOREIGN KEY ("customerId") REFERENCES "public"."customers"("customerId") ON DELETE set null ON UPDATE no action;--> statement-breakpoint
-ALTER TABLE "services" ADD CONSTRAINT "services_staffId_staffs_staffId_fk" FOREIGN KEY ("staffId") REFERENCES "public"."staffs"("staffId") ON DELETE set null ON UPDATE no action;--> statement-breakpoint
-ALTER TABLE "smsLogs" ADD CONSTRAINT "smsLogs_staffId_staffs_staffId_fk" FOREIGN KEY ("staffId") REFERENCES "public"."staffs"("staffId") ON DELETE set null ON UPDATE no action;--> statement-breakpoint
-ALTER TABLE "staffComplaints" ADD CONSTRAINT "staffComplaints_customerId_customers_customerId_fk" FOREIGN KEY ("customerId") REFERENCES "public"."customers"("customerId") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
-ALTER TABLE "staffComplaints" ADD CONSTRAINT "staffComplaints_staffId_staffs_staffId_fk" FOREIGN KEY ("staffId") REFERENCES "public"."staffs"("staffId") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
-ALTER TABLE "staffComplaints" ADD CONSTRAINT "staffComplaints_serviceId_services_serviceId_fk" FOREIGN KEY ("serviceId") REFERENCES "public"."services"("serviceId") ON DELETE set null ON UPDATE no action;--> statement-breakpoint
-ALTER TABLE "staffNotifications" ADD CONSTRAINT "staffNotifications_staffId_staffs_staffId_fk" FOREIGN KEY ("staffId") REFERENCES "public"."staffs"("staffId") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
-ALTER TABLE "tasks" ADD CONSTRAINT "tasks_staffId_staffs_staffId_fk" FOREIGN KEY ("staffId") REFERENCES "public"."staffs"("staffId") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
-ALTER TABLE "tasks" ADD CONSTRAINT "tasks_serviceId_services_serviceId_fk" FOREIGN KEY ("serviceId") REFERENCES "public"."services"("serviceId") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
-ALTER TABLE "userAgreements" ADD CONSTRAINT "userAgreements_agreementId_agreements_id_fk" FOREIGN KEY ("agreementId") REFERENCES "public"."agreements"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
-CREATE INDEX "admin_notifications_created_at_idx" ON "adminNotifications" USING btree ("createdAt");--> statement-breakpoint
-CREATE INDEX "application_id_idx" ON "applications" USING btree ("applicationId");--> statement-breakpoint
-CREATE INDEX "applicant_id_idx" ON "applications" USING btree ("applicantId");--> statement-breakpoint
-CREATE INDEX "application_status_idx" ON "applications" USING btree ("status");--> statement-breakpoint
-CREATE INDEX "application_type_idx" ON "applications" USING btree ("type");--> statement-breakpoint
-CREATE INDEX "customer_id_idx" ON "customers" USING btree ("customerId");--> statement-breakpoint
-CREATE INDEX "customer_phone_idx" ON "customers" USING btree ("phone");--> statement-breakpoint
-CREATE INDEX "invoice_number_fk_idx" ON "customers" USING btree ("invoiceNumber");--> statement-breakpoint
-CREATE INDEX "invoice_number_idx" ON "invoices" USING btree ("invoiceNumber");--> statement-breakpoint
-CREATE INDEX "invoice_customer_id_idx" ON "invoices" USING btree ("customerId");--> statement-breakpoint
-CREATE INDEX "payment_staff_id_idx" ON "payments" USING btree ("staffId");--> statement-breakpoint
-CREATE INDEX "payment_service_id_idx" ON "payments" USING btree ("serviceId");--> statement-breakpoint
-CREATE INDEX "payment_status_idx" ON "payments" USING btree ("status");--> statement-breakpoint
-CREATE INDEX "payment_date_idx" ON "payments" USING btree ("date");--> statement-breakpoint
-CREATE INDEX "referral_bonus_referrer_idx" ON "referralBonuses" USING btree ("referrerCustomerId");--> statement-breakpoint
-CREATE INDEX "referral_bonus_vip_card_idx" ON "referralBonuses" USING btree ("referrerVipCard");--> statement-breakpoint
-CREATE INDEX "referral_payment_customer_idx" ON "referralPaymentRequests" USING btree ("customerId");--> statement-breakpoint
-CREATE INDEX "referral_payment_status_idx" ON "referralPaymentRequests" USING btree ("status");--> statement-breakpoint
-CREATE INDEX "status_history_service_id_idx" ON "serviceStatusHistory" USING btree ("serviceId");--> statement-breakpoint
-CREATE INDEX "status_history_status_idx" ON "serviceStatusHistory" USING btree ("status");--> statement-breakpoint
-CREATE INDEX "service_id_idx" ON "services" USING btree ("serviceId");--> statement-breakpoint
-CREATE INDEX "service_customer_id_idx" ON "services" USING btree ("customerId");--> statement-breakpoint
-CREATE INDEX "service_staff_id_idx" ON "services" USING btree ("staffId");--> statement-breakpoint
-CREATE INDEX "service_is_active_idx" ON "services" USING btree ("isActive");--> statement-breakpoint
-CREATE INDEX "service_type_idx" ON "services" USING btree ("type");--> statement-breakpoint
-CREATE INDEX "service_customer_phone_idx" ON "services" USING btree ("customerPhone");--> statement-breakpoint
-CREATE INDEX "service_active_type_idx" ON "services" USING btree ("isActive","type");--> statement-breakpoint
-CREATE INDEX "sms_log_staff_id_idx" ON "smsLogs" USING btree ("staffId");--> statement-breakpoint
-CREATE INDEX "sms_log_status_idx" ON "smsLogs" USING btree ("status");--> statement-breakpoint
-CREATE INDEX "staff_id_idx" ON "staffs" USING btree ("staffId");--> statement-breakpoint
-CREATE INDEX "staff_username_idx" ON "staffs" USING btree ("username");--> statement-breakpoint
-CREATE INDEX "staff_phone_idx" ON "staffs" USING btree ("phone");--> statement-breakpoint
-CREATE INDEX "staff_is_verified_idx" ON "staffs" USING btree ("isVerified");--> statement-breakpoint
-CREATE INDEX "staff_role_idx" ON "staffs" USING btree ("role");--> statement-breakpoint
-CREATE INDEX "staff_verified_role_idx" ON "staffs" USING btree ("isVerified","role");--> statement-breakpoint
-CREATE INDEX "staff_active_idx" ON "staffs" USING btree ("isActiveStaff");--> statement-breakpoint
-CREATE INDEX "subscription_id_idx" ON "subscriptions" USING btree ("subscriptionId");--> statement-breakpoint
-CREATE INDEX "subscriber_name_idx" ON "subscriptions" USING btree ("name");--> statement-breakpoint
-CREATE INDEX "subscriber_phone_idx" ON "subscriptions" USING btree ("phone");--> statement-breakpoint
-CREATE INDEX "subscriber_address_idx" ON "subscriptions" USING btree ("district");--> statement-breakpoint
-CREATE INDEX "task_id_idx" ON "tasks" USING btree ("taskId");--> statement-breakpoint
-CREATE INDEX "task_staff_id_idx" ON "tasks" USING btree ("staffId");--> statement-breakpoint
-CREATE INDEX "task_service_id_idx" ON "tasks" USING btree ("serviceId");
+DO $$ BEGIN
+    ALTER TABLE "contactMessages" ADD CONSTRAINT "contactMessages_customerId_customers_customerId_fk" FOREIGN KEY ("customerId") REFERENCES "public"."customers"("customerId") ON DELETE cascade ON UPDATE no action;
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
+--> statement-breakpoint
+DO $$ BEGIN
+    ALTER TABLE "customerNotifications" ADD CONSTRAINT "customerNotifications_customerId_customers_customerId_fk" FOREIGN KEY ("customerId") REFERENCES "public"."customers"("customerId") ON DELETE cascade ON UPDATE no action;
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
+--> statement-breakpoint
+DO $$ BEGIN
+    ALTER TABLE "feedbacks" ADD CONSTRAINT "feedbacks_serviceId_services_serviceId_fk" FOREIGN KEY ("serviceId") REFERENCES "public"."services"("serviceId") ON DELETE cascade ON UPDATE no action;
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
+--> statement-breakpoint
+DO $$ BEGIN
+    ALTER TABLE "feedbacks" ADD CONSTRAINT "feedbacks_customerId_customers_customerId_fk" FOREIGN KEY ("customerId") REFERENCES "public"."customers"("customerId") ON DELETE cascade ON UPDATE no action;
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
+--> statement-breakpoint
+DO $$ BEGIN
+    ALTER TABLE "invoices" ADD CONSTRAINT "invoices_customerId_customers_customerId_fk" FOREIGN KEY ("customerId") REFERENCES "public"."customers"("customerId") ON DELETE cascade ON UPDATE no action;
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
+--> statement-breakpoint
+DO $$ BEGIN
+    ALTER TABLE "noticeRecipients" ADD CONSTRAINT "noticeRecipients_noticeId_notices_id_fk" FOREIGN KEY ("noticeId") REFERENCES "public"."notices"("id") ON DELETE cascade ON UPDATE no action;
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
+--> statement-breakpoint
+DO $$ BEGIN
+    ALTER TABLE "noticeRecipients" ADD CONSTRAINT "noticeRecipients_staffId_staffs_staffId_fk" FOREIGN KEY ("staffId") REFERENCES "public"."staffs"("staffId") ON DELETE cascade ON UPDATE no action;
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
+--> statement-breakpoint
+DO $$ BEGIN
+    ALTER TABLE "noticeRecipients" ADD CONSTRAINT "noticeRecipients_customerId_customers_customerId_fk" FOREIGN KEY ("customerId") REFERENCES "public"."customers"("customerId") ON DELETE cascade ON UPDATE no action;
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
+--> statement-breakpoint
+DO $$ BEGIN
+    ALTER TABLE "notices" ADD CONSTRAINT "notices_createdBy_admins_id_fk" FOREIGN KEY ("createdBy") REFERENCES "public"."admins"("id") ON DELETE set null ON UPDATE no action;
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
+--> statement-breakpoint
+DO $$ BEGIN
+    ALTER TABLE "payments" ADD CONSTRAINT "payments_staffId_staffs_staffId_fk" FOREIGN KEY ("staffId") REFERENCES "public"."staffs"("staffId") ON DELETE cascade ON UPDATE no action;
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
+--> statement-breakpoint
+DO $$ BEGIN
+    ALTER TABLE "payments" ADD CONSTRAINT "payments_serviceId_services_serviceId_fk" FOREIGN KEY ("serviceId") REFERENCES "public"."services"("serviceId") ON DELETE set null ON UPDATE no action;
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
+--> statement-breakpoint
+DO $$ BEGIN
+    ALTER TABLE "products" ADD CONSTRAINT "products_invoiceId_invoices_id_fk" FOREIGN KEY ("invoiceId") REFERENCES "public"."invoices"("id") ON DELETE cascade ON UPDATE no action;
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
+--> statement-breakpoint
+DO $$ BEGIN
+    ALTER TABLE "referralBonuses" ADD CONSTRAINT "referralBonuses_referrerCustomerId_customers_customerId_fk" FOREIGN KEY ("referrerCustomerId") REFERENCES "public"."customers"("customerId") ON DELETE cascade ON UPDATE no action;
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
+--> statement-breakpoint
+DO $$ BEGIN
+    ALTER TABLE "referralBonuses" ADD CONSTRAINT "referralBonuses_referredCustomerId_customers_customerId_fk" FOREIGN KEY ("referredCustomerId") REFERENCES "public"."customers"("customerId") ON DELETE set null ON UPDATE no action;
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
+--> statement-breakpoint
+DO $$ BEGIN
+    ALTER TABLE "referralPaymentRequests" ADD CONSTRAINT "referralPaymentRequests_customerId_customers_customerId_fk" FOREIGN KEY ("customerId") REFERENCES "public"."customers"("customerId") ON DELETE cascade ON UPDATE no action;
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
+--> statement-breakpoint
+DO $$ BEGIN
+    ALTER TABLE "serviceStatusHistory" ADD CONSTRAINT "serviceStatusHistory_serviceId_services_serviceId_fk" FOREIGN KEY ("serviceId") REFERENCES "public"."services"("serviceId") ON DELETE cascade ON UPDATE no action;
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
+--> statement-breakpoint
+DO $$ BEGIN
+    ALTER TABLE "services" ADD CONSTRAINT "services_customerId_customers_customerId_fk" FOREIGN KEY ("customerId") REFERENCES "public"."customers"("customerId") ON DELETE set null ON UPDATE no action;
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
+--> statement-breakpoint
+DO $$ BEGIN
+    ALTER TABLE "services" ADD CONSTRAINT "services_staffId_staffs_staffId_fk" FOREIGN KEY ("staffId") REFERENCES "public"."staffs"("staffId") ON DELETE set null ON UPDATE no action;
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
+--> statement-breakpoint
+DO $$ BEGIN
+    ALTER TABLE "smsLogs" ADD CONSTRAINT "smsLogs_staffId_staffs_staffId_fk" FOREIGN KEY ("staffId") REFERENCES "public"."staffs"("staffId") ON DELETE set null ON UPDATE no action;
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
+--> statement-breakpoint
+DO $$ BEGIN
+    ALTER TABLE "staffComplaints" ADD CONSTRAINT "staffComplaints_customerId_customers_customerId_fk" FOREIGN KEY ("customerId") REFERENCES "public"."customers"("customerId") ON DELETE cascade ON UPDATE no action;
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
+--> statement-breakpoint
+DO $$ BEGIN
+    ALTER TABLE "staffComplaints" ADD CONSTRAINT "staffComplaints_staffId_staffs_staffId_fk" FOREIGN KEY ("staffId") REFERENCES "public"."staffs"("staffId") ON DELETE cascade ON UPDATE no action;
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
+--> statement-breakpoint
+DO $$ BEGIN
+    ALTER TABLE "staffComplaints" ADD CONSTRAINT "staffComplaints_serviceId_services_serviceId_fk" FOREIGN KEY ("serviceId") REFERENCES "public"."services"("serviceId") ON DELETE set null ON UPDATE no action;
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
+--> statement-breakpoint
+DO $$ BEGIN
+    ALTER TABLE "staffNotifications" ADD CONSTRAINT "staffNotifications_staffId_staffs_staffId_fk" FOREIGN KEY ("staffId") REFERENCES "public"."staffs"("staffId") ON DELETE cascade ON UPDATE no action;
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
+--> statement-breakpoint
+DO $$ BEGIN
+    ALTER TABLE "tasks" ADD CONSTRAINT "tasks_staffId_staffs_staffId_fk" FOREIGN KEY ("staffId") REFERENCES "public"."staffs"("staffId") ON DELETE cascade ON UPDATE no action;
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
+--> statement-breakpoint
+DO $$ BEGIN
+    ALTER TABLE "tasks" ADD CONSTRAINT "tasks_serviceId_services_serviceId_fk" FOREIGN KEY ("serviceId") REFERENCES "public"."services"("serviceId") ON DELETE cascade ON UPDATE no action;
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
+--> statement-breakpoint
+DO $$ BEGIN
+    ALTER TABLE "userAgreements" ADD CONSTRAINT "userAgreements_agreementId_agreements_id_fk" FOREIGN KEY ("agreementId") REFERENCES "public"."agreements"("id") ON DELETE cascade ON UPDATE no action;
+EXCEPTION
+    WHEN duplicate_object THEN null;
+END $$;
+--> statement-breakpoint
+CREATE INDEX IF NOT EXISTS "admin_notifications_created_at_idx" ON "adminNotifications" USING btree ("createdAt");--> statement-breakpoint
+CREATE INDEX IF NOT EXISTS "application_id_idx" ON "applications" USING btree ("applicationId");--> statement-breakpoint
+CREATE INDEX IF NOT EXISTS "applicant_id_idx" ON "applications" USING btree ("applicantId");--> statement-breakpoint
+CREATE INDEX IF NOT EXISTS "application_status_idx" ON "applications" USING btree ("status");--> statement-breakpoint
+CREATE INDEX IF NOT EXISTS "application_type_idx" ON "applications" USING btree ("type");--> statement-breakpoint
+CREATE INDEX IF NOT EXISTS "customer_id_idx" ON "customers" USING btree ("customerId");--> statement-breakpoint
+CREATE INDEX IF NOT EXISTS "customer_phone_idx" ON "customers" USING btree ("phone");--> statement-breakpoint
+CREATE INDEX IF NOT EXISTS "invoice_number_fk_idx" ON "customers" USING btree ("invoiceNumber");--> statement-breakpoint
+CREATE INDEX IF NOT EXISTS "invoice_number_idx" ON "invoices" USING btree ("invoiceNumber");--> statement-breakpoint
+CREATE INDEX IF NOT EXISTS "invoice_customer_id_idx" ON "invoices" USING btree ("customerId");--> statement-breakpoint
+CREATE INDEX IF NOT EXISTS "payment_staff_id_idx" ON "payments" USING btree ("staffId");--> statement-breakpoint
+CREATE INDEX IF NOT EXISTS "payment_service_id_idx" ON "payments" USING btree ("serviceId");--> statement-breakpoint
+CREATE INDEX IF NOT EXISTS "payment_status_idx" ON "payments" USING btree ("status");--> statement-breakpoint
+CREATE INDEX IF NOT EXISTS "payment_date_idx" ON "payments" USING btree ("date");--> statement-breakpoint
+CREATE INDEX IF NOT EXISTS "referral_bonus_referrer_idx" ON "referralBonuses" USING btree ("referrerCustomerId");--> statement-breakpoint
+CREATE INDEX IF NOT EXISTS "referral_bonus_vip_card_idx" ON "referralBonuses" USING btree ("referrerVipCard");--> statement-breakpoint
+CREATE INDEX IF NOT EXISTS "referral_payment_customer_idx" ON "referralPaymentRequests" USING btree ("customerId");--> statement-breakpoint
+CREATE INDEX IF NOT EXISTS "referral_payment_status_idx" ON "referralPaymentRequests" USING btree ("status");--> statement-breakpoint
+CREATE INDEX IF NOT EXISTS "status_history_service_id_idx" ON "serviceStatusHistory" USING btree ("serviceId");--> statement-breakpoint
+CREATE INDEX IF NOT EXISTS "status_history_status_idx" ON "serviceStatusHistory" USING btree ("status");--> statement-breakpoint
+CREATE INDEX IF NOT EXISTS "service_id_idx" ON "services" USING btree ("serviceId");--> statement-breakpoint
+CREATE INDEX IF NOT EXISTS "service_customer_id_idx" ON "services" USING btree ("customerId");--> statement-breakpoint
+CREATE INDEX IF NOT EXISTS "service_staff_id_idx" ON "services" USING btree ("staffId");--> statement-breakpoint
+CREATE INDEX IF NOT EXISTS "service_is_active_idx" ON "services" USING btree ("isActive");--> statement-breakpoint
+CREATE INDEX IF NOT EXISTS "service_type_idx" ON "services" USING btree ("type");--> statement-breakpoint
+CREATE INDEX IF NOT EXISTS "service_customer_phone_idx" ON "services" USING btree ("customerPhone");--> statement-breakpoint
+CREATE INDEX IF NOT EXISTS "service_active_type_idx" ON "services" USING btree ("isActive","type");--> statement-breakpoint
+CREATE INDEX IF NOT EXISTS "sms_log_staff_id_idx" ON "smsLogs" USING btree ("staffId");--> statement-breakpoint
+CREATE INDEX IF NOT EXISTS "sms_log_status_idx" ON "smsLogs" USING btree ("status");--> statement-breakpoint
+CREATE INDEX IF NOT EXISTS "staff_id_idx" ON "staffs" USING btree ("staffId");--> statement-breakpoint
+CREATE INDEX IF NOT EXISTS "staff_username_idx" ON "staffs" USING btree ("username");--> statement-breakpoint
+CREATE INDEX IF NOT EXISTS "staff_phone_idx" ON "staffs" USING btree ("phone");--> statement-breakpoint
+CREATE INDEX IF NOT EXISTS "staff_is_verified_idx" ON "staffs" USING btree ("isVerified");--> statement-breakpoint
+CREATE INDEX IF NOT EXISTS "staff_role_idx" ON "staffs" USING btree ("role");--> statement-breakpoint
+CREATE INDEX IF NOT EXISTS "staff_verified_role_idx" ON "staffs" USING btree ("isVerified","role");--> statement-breakpoint
+CREATE INDEX IF NOT EXISTS "staff_active_idx" ON "staffs" USING btree ("isActiveStaff");--> statement-breakpoint
+CREATE INDEX IF NOT EXISTS "subscription_id_idx" ON "subscriptions" USING btree ("subscriptionId");--> statement-breakpoint
+CREATE INDEX IF NOT EXISTS "subscriber_name_idx" ON "subscriptions" USING btree ("name");--> statement-breakpoint
+CREATE INDEX IF NOT EXISTS "subscriber_phone_idx" ON "subscriptions" USING btree ("phone");--> statement-breakpoint
+CREATE INDEX IF NOT EXISTS "subscriber_address_idx" ON "subscriptions" USING btree ("district");--> statement-breakpoint
+CREATE INDEX IF NOT EXISTS "task_id_idx" ON "tasks" USING btree ("taskId");--> statement-breakpoint
+CREATE INDEX IF NOT EXISTS "task_staff_id_idx" ON "tasks" USING btree ("staffId");--> statement-breakpoint
+CREATE INDEX IF NOT EXISTS "task_service_id_idx" ON "tasks" USING btree ("serviceId");
