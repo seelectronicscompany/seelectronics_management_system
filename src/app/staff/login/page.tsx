@@ -57,9 +57,6 @@ export default function StaffLoginPage() {
           <h1 className="text-xl font-bold text-white tracking-wider uppercase">
             SE Electronics
           </h1>
-          <p className="text-[11px] text-blue-200 font-semibold tracking-[0.2em] uppercase mt-1">
-            Service Time Member
-          </p>
         </div>
 
         {/* White Form Section with curved top */}

@@ -1,0 +1,1 @@
+ALTER TABLE "staffs" ADD COLUMN "serviceCenterServices" integer DEFAULT 0;

@@ -117,7 +117,7 @@ export default function StaffDashboardClient({
         )}
 
         {/* Stats */}
-        <div className="grid grid-cols-3 gap-4 sm:gap-6">
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 sm:gap-6">
           <div className="bg-emerald-50 border-emerald-200 p-2 sm:p-4 rounded-md shadow-sm border flex items-center text-center justify-center">
             <div>
               <p className="text-2xl sm:text-3xl font-black text-emerald-600">
@@ -147,6 +147,17 @@ export default function StaffDashboardClient({
               </p>
               <p className="text-[10px] sm:text-xs uppercase font-black text-rose-600/70 tracking-tighter sm:tracking-widest">
                 Service Canceled
+              </p>
+            </div>
+          </div>
+
+          <div className="bg-blue-50 border-blue-200 p-2 sm:p-4 rounded-md shadow-sm border flex items-center text-center justify-center">
+            <div>
+              <p className="text-2xl sm:text-3xl font-black text-blue-600">
+                {staffData.serviceCenterServices || 0}
+              </p>
+              <p className="text-[10px] sm:text-xs uppercase font-black text-blue-600/70 tracking-tighter sm:tracking-widest">
+                Service Center
               </p>
             </div>
           </div>

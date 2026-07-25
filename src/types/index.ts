@@ -156,6 +156,7 @@ export type StaffsType = {
   successfulServices: number | null;
   canceledServices: number | null;
   isActiveStaff: boolean | null;
+  serviceCenterServices: number | null;
   smsNotificationEnabled: boolean;
   smsWorkingHoursOnly: boolean;
   smsFrequency: SMSFrequency;

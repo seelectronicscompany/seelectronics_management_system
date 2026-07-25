@@ -36,9 +36,6 @@ export default function CustomerLoginPage() {
           <h1 className="text-xl font-bold text-white tracking-wider uppercase">
             SE Electronics
           </h1>
-          <p className="text-[11px] text-blue-200 font-semibold tracking-[0.2em] uppercase mt-1">
-            Service Time Member
-          </p>
         </div>
 
         {/* White Form Section with curved top */}
@@ -46,7 +43,7 @@ export default function CustomerLoginPage() {
           {/* Light blue label bar */}
           <div className="bg-gradient-to-r from-sky-100 to-blue-100 rounded-md py-3 px-4 mb-6 mt-4 border border-sky-200">
             <h2 className="text-center text-[13px] font-extrabold text-brand tracking-wider uppercase">
-              SE Electronics ID Login
+              Customer Portal Login
             </h2>
           </div>
 

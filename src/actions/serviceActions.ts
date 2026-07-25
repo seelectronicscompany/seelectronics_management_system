@@ -1021,20 +1021,12 @@ export const reportService = async ({
         columns: { staffId: true },
       });
 
-      const isServiceCenter = serviceStatus.status === "service_center";
-
       await db
         .update(services)
         .set({
           staffReport: serviceReport,
           status: serviceStatus.status,
           ...(serviceReport.resolved && { resolvedBy: "staff_member" }),
-          ...(isServiceCenter && {
-            staffId: null,
-            staffName: null,
-            staffPhone: null,
-            staffRole: null,
-          }),
         })
         .where(eq(services.serviceId, serviceStatus.serviceId));
 

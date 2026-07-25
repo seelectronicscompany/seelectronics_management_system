@@ -15,6 +15,7 @@ import {
   services,
   staffs,
   userAgreements,
+  serviceStatusHistory,
 } from "@/db/schema";
 import {
   SMSError,
@@ -35,7 +36,7 @@ import {
 } from "@/validationSchemas";
 import bcrypt from "bcrypt";
 import crypto from "crypto";
-import { and, desc, eq, ilike, or, sql } from "drizzle-orm";
+import { and, desc, eq, ilike, or, sql, inArray, not } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 import { cookies, headers } from "next/headers";
 import { RedirectType, redirect } from "next/navigation";
@@ -411,6 +412,7 @@ export const getStaffById = async (staffId: string) => {
         completedServices: staffData.successfulServices || 0,
         pendingServices: staffData.pendingServices || 0,
         canceledServices: staffData.canceledServices || 0,
+        serviceCenterServices: staffData.serviceCenterServices || 0,
         activeServices:
           (staffData.totalServices || 0) -
           (staffData.successfulServices || 0) -
@@ -1068,6 +1070,7 @@ export async function getStaffProfileStats(staffId: string) {
           successfulServices: true,
           canceledServices: true,
           pendingServices: true,
+          serviceCenterServices: true,
           rating: true,
         },
       }),
@@ -1106,6 +1109,7 @@ export async function getStaffProfileStats(staffId: string) {
         completedServices: Number(staffStats.successfulServices || 0),
         canceledServices: Number(staffStats.canceledServices || 0),
         pendingServices: Number(staffStats.pendingServices || 0),
+        serviceCenterServices: Number(staffStats.serviceCenterServices || 0),
         averageRating: Number(staffStats.rating ?? ratingResult[0]?.avg ?? 0),
         recentPayments: staffPayments,
         totalEarnings,
@@ -1133,22 +1137,37 @@ export async function refreshStaffStats(
 
 export async function updateStaffStats(staffId: string) {
   try {
+    const serviceCenterSubquery = db
+      .select({ serviceId: serviceStatusHistory.serviceId })
+      .from(serviceStatusHistory)
+      .where(eq(serviceStatusHistory.status, "service_center"));
+
     const [
       totalResult,
       successResult,
       canceledResult,
       pendingResult,
       ratingResult,
+      serviceCenterResult,
     ] = await Promise.all([
       db
         .select({ count: sql<number>`count(*)` })
         .from(services)
-        .where(eq(services.staffId, staffId)),
+        .where(
+          and(
+            eq(services.staffId, staffId),
+            not(inArray(services.serviceId, serviceCenterSubquery)),
+          ),
+        ),
       db
         .select({ count: sql<number>`count(*)` })
         .from(services)
         .where(
-          and(eq(services.staffId, staffId), eq(services.status, "completed")),
+          and(
+            eq(services.staffId, staffId),
+            eq(services.status, "completed"),
+            not(inArray(services.serviceId, serviceCenterSubquery)),
+          ),
         ),
       db
         .select({ count: sql<number>`count(*)` })
@@ -1157,6 +1176,7 @@ export async function updateStaffStats(staffId: string) {
           and(
             eq(services.staffId, staffId),
             sql`${services.status} in ('canceled', 'appointment_retry')`,
+            not(inArray(services.serviceId, serviceCenterSubquery)),
           ),
         ),
       db
@@ -1166,6 +1186,7 @@ export async function updateStaffStats(staffId: string) {
           and(
             eq(services.staffId, staffId),
             sql`${services.status} not in ('completed', 'canceled', 'appointment_retry')`,
+            not(inArray(services.serviceId, serviceCenterSubquery)),
           ),
         ),
       db
@@ -1174,6 +1195,15 @@ export async function updateStaffStats(staffId: string) {
         .innerJoin(services, eq(services.serviceId, feedbacks.serviceId))
         .where(eq(services.staffId, staffId))
         .limit(1),
+      db
+        .select({ count: sql<number>`count(*)` })
+        .from(services)
+        .where(
+          and(
+            eq(services.staffId, staffId),
+            inArray(services.serviceId, serviceCenterSubquery),
+          ),
+        ),
     ]);
 
     const totalCount = Number(totalResult[0]?.count || 0);
@@ -1181,6 +1211,7 @@ export async function updateStaffStats(staffId: string) {
     const canceledCount = Number(canceledResult[0]?.count || 0);
     const pendingCount = Number(pendingResult[0]?.count || 0);
     const rating = Number(ratingResult[0]?.avg) || 0;
+    const serviceCenterCount = Number(serviceCenterResult[0]?.count || 0);
 
     await db
       .update(staffs)
@@ -1189,6 +1220,7 @@ export async function updateStaffStats(staffId: string) {
         successfulServices: successCount,
         canceledServices: canceledCount,
         pendingServices: pendingCount,
+        serviceCenterServices: serviceCenterCount,
         rating: parseFloat(rating.toFixed(2)),
       })
       .where(eq(staffs.staffId, staffId));

@@ -24,6 +24,11 @@ const statusConfig: Record<
     icon: AlertCircle,
     color: "orange",
   },
+  service_center_received: {
+    label: "Center Received",
+    icon: CheckCircle2,
+    color: "blue",
+  },
   completed: { label: "Resolved", icon: CheckCircle2, color: "green" },
   canceled: { label: "Canceled", icon: AlertCircle, color: "red" },
 };

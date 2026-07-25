@@ -37,7 +37,7 @@ const STATUSES = {
       "text-blue-500 bg-blue-500 bg-opacity-10 px-2 py-0.5 rounded-md border border-blue-500",
   },
   service_center_received: {
-    name: "Service Center",
+    name: "Service Center Received",
     styles:
       "text-blue-500 bg-blue-500 bg-opacity-10 px-2 py-0.5 rounded-md border border-blue-500",
   },
