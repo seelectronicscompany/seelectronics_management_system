@@ -18,17 +18,15 @@ export const sendSMS = async (phoneNumber: string, message: string) => {
       process.env.SMS_API_BASE_ENDPOINT &&
       process.env.SMS_API_KEY
     ) {
+      const params = new URLSearchParams();
+      params.append("api_key", process.env.SMS_API_KEY!);
+      params.append("senderid", process.env.SMS_SENDER_ID || "");
+      params.append("number", phoneNumber);
+      params.append("message", message);
+
       const res = await fetch(process.env.SMS_API_BASE_ENDPOINT + "/smsapi", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          api_key: process.env.SMS_API_KEY,
-          senderid: process.env.SMS_SENDER_ID,
-          number: phoneNumber,
-          message: message,
-        }),
+        body: params,
       });
       const jsonRes = await res.json();
       if (jsonRes.response_code != 202) {
