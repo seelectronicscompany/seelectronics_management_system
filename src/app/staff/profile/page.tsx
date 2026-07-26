@@ -1,5 +1,5 @@
 import { staffLogout, verifyStaffSession } from "@/actions";
-import { getStaffById, getStaffProfileStats } from "@/actions/staffActions";
+import { getStaffById, getStaffProfileStats, getStaffCertificateToken } from "@/actions/staffActions";
 import { getComplaintsByStaff } from "@/actions/complaintActions";
 import { getStaffNotices } from "@/actions/noticeActions";
 import StaffDashboardClient from "@/components/features/staff/StaffDashboardClient";
@@ -46,11 +46,12 @@ export default async function StaffProfilePage() {
   }
 
   const userId = session.userId as string;
-  const [profileRes, statsRes, complaintsRes, noticesRes] = await Promise.all([
+  const [profileRes, statsRes, complaintsRes, noticesRes, certRes] = await Promise.all([
     getStaffById(userId),
     getStaffProfileStats(userId),
     getComplaintsByStaff(userId),
     getStaffNotices(),
+    getStaffCertificateToken(userId),
   ]);
 
   const staffData = profileRes.success ? profileRes.data : null;
@@ -61,6 +62,7 @@ export default async function StaffProfilePage() {
   const activeNotices = noticesRes.success
     ? noticesRes.data || []
     : [];
+  const certificateToken = certRes.success ? certRes.token : null;
 
   if (!staffData) {
     return (
@@ -146,6 +148,7 @@ export default async function StaffProfilePage() {
       adminPhone={adminPhone}
       activeComplaints={activeComplaints}
       activeNotices={activeNotices}
+      certificateToken={certificateToken}
     />
   );
 }

@@ -234,22 +234,14 @@ export default async function generatePDF({
           await import("@/components/features/staff/CertificateTemplate")
         ).default;
 
-        let staffInfo:
-          | CertificatePayload
-          | Awaited<
-              ReturnType<typeof import("@/actions/staffActions").getStaffById>
-            >["data"] = payload as CertificatePayload;
+        let staffInfo: CertificatePayload | null = payload as CertificatePayload;
 
         if (
           !staffInfo ||
           finalDocType !== "certificate" ||
           !staffInfo.shopName
         ) {
-          const { getStaffById } = await import("@/actions/staffActions");
-          const response = await getStaffById(finalId);
-          if (!response.success || !response.data)
-            throw new AppError("স্টাফকে পাওয়া যায়নি।");
-          staffInfo = response.data;
+          throw new AppError("সার্টিফিকেট ডাউনলোড করার জন্য একটি বৈধ ডাউনলোড লিঙ্ক প্রয়োজন।");
         }
 
         const templatePath = path.join(

@@ -36,7 +36,7 @@ import {
 } from "@/validationSchemas";
 import bcrypt from "bcrypt";
 import crypto from "crypto";
-import { and, desc, eq, ilike, or, sql, inArray, not } from "drizzle-orm";
+import { and, desc, eq, ilike, or, sql, inArray, not, gt } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 import { cookies, headers } from "next/headers";
 import { RedirectType, redirect } from "next/navigation";
@@ -129,7 +129,10 @@ export const sendIdCardDownloadLink = async (staffData: {
       phoneNumber,
       type: "id_card",
       message: message,
-      shortMessage: `প্রিয় {staff_name}, আপনার আইডি কার্ড ডাউনলোড করার জন্য ড্যাশবোর্ডে লগইন করুন।`,
+      shortMessage: renderText(
+        `প্রিয় {staff_name}, আপনার আইডি কার্ড ডাউনলোড করার জন্য ড্যাশবোর্ডে লগইন করুন।`,
+        { staff_name: staffName },
+      ),
       link: "/staff/profile", // Or a specific link if available
     });
 
@@ -201,7 +204,10 @@ export const sendCertificateLink = async (formData: FormData) => {
           phoneNumber: phone,
           type: "certificate",
           message: message,
-          shortMessage: `প্রিয় {ownerName}, আপনার সার্টিফিকেট ডাউনলোড করার জন্য ড্যাশবোর্ডে লগইন করুন।`,
+          shortMessage: renderText(
+            `প্রিয় {ownerName}, আপনার সার্টিফিকেট ডাউনলোড করার জন্য ড্যাশবোর্ডে লগইন করুন।`,
+            { ownerName },
+          ),
           link: "/staff/profile",
         });
       }
@@ -248,6 +254,8 @@ export const getAllTeamMembers = async () => {
         successfulServices: staffs.successfulServices,
         canceledServices: staffs.canceledServices,
         totalServices: staffs.totalServices,
+        pendingServices: staffs.pendingServices,
+        serviceCenterServices: staffs.serviceCenterServices,
       })
       .from(staffs)
       .leftJoin(services, eq(services.staffId, staffs.staffId))
@@ -273,10 +281,8 @@ export const getAllTeamMembers = async () => {
           nidBackPhotoUrl,
           completedServices: staff.successfulServices || 0,
           canceledServices: staff.canceledServices || 0,
-          pendingServices:
-            (staff.totalServices || 0) -
-            (staff.successfulServices || 0) -
-            (staff.canceledServices || 0),
+          pendingServices: staff.pendingServices || 0,
+          serviceCenterServices: staff.serviceCenterServices || 0,
         };
       }),
     );
@@ -1307,3 +1313,91 @@ export const markStaffNotificationAsRead = async (id: string) => {
     return { success: false, message: "Something went wrong" };
   }
 };
+
+export const getStaffCertificateToken = async (staffId: string) => {
+  try {
+    const tokens = await db
+      .select({ token: authTokens.token })
+      .from(authTokens)
+      .where(
+        and(
+          gt(authTokens.expiresAt, new Date()),
+          sql`payload->>'type' = 'certificate'`,
+          sql`payload->>'staffId' = ${staffId}`
+        )
+      )
+      .orderBy(desc(authTokens.createdAt))
+      .limit(1);
+
+    if (tokens.length === 0) return { success: false, token: null };
+    return { success: true, token: tokens[0].token };
+  } catch (error) {
+    console.error("Error fetching certificate token:", error);
+    return { success: false, token: null };
+  }
+};
+
+export const getCertificatePreviewData = async (token: string) => {
+  try {
+    const { verifyAuthToken } = await import("@/actions/authActions");
+    const tokenResult = await verifyAuthToken(token);
+    if (!tokenResult.isValid) {
+      return { success: false, message: "ডাউনলোড লিংকটির মেয়াদ শেষ বা অকার্যকর।" };
+    }
+
+    const payload = tokenResult.payload;
+    if (!payload || payload.type !== "certificate") {
+      return { success: false, message: "অকার্যকর সার্টিফিকেট তথ্য।" };
+    }
+
+    const fs = await import("fs");
+    const path = await import("path");
+
+    const convertToBase64 = async (filePath: string): Promise<string> => {
+      const fileBuffer = await fs.promises.readFile(filePath);
+      const extensionName = path.extname(filePath).toLowerCase();
+      let mimeType = "image/jpeg";
+      if (extensionName === ".png") mimeType = "image/png";
+      else if (extensionName === ".svg") mimeType = "image/svg+xml";
+      else if (extensionName === ".ttf") mimeType = "font/ttf";
+      return `data:${mimeType};base64,${fileBuffer.toString("base64")}`;
+    };
+
+    const templatePath = path.join(
+      process.cwd(),
+      "src",
+      "assets",
+      "images",
+      "certificate-template.jpg"
+    );
+    const backgroundBase64 = await convertToBase64(templatePath);
+
+    const fontsPath = path.join(process.cwd(), "src", "assets", "fonts");
+    const font1 = await convertToBase64(path.join(fontsPath, "oldenglishtextmt.ttf"));
+    const font2 = await convertToBase64(path.join(fontsPath, "edwardianscriptitc.ttf"));
+    const font3 = await convertToBase64(path.join(fontsPath, "brockScript.ttf"));
+
+    const { qrcode } = await import("@/lib/id-gen");
+    const qrCodeData = await qrcode(payload.staffId || payload.shopId || "");
+
+    const issueDate = new Date();
+
+    return {
+      success: true,
+      data: {
+        ...payload,
+        bgImage: backgroundBase64,
+        qrcode: qrCodeData,
+        font1,
+        font2,
+        font3,
+        issueDate,
+      },
+    };
+  } catch (error) {
+    console.error("Error fetching preview data:", error);
+    return { success: false, message: "সার্টিফিকেট লোড করতে ব্যর্থ।" };
+  }
+};
+
+

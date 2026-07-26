@@ -10,9 +10,11 @@ import {
   User,
   Wallet,
   Wrench,
+  Award,
 } from "lucide-react";
 import Link from "next/link";
 import Marquee from "react-fast-marquee";
+import { toast } from "react-toastify";
 import PrayerTimes from "../shared/PrayerTimes";
 
 import { StaffLayout } from "@/components/layout";
@@ -25,6 +27,7 @@ interface StaffDashboardClientProps {
   adminPhone: string;
   activeComplaints: any[];
   activeNotices: any[];
+  certificateToken?: string | null;
 }
 
 export default function StaffDashboardClient({
@@ -34,6 +37,7 @@ export default function StaffDashboardClient({
   adminPhone,
   activeComplaints,
   activeNotices,
+  certificateToken,
 }: StaffDashboardClientProps) {
   const unreadNotices = activeNotices.filter((n) => !n.isRead);
   const showMarquee =
@@ -223,18 +227,31 @@ export default function StaffDashboardClient({
                 color: "text-red-500",
                 bg: "bg-red-50",
               },
-               {
-      label: "Emergency Services",
-      icon: AlertCircle,
-      href: "/staff/jorori-seba",
-      color: "text-red-500",
-      bg: "bg-red-50",
-    },
-  
+              {
+                label: "Emergency Services",
+                icon: AlertCircle,
+                href: "/staff/jorori-seba",
+                color: "text-red-500",
+                bg: "bg-red-50",
+              },
+              {
+                label: "Certificate",
+                icon: Award,
+                href: certificateToken ? `/staff/certificate?token=${certificateToken}` : "#",
+                onClick: (e: any) => {
+                  if (!certificateToken) {
+                    e.preventDefault();
+                    toast.error("আপনার জন্য কোনো সার্টিফিকেট ইস্যু করা হয়নি। অনুগ্রহ করে এডমিনের সাথে যোগাযোগ করুন।");
+                  }
+                },
+                color: "text-amber-500",
+                bg: "bg-amber-50",
+              },
             ].map((action, i) => (
               <Link
                 key={action.label}
                 href={action.href}
+                onClick={action.onClick}
                 className="flex flex-col items-center gap-3 group"
               >
                 <div

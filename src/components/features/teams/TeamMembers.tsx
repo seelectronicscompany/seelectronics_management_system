@@ -40,6 +40,7 @@ export default function TeamMembers({
     completedServices: number;
     canceledServices: number;
     pendingServices: number;
+    serviceCenterServices: number;
   }[];
   staffId?: string;
 }) {
@@ -129,50 +130,61 @@ export default function TeamMembers({
               </div>
             </div>
 
-            <div className="grid grid-cols-4 gap-3 py-4">
-              <div className="flex flex-col items-center p-2 rounded-md bg-green-50 border border-green-200">
-                <div className="bg-green-100 rounded-md p-1 mb-3 mx-a">
+            <div className="grid grid-cols-3 gap-2.5 py-4">
+              <div className="flex flex-col items-center p-2 rounded-md bg-green-50 border border-green-200 text-center">
+                <div className="bg-green-100 rounded-md p-1 mb-2">
                   <CheckSquare className="size-5 text-green-600" />
                 </div>
-                <span className="text-2xl font-bold text-gray-900">
+                <span className="text-xl font-bold text-gray-900">
                   {selectedProfile.completedServices ?? 0}
                 </span>
-                <span className="text-sm font-medium text-green-700 ">
+                <span className="text-xs font-semibold text-green-700">
                   সফল সার্ভিস
                 </span>
               </div>
-              <div className="flex flex-col items-center p-2 rounded-md bg-blue-50 border border-blue-200">
-                <div className="bg-blue-100 rounded-md p-1 mb-3">
+              <div className="flex flex-col items-center p-2 rounded-md bg-blue-50 border border-blue-200 text-center">
+                <div className="bg-blue-100 rounded-md p-1 mb-2">
                   <Clock className="size-5 text-blue-600" />
                 </div>
-                <span className="text-2xl font-bold text-gray-900">
+                <span className="text-xl font-bold text-gray-900">
                   {selectedProfile.pendingServices ?? 0}
                 </span>
-                <span className="text-sm font-medium text-blue-700 ">
+                <span className="text-xs font-semibold text-blue-700">
                   পেন্ডিং সার্ভিস
                 </span>
               </div>
-              <div className="flex flex-col items-center p-2 rounded-md bg-purple-50 border border-purple-200">
-                <div className="bg-purple-100 rounded-md p-1 mb-3">
+              <div className="flex flex-col items-center p-2 rounded-md bg-purple-50 border border-purple-200 text-center">
+                <div className="bg-purple-100 rounded-md p-1 mb-2">
                   <BriefcaseBusiness className="size-5 text-purple-600" />
                 </div>
-                <span className="text-2xl font-bold text-gray-900">
+                <span className="text-xl font-bold text-gray-900">
                   {selectedProfile.repairExperienceYears ||
                     selectedProfile.installationExperienceYears}
                 </span>
-                <span className="text-sm font-medium text-purple-700 ">
+                <span className="text-xs font-semibold text-purple-700">
                   বছরের দক্ষতা
                 </span>
               </div>
-              <div className="flex flex-col items-center p-2 rounded-md bg-amber-50 border border-amber-200">
-                <div className="bg-amber-100 rounded-md p-1 mb-3">
+              <div className="flex flex-col items-center p-2 rounded-md bg-amber-50 border border-amber-200 text-center">
+                <div className="bg-amber-100 rounded-md p-1 mb-2">
                   <XCircle className="size-5 text-amber-600" />
                 </div>
-                <span className="text-2xl font-bold text-gray-900">
+                <span className="text-xl font-bold text-gray-900">
                   {selectedProfile.canceledServices ?? 0}
                 </span>
-                <span className="text-sm font-medium text-amber-700 mb-1">
+                <span className="text-xs font-semibold text-amber-700">
                   বাতিল সার্ভিস
+                </span>
+              </div>
+              <div className="flex flex-col items-center p-2 rounded-md bg-rose-50 border border-rose-200 text-center">
+                <div className="bg-rose-100 rounded-md p-1 mb-2">
+                  <Building2 className="size-5 text-rose-600" />
+                </div>
+                <span className="text-xl font-bold text-gray-900">
+                  {selectedProfile.serviceCenterServices ?? 0}
+                </span>
+                <span className="text-xs font-semibold text-rose-700">
+                  সার্ভিস সেন্টার
                 </span>
               </div>
             </div>

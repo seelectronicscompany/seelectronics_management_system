@@ -214,27 +214,26 @@ export default async function StaffDetailsPage() {
                 Staff ID: {staffData.staffId}
               </p>
               <a
-  target="_blank"
-  href={`/pdf/download?type=id-card&id=${staffData.staffId}`}
-  className="inline-flex items-center gap-2 mt-3 px-4 py-2 bg-sky-50 text-sky-600 rounded-md hover:bg-sky-100 transition-all border border-sky-200 text-xs font-bold uppercase tracking-wider"
->
-  <svg
-    xmlns="http://www.w3.org/2000/svg"
-    fill="none"
-    viewBox="0 0 24 24"
-    strokeWidth={1.5}
-    stroke="currentColor"
-    className="size-4"
-  >
-    <path
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5M16.5 12 12 16.5m0 0L7.5 12m4.5 4.5V3"
-    />
-  </svg>
-
-  Download ID
-</a>
+                target="_blank"
+                href={`/pdf/download?type=id-card&id=${staffData.staffId}`}
+                className="inline-flex items-center gap-2 mt-3 px-4 py-2 bg-sky-50 text-sky-600 rounded-md hover:bg-sky-100 transition-all border border-sky-200 text-xs font-bold uppercase tracking-wider"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  strokeWidth={1.5}
+                  stroke="currentColor"
+                  className="size-4"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5M16.5 12 12 16.5m0 0L7.5 12m4.5 4.5V3"
+                  />
+                </svg>
+                Download ID
+              </a>
 
               <div className="flex flex-wrap justify-center md:justify-start gap-2 mt-2">
                 <span className="bg-brand/10 text-brand text-sm font-bold px-3 py-2 rounded capitalize">
@@ -269,10 +268,10 @@ export default async function StaffDetailsPage() {
 
             <div className="bg-blue-50/70 border border-blue-400  p-3 rounded shadow-sm  text-center">
               <p className="text-2xl font-bold text-blue-600">
-                {staffData.pendingServices}
+                {staffData.serviceCenterServices}
               </p>
               <p className="text-sm text-blue-600 font-bold uppercase">
-                Pending
+                Service Center
               </p>
             </div>
 
