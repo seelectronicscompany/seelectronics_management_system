@@ -98,7 +98,7 @@ export const generateUrl = <T extends UrlConfig["type"]>(
       if (!p.token) {
         throw new Error("token is required");
       }
-      return `${baseUrl}/pdf/download?token=${p.token}`;
+      return `${baseUrl}/staff/certificate?token=${p.token}`;
 
     case "feedback":
       if (!p.serviceId) {

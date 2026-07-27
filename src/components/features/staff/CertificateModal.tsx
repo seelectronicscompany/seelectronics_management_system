@@ -79,12 +79,11 @@ export default function CertificateModal({ onClose }: { onClose: () => void }) {
             placeholder="Shop ID"
             required
           />
-          <input
+           <input
             type="text"
             name="staffId"
             className="__input"
-            placeholder="Staff ID"
-            required
+            placeholder="Staff ID (Optional)"
           />
         </div>
         <div className="flex justify-end gap-x-3 pt-3">

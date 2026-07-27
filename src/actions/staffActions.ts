@@ -174,7 +174,7 @@ export const sendCertificateLink = async (formData: FormData) => {
 
     const payload = {
       type: "certificate",
-      staffId,
+      staffId: staffId || undefined,
       memberNumber,
       shopName,
       shopId,
@@ -190,8 +190,9 @@ export const sendCertificateLink = async (formData: FormData) => {
       download_link: generateUrl("certificate-download", { token }),
     });
 
+    let notified = false;
     // Only create notification if staff exists in database
-    if (staffId) {
+    if (staffId && staffId.trim() !== "") {
       const staffExists = await db.query.staffs.findFirst({
         where: eq(staffs.staffId, staffId),
         columns: { staffId: true },
@@ -205,12 +206,17 @@ export const sendCertificateLink = async (formData: FormData) => {
           type: "certificate",
           message: message,
           shortMessage: renderText(
-            `প্রিয় {ownerName}, আপনার সার্টিফিকেট ডাউনলোড করার জন্য ড্যাশবোর্ডে লগইন করুন।`,
-            { ownerName },
+            `প্রিয় {ownerName}, আপনার সার্টিফিকেট ডাউনলোড করার জন্য ড্যাশবোর্ডে লগইন করুন অথবা এই লিঙ্কে যান: {download_link}`,
+            { ownerName, download_link: generateUrl("certificate-download", { token }) },
           ),
-          link: "/staff/profile",
+          link: `/staff/certificate?token=${token}`,
         });
+        notified = true;
       }
+    }
+
+    if (!notified) {
+      await sendSMS(phone, message);
     }
 
     return { success: true, message: "Certificate link sent" };

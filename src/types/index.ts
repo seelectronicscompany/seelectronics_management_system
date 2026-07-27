@@ -26,7 +26,7 @@ export type DocType =
   | "staff-not-guilty";
 
 export type CertificateData = {
-  staffId: string;
+  staffId?: string;
   memberNumber: string;
   shopName: string;
   shopId: string;
