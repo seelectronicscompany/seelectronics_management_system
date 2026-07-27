@@ -1,5 +1,4 @@
 import { CertificateData } from "@/types";
-import Image from "next/image";
 
 interface CertificateProps extends CertificateData {
   issueDate: Date;
@@ -38,7 +37,7 @@ export default function CertificateTemplate({
         <div className="col-span-5 flex items-center justify-between  w-full ">
           <div className="w-full h-full ">
             <div className="relative top-[7%] left-[10.5%]">
-              <Image
+              <img
                 src={data.qrcode}
                 alt="qr"
                 width={85}
@@ -49,7 +48,7 @@ export default function CertificateTemplate({
           </div>
           <div className="w-full h-full ">
             <div
-              className="relative left-[37%] -bottom-1 top-[77%]  text-[45px] font-bold text-slate-900 "
+              className="relative left-[37%] -bottom-1 top-[70%]  text-[45px] font-bold text-slate-900 "
               style={{ fontFamily: '"font1", system-ui' }}
             >
               {data.shopName}
