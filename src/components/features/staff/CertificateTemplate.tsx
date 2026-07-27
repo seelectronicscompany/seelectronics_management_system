@@ -1,4 +1,5 @@
 import { CertificateData } from "@/types";
+import Image from "next/image";
 
 interface CertificateProps extends CertificateData {
   issueDate: Date;
@@ -16,7 +17,7 @@ export default function CertificateTemplate({
 }) {
   return (
     <div
-      className="relative w-[297mm] h-[210mm] mx-auto bg-white bg-center bg-no-repeat bg-cover text-slate-900"
+      className="relative  w-[297mm] h-[210mm] mx-auto  bg-center bg-no-repeat bg-cover text-slate-900 grid-cols-[156px_88px_576px_140px_162px] grid-rows-[138px_89px_11px_32px_35px_55px_55px_55px_1fr]"
       style={{ backgroundImage: `url(${data.bgImage})` }}
     >
       <style>{`
@@ -33,66 +34,95 @@ export default function CertificateTemplate({
                 src: url('${data.font3}') format('truetype');
             }
             `}</style>
-      <div
-        className="absolute flex items-start justify-center border-[1px] border-slate-900 rounded-[2px]"
-        style={{
-          width: 88,
-          height: 89,
-          left: 156,
-          top: 138,
-        }}
-      >
-        <img
-          src={data.qrcode}
-          alt="QR Code"
-          className="w-full h-full object-cover object-center"
-        />
+      <div className=" p-32 h-full grid grid-cols-5 grid-rows-3 ">
+        <div className="col-span-5 flex items-center justify-between  w-full ">
+          <div className="w-full h-full ">
+            <div className="relative top-[7%] left-[10.5%]">
+              <Image
+                src={data.qrcode}
+                alt="qr"
+                width={85}
+                height={30}
+                className="inline"
+              />
+            </div>
+          </div>
+          <div className="w-full h-full ">
+            <div
+              className="relative left-[37%] -bottom-1 top-[77%]  text-[45px] font-bold text-slate-900 "
+              style={{ fontFamily: '"font1", system-ui' }}
+            >
+              {data.shopName}
+            </div>
+          </div>
+          <div className="w-full h-full ">
+            <div className="relative top-[62%] left-[37%]">
+              <div className="inline font-bold text-slate-800 text-xl tracking-wider">
+                {data.memberNumber}
+              </div>
+            </div>
+          </div>
+        </div>
+        <div className="col-span-3 row-start-2">
+          <div className="w-3/4 relative top-[22px] left-[44px] h-full  flex flex-col items-center justify-start ">
+            <div className="w-full">
+              <div
+                className="text-3xl relative -top-[10px] left-[166px] font-semibold"
+                style={{ fontFamily: '"font2", cursive' }}
+              >
+                {data.ownerName}
+              </div>
+            </div>
+            <div className="w-full">
+              <div
+                className="text-xl relative top-0 left-[115px] font-semibold"
+                style={{ fontFamily: '"font3"' }}
+              >
+                {data.shopId}
+              </div>
+            </div>
+            <div className="w-full">
+              <div
+                className="text-[28px] text-xl relative top-[11px] left-[115px] font-semibold"
+                style={{ fontFamily: '"font2", cursive' }}
+              >
+                {data.address}
+              </div>
+            </div>
+          </div>
+        </div>
+        <div className="col-span-2 col-start-4 row-start-2">
+          <div className="w-3/4 relative top-[22px] left-[44px] h-full  flex flex-col items-center justify-start ">
+            <div className="w-full">
+              <div
+                className="text-3xl relative -top-[8px] left-[166px] font-semibold"
+                style={{ fontFamily: '"font2", cursive' }}
+              >{`_`}</div>
+            </div>
+            <div className="w-full">
+              <div
+                className="text-xl relative top-0 -left-[55px] font-semibold"
+                style={{ fontFamily: '"font3"' }}
+              >
+                {data.phone}
+              </div>
+            </div>
+            <div className="w-full">
+              <div
+                className="text-[28px] text-xl relative top-[11px] left-[45px] font-semibold"
+                style={{ fontFamily: '"font2", cursive' }}
+              >
+                {data.district}
+              </div>
+            </div>
+          </div>
+        </div>
+        <div className="col-span-5 row-start-3">
+          <div className="relative top-[115px] left-[55px] inline">
+            {data.issueDate.toLocaleDateString("en-GB")}
+          </div>
+        </div>
       </div>
-      <div className="absolute top-[64mm] right-[48mm] text-center font-bold text-slate-800">
-        {data.memberNumber}
-      </div>
-      <div
-        className="absolute inset-x-0 text-center text-[40px] top-[245px] text-slate-900 font-bold"
-        style={{ fontFamily: '"font1", system-ui' }}
-      >
-        {data.shopName}
-      </div>
-      <div
-        className="absolute top-[305px] left-[340px] text-[40px] text-center text-slate-800"
-        style={{ fontFamily: '"font2", cursive' }}
-      >
-        {data.ownerName}
-      </div>
-      <div
-        className="absolute top-[355px] right-[340px] text-3xl text-center text-slate-800"
-        style={{ fontFamily: '"font3"' }}
-      >
-        {data.phone}
-      </div>
-      <div className="absolute top-[360px] left-[300px] text-2xl text-center text-slate-800">
-        {data.shopId}
-      </div>
-      <div
-        className="absolute top-[390px] left-[285px] text-[35px] text-center text-slate-800"
-        style={{ fontFamily: '"font2", cursive' }}
-      >
-        {data.address}
-      </div>
-      <div
-        className="absolute top-[385px] right-[290px] text-[40px] text-center text-slate-800"
-        style={{ fontFamily: '"font2", cursive' }}
-      >
-        {data.district}
-      </div>
-      <div className="absolute bottom-[165px] left-[160px] text-center text-xl text-slate-700">
-        {data.issueDate.toLocaleDateString("en-GB")}
-      </div>
-      <p className="absolute top-[122mm] text-center px-40 font-bold text-slate-800 leading-relaxed">
-        This certificate is proudly awarded to {data.shopName}. Your passion for
-        contributing has been a source of endless inspiration. With great
-        admiration, we present this gesture of gratitude. our heartfelt efforts
-        for SE ELECTRONICS BD have not gone unnoticed.
-      </p>
     </div>
   );
 }
