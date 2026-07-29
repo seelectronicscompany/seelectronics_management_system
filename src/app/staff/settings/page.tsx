@@ -13,7 +13,7 @@ export default async function StaffSettingsPage() {
 
   const userId = session.userId as string;
   const staffData = await db.query.staffs.findFirst({
-    where: eq(staffs.id, userId),
+    where: eq(staffs.staffId, userId),
   });
 
   if (!staffData) redirect("/staff/login");

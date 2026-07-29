@@ -37,30 +37,31 @@ export function StaffHeader({ balance }: StaffHeaderProps) {
   const { title, showBalance } = current;
 
   return (
-    <header className="sticky top-0 z-50 bg-[#0A1A3A] text-white shadow-lg overflow-hidden">
-      <div className="max-w-4xl mx-auto px-4 h-14 md:h-16 flex items-center justify-between">
+    <header className="sticky top-0 z-50 bg-[#0A1A3A] text-white shadow-lg overflow-hidden w-full">
+      <div className="max-w-4xl mx-auto px-4 h-14 md:h-16 flex items-center justify-between gap-3">
         
-        {showBalance && <StaffBalanceBar amount={balance} />}
-
-      
-
-        {/*  TITLE (MobilePageHeader logic) */}
-        <h1 className="font-bold text-sm sm:text-base p-1 flex-1">
-          {title}
-        </h1>
- {/* LEFT */}
+        {/* LEFT PROFILE ACCORDION */}
         <Link
           href="/staff/profile"
-          className="flex items-center gap-2 hover:bg-white/40 p-1.5 rounded-md transition-colors"
+          className="flex items-center shrink-0 gap-2 hover:bg-white/10 p-1.5 rounded-md transition-colors"
         >
-          <div className="w-8 h-8 sm:w-10 sm:h-10 bg-white/20 rounded-md flex items-center justify-center border border-white/20 overflow-hidden">
-            <span className="text-base font-bold">SE</span>
+          <div className="w-8 h-8 sm:w-10 sm:h-10 bg-white/20 rounded-md flex items-center justify-center border border-white/20 overflow-hidden shrink-0">
+            <span className="text-sm sm:text-base font-bold">SE</span>
           </div>
-
-         
         </Link>
-        {/* RIGHT */}
-        <div className="flex items-center">
+
+        {/* TITLE */}
+        <h1 className="font-bold text-xs sm:text-sm md:text-base truncate flex-1 min-w-0">
+          {title}
+        </h1>
+
+        {/* BALANCE BAR AND NOTIFICATIONS */}
+        <div className="flex items-center gap-2 shrink-0 max-w-full min-w-0">
+          {showBalance && (
+            <div className="min-w-0 max-w-[140px] xs:max-w-none">
+              <StaffBalanceBar amount={balance} />
+            </div>
+          )}
           <StaffNotificationBell />
         </div>
       </div>

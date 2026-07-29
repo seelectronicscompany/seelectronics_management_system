@@ -2,7 +2,7 @@
 
 import { Check, TriangleAlert } from "lucide-react"
 import { notFound, useSearchParams } from "next/navigation"
-import { useEffect, useState } from "react"
+import { useEffect, useState, useRef } from "react"
 import generatePDF from "./actions/generatePDF"
 import { DocType } from "@/types"
 
@@ -10,6 +10,7 @@ export default function DocDownloadPage() {
     const searchParams = useSearchParams()
     const [finishedDownload, setFinishedDownload] = useState(false)
     const [error, setError] = useState<string>()
+    const downloadStarted = useRef(false)
 
     const token = searchParams.get('token')
     const docType = searchParams.get('type') as DocType
@@ -74,6 +75,8 @@ export default function DocDownloadPage() {
     }
 
     useEffect(() => {
+        if (downloadStarted.current) return
+        downloadStarted.current = true
         download()
     }, [])
     return <div className="min-h-screen flex items-center justify-center p-4">

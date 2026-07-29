@@ -124,10 +124,9 @@ export default function StaffTaskList() {
       </div>
 
       {/* Task List */}
-      <div className="grid gap-2"
-      >
+      <div className="grid gap-3 w-full">
         {tasks.length === 0 ? (
-          <div className="h-52 flex flex-col items-center justify-center text-gray-400 bg-white rounded-xl border border-dashed">
+          <div className="h-52 flex flex-col items-center justify-center text-gray-400 bg-white rounded-xl border border-dashed p-4">
             <Inbox size={32} />
             <p className="text-xs font-bold uppercase mt-1">
               No tasks assigned
@@ -141,57 +140,28 @@ export default function StaffTaskList() {
                 handleMarkAsRead(task.taskId);
                 setSelectedTask(task);
               }}
-
               className={clsx(
-                "group flex flex-col sm:flex-row items-start sm:items-center gap-3 p-3 bg-white rounded-xl border transition-all text-left",
+                "group w-full flex flex-col gap-3 p-4 bg-white rounded-xl border transition-all text-left shadow-sm hover:shadow-md",
                 getVisualStatus(task) === "completed"
                   ? "border-gray-100 opacity-70"
-                  : "border-brand/20 shadow-sm hover:border-brand/30",
+                  : "border-brand/25 hover:border-brand/45",
               )}
             >
-              {/* Priority */}
-              {/* <div
-  className={clsx(
-    "shrink-0 size-10 rounded-lg flex items-center justify-center text-white self-end sm:self-auto",
-    {
-      "bg-blue-500": task.priority === "low",
-      "bg-emerald-500": task.priority === "normal",
-      "bg-orange-500": task.priority === "high",
-      "bg-rose-500": task.priority === "urgent",
-    },
-  )}
->
-  {task.priority === "urgent" ? (
-    <Zap size={16} />
-  ) : task.priority === "high" ? (
-    <AlertTriangle size={16} />
-  ) : (
-    <Wrench size={16} />
-  )}
-</div> */}
-
-              {/* Content */}
-              <div className="flex-1 min-w-0 space-y-0.5"
-              >
-                <div className="flex items-center gap-2">
-                  <h3 className="text-sm font-semibold text-gray-900
-               truncate uppercase">
-                    {task.staff?.name} নতুন {task.title} আসছে
-
-                  </h3>
-
-                  <div className="hidden sm:flex items-center gap-2">
+              {/* Header Info: Title & Badges */}
+              <div className="flex flex-col gap-1.5 w-full">
+                <div className="flex flex-wrap items-center justify-between gap-2 w-full">
+                  <div className="flex flex-wrap items-center gap-2 max-w-full">
                     <span
                       className={clsx(
-                        "px-2 py-1 rounded text-[13px] font-bold uppercase",
+                        "px-2 py-0.5 rounded text-[11px] font-bold uppercase tracking-wider",
                         {
-                          "bg-gray-100 text-gray-500":
+                          "bg-gray-100 text-gray-600":
                             getVisualStatus(task) === "pending",
-                          "bg-blue-100 text-blue-600":
+                          "bg-blue-100 text-blue-700":
                             getVisualStatus(task) === "in_progress",
-                          "bg-emerald-100 text-emerald-600":
+                          "bg-emerald-100 text-emerald-700":
                             getVisualStatus(task) === "completed",
-                          "bg-rose-100 text-rose-600":
+                          "bg-rose-100 text-rose-700":
                             getVisualStatus(task) === "cancelled",
                         },
                       )}
@@ -200,68 +170,40 @@ export default function StaffTaskList() {
                     </span>
 
                     {!readTasks.includes(task.taskId) && (
-                      <span className="text-[13px] font-bold uppercase px-2 py-1 rounded bg-red-100 text-red-600">
+                      <span className="text-[11px] font-bold uppercase px-2 py-0.5 rounded bg-red-100 text-red-600 animate-pulse">
                         NEW
                       </span>
                     )}
                   </div>
-                </div>
 
-                <p className="text-[15px] text-gray-500 line-clamp-3 sm:line-clamp-2 font-medium">
-                  {task.description}
-                </p>
-
-                <div className="flex flex-wrap items-center gap-x-3 gap-y-1 mt-1">
-                  <div className="flex items-center gap-1 text-[12px] font-bold text-gray-400">
-                    <Calendar size={10} />
-                    {task.dueDate
-                      ? formatDate(task.dueDate)
-                      : "No Deadline"}
-                  </div>
-                  <div className="flex items-center gap-1 text-[12px] font-bold text-gray-400">
-                    <Clock size={10} />
-                    {formatDate(task.createdAt)}
-                  </div>
-                </div>
-              </div>
-
-              {/* Arrow */}
-
-              <div className="hidden sm:flex shrink-0 px-2 py-1 rounded border  bg-emerald-100 border-emerald-600 font-bold text-[13px] text-emerald-700 uppercase transition-all">
-                details
-              </div>
-              <div className="flex sm:hidden items-center justify-between mt-2">
-
-                {/* LEFT: status + NEW */}
-                <div className="flex items-center gap-2">
-                  <span
-                    className={clsx(
-                      "px-2 py-1 rounded text-[13px] font-bold uppercase",
-                      {
-                        "bg-gray-100 text-gray-500":
-                          getVisualStatus(task) === "pending",
-                        "bg-blue-100 text-blue-600":
-                          getVisualStatus(task) === "in_progress",
-                        "bg-emerald-100 text-emerald-600":
-                          getVisualStatus(task) === "completed",
-                        "bg-rose-100 text-rose-600":
-                          getVisualStatus(task) === "cancelled",
-                      },
-                    )}
-                  >
-                    {getVisualStatus(task).replace("_", " ")}
+                  <span className="shrink-0 px-2.5 py-1 rounded-md border border-emerald-600 bg-emerald-50 font-bold text-[11px] text-emerald-700 uppercase group-hover:bg-emerald-100 transition-colors">
+                    details
                   </span>
-
-                  {!readTasks.includes(task.taskId) && (
-                    <span className="text-[13px] font-bold uppercase px-2 py-1 rounded bg-red-100 text-red-600">
-                      NEW
-                    </span>
-                  )}
                 </div>
 
-                {/* RIGHT: details */}
-                <div className="px-2 mx-2 font-bold uppercase py-1 rounded border border-emerald-600  bg-emerald-100  text-[13px] text-emerald-700 ">
-                  details
+                <h3 className="text-sm sm:text-base font-bold text-gray-900 break-words leading-snug">
+                  {task.staff?.name ? `${task.staff.name} - ` : ""}{task.title}
+                </h3>
+              </div>
+
+              {/* Description */}
+              <p className="text-xs sm:text-sm text-gray-500 line-clamp-2 break-words">
+                {task.description}
+              </p>
+
+              {/* Footer Meta */}
+              <div className="flex flex-wrap items-center justify-between gap-2 pt-2 border-t border-gray-50 w-full text-[11px] font-bold text-gray-400">
+                <div className="flex items-center gap-1.5 min-w-0">
+                  <Calendar size={12} className="shrink-0 text-gray-400" />
+                  <span className="truncate">
+                    Due: {task.dueDate ? formatDate(task.dueDate) : "No Deadline"}
+                  </span>
+                </div>
+                <div className="flex items-center gap-1.5 min-w-0">
+                  <Clock size={12} className="shrink-0 text-gray-400" />
+                  <span className="truncate">
+                    Assigned: {formatDate(task.createdAt)}
+                  </span>
                 </div>
               </div>
             </button>
@@ -314,62 +256,64 @@ export default function StaffTaskList() {
             </div>
 
             {/* Main Info Grid */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <div className="p-4 rounded-md bg-gray-50 border border-gray-100">
-                <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <div className="p-3 rounded-md bg-gray-50 border border-gray-100">
+                <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-0.5">
                   Assigned Date
                 </p>
-                <div className="flex items-center gap-2 font-bold text-gray-900">
-                  <Calendar size={16} className="text-brand" />
-                  {formatDate(selectedTask.createdAt)}
+                <div className="flex items-center gap-2 text-xs font-bold text-gray-900">
+                  <Calendar size={14} className="text-brand shrink-0" />
+                  <span className="truncate">{formatDate(selectedTask.createdAt)}</span>
                 </div>
               </div>
-              <div className="p-4 rounded-md bg-gray-50 border border-gray-100">
-                <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1">
+              <div className="p-3 rounded-md bg-gray-50 border border-gray-100">
+                <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-0.5">
                   Due Date
                 </p>
-                <div className="flex items-center gap-2 font-bold text-gray-900">
-                  <Clock size={16} className="text-brand" />
-                  {selectedTask.dueDate
-                    ? formatDate(selectedTask.dueDate)
-                    : "No Deadline"}
+                <div className="flex items-center gap-2 text-xs font-bold text-gray-900">
+                  <Clock size={14} className="text-brand shrink-0" />
+                  <span className="truncate">
+                    {selectedTask.dueDate
+                      ? formatDate(selectedTask.dueDate)
+                      : "No Deadline"}
+                  </span>
                 </div>
               </div>
             </div>
 
             {/* Description */}
-            <div className="space-y-3">
-              <h4 className="text-xs font-black text-gray-400 uppercase tracking-[0.2em] flex items-center gap-2">
-                <FileText size={14} className="text-brand" />
+            <div className="space-y-2">
+              <h4 className="text-[10px] font-black text-gray-400 uppercase tracking-widest flex items-center gap-2">
+                <FileText size={12} className="text-brand shrink-0" />
                 Task Description
               </h4>
-              <div className="p-6 bg-white rounded-[2rem]  border border-gray-100 shadow-sm min-h-32 text-gray-700 leading-relaxed text-[17px] font-medium whitespace-pre-wrap">
+              <div className="p-4 bg-white rounded-xl border border-gray-100 shadow-sm min-h-24 text-gray-700 leading-relaxed text-xs sm:text-sm font-medium whitespace-pre-wrap break-words">
                 {selectedTask.description}
               </div>
             </div>
 
             {/* Attachments (Placeholder for now) */}
             {selectedTask.files && selectedTask.files.length > 0 && (
-              <div className="space-y-3 ">
-                <h4 className="text-xs font-black text-gray-400 uppercase tracking-[0.2em] flex items-center gap-2">
-                  <FileText size={14} className="text-brand" />
+              <div className="space-y-2">
+                <h4 className="text-[10px] font-black text-gray-400 uppercase tracking-widest flex items-center gap-2">
+                  <FileText size={12} className="text-brand shrink-0" />
                   Associated Files
                 </h4>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                   {selectedTask.files.map((file, idx) => (
                     <div
                       key={idx}
-                      className="p-3 rounded-md bg-gray-50 border border-gray-100 flex items-center justify-between group hover:bg-white hover:border-brand/20 transition-all"
+                      className="p-2 rounded-md bg-gray-50 border border-gray-100 flex items-center justify-between group hover:bg-white hover:border-brand/20 transition-all text-xs"
                     >
-                      <div className="flex items-center gap-3">
-                        <div className="size-8 rounded-md bg-brand/10 flex items-center justify-center text-brand">
-                          <FileText size={16} />
+                      <div className="flex items-center gap-2 min-w-0">
+                        <div className="size-7 rounded bg-brand/10 flex items-center justify-center text-brand shrink-0">
+                          <FileText size={14} />
                         </div>
-                        <span className="text-xs font-bold text-gray-600 truncate max-w-[150px]">
+                        <span className="font-bold text-gray-600 truncate max-w-[120px]">
                           File_{idx + 1}
                         </span>
                       </div>
-                      <button className="text-[10px] font-black uppercase text-brand tracking-widest opacity-0 group-hover:opacity-100 transition-all">
+                      <button className="text-[10px] font-black uppercase text-brand tracking-widest opacity-0 group-hover:opacity-100 transition-all ml-2 shrink-0">
                         View
                       </button>
                     </div>
@@ -378,7 +322,7 @@ export default function StaffTaskList() {
               </div>
             )}
 
-            <div className="pt-4 border-t border-gray-100 flex flex-wrap gap-3">
+            <div className="pt-3 border-t border-gray-100 flex flex-wrap gap-2">
               {(getVisualStatus(selectedTask) === "pending" || getVisualStatus(selectedTask) === "in_progress") && (
                 <button
                   disabled={isUpdatingStatus}
@@ -389,18 +333,18 @@ export default function StaffTaskList() {
                       router.push(`/service-report?serviceId=${selectedTask.serviceId}`);
                     }
                   }}
-                  className="flex-1 min-w-[140px] py-4 rounded-md bg-blue-600 text-white font-black uppercase tracking-widest text-xs hover:bg-blue-700 transition-all shadow-lg shadow-blue-100 flex items-center justify-center gap-2"
+                  className="flex-1 min-w-[120px] py-3 rounded-md bg-blue-600 text-white font-black uppercase tracking-wider text-[10px] sm:text-xs hover:bg-blue-700 transition-all shadow-md shadow-blue-100 flex items-center justify-center gap-2"
                 >
                   {isUpdatingStatus ? (
                     <Spinner />
                   ) : getVisualStatus(selectedTask) === "pending" ? (
                     <>
-                      <PlayCircle size={18} />
+                      <PlayCircle size={16} />
                       Start Task
                     </>
                   ) : (
                     <>
-                      <FileText size={18} />
+                      <FileText size={16} />
                       Open Report
                     </>
                   )}
@@ -413,9 +357,9 @@ export default function StaffTaskList() {
                     onClick={() =>
                       handleStatusUpdate(selectedTask.taskId, "cancelled")
                     }
-                    className="py-4 px-6 rounded-md bg-gray-100 text-gray-500 font-black uppercase tracking-widest text-xs hover:bg-rose-50 hover:text-rose-600 transition-all flex items-center justify-center gap-2"
+                    className="py-3 px-4 rounded-md bg-gray-100 text-gray-500 font-black uppercase tracking-wider text-[10px] sm:text-xs hover:bg-rose-50 hover:text-rose-600 transition-all flex items-center justify-center gap-2"
                   >
-                    {isUpdatingStatus ? <Spinner /> : <XCircle size={18} />}
+                    {isUpdatingStatus ? <Spinner /> : <XCircle size={16} />}
                     Cancel
                   </button>
                 )}

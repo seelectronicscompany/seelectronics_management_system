@@ -48,14 +48,14 @@ export default function CertificateTemplate({
           </div>
           <div className="w-full h-full ">
             <div
-              className="relative left-[37%] -bottom-1 top-[70%]  text-[45px] font-bold text-slate-900 "
+              className="relative left-[37%] -bottom-3 top-[61%]  text-[45px] font-bold text-slate-900 "
               style={{ fontFamily: '"font1", system-ui' }}
             >
               {data.shopName}
             </div>
           </div>
           <div className="w-full h-full ">
-            <div className="relative top-[62%] left-[37%]">
+            <div className="relative top-[62%] left-[63%]">
               <div className="inline font-bold text-slate-800 text-xl tracking-wider">
                 {data.memberNumber}
               </div>
