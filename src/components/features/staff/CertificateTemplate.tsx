@@ -48,7 +48,7 @@ export default function CertificateTemplate({
           </div>
           <div className="w-full h-full ">
             <div
-              className="relative left-0 text-center -bottom-3 top-[61%]  text-[45px] font-bold text-slate-900 "
+              className="relative left-0 text-center -bottom-3 top-[70%]  text-[30px] font-bold text-slate-900 "
               style={{ fontFamily: '"font1", system-ui' }}
             >
               {data.shopName}
@@ -74,7 +74,7 @@ export default function CertificateTemplate({
             </div>
             <div className="w-full">
               <div
-                className="text-xl relative top-0 left-[115px] font-semibold"
+                className="text-3xl relative top-0 left-[115px] font-semibold"
                 style={{ fontFamily: '"font3"' }}
               >
                 {data.shopId}
@@ -82,7 +82,7 @@ export default function CertificateTemplate({
             </div>
             <div className="w-full">
               <div
-                className="text-[28px] text-xl relative top-[11px] left-[115px] font-semibold"
+                className="text-3xl relative top-[2px] left-[115px] font-semibold"
                 style={{ fontFamily: '"font2", cursive' }}
               >
                 {data.address}
@@ -100,7 +100,7 @@ export default function CertificateTemplate({
             </div>
             <div className="w-full">
               <div
-                className="text-xl relative top-0 -left-[55px] font-semibold"
+                className="text-3xl relative top-0 -left-[55px] font-semibold"
                 style={{ fontFamily: '"font3"' }}
               >
                 {data.phone}
@@ -108,7 +108,7 @@ export default function CertificateTemplate({
             </div>
             <div className="w-full">
               <div
-                className="text-[28px] text-xl relative top-[11px] left-[45px] font-semibold"
+                className="text-3xl relative top-[2px] left-[45px] font-semibold"
                 style={{ fontFamily: '"font2", cursive' }}
               >
                 {data.district}
@@ -117,7 +117,7 @@ export default function CertificateTemplate({
           </div>
         </div>
         <div className="col-span-5 row-start-3">
-          <div className="relative top-[115px] left-[55px] inline">
+          <div className="relative top-[115px] left-[55px] inline text-xl text-slate-700">
             {data.issueDate.toLocaleDateString("en-GB")}
           </div>
         </div>
