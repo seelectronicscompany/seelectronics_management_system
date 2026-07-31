@@ -48,7 +48,7 @@ export default function CertificateTemplate({
           </div>
           <div className="w-full h-full ">
             <div
-              className="relative left-[37%] -bottom-3 top-[61%]  text-[45px] font-bold text-slate-900 "
+              className="relative left-0 text-center -bottom-3 top-[61%]  text-[45px] font-bold text-slate-900 "
               style={{ fontFamily: '"font1", system-ui' }}
             >
               {data.shopName}
@@ -121,6 +121,12 @@ export default function CertificateTemplate({
             {data.issueDate.toLocaleDateString("en-GB")}
           </div>
         </div>
+        <p className="absolute top-[119mm] left-[12.5%] w-[75%] text-center font-bold text-slate-800 leading-relaxed">
+          This certificate is proudly awarded to {data.shopName || "N/A"}. Your
+          passion for contributing has been a source of endless inspiration.
+          With great admiration, we present this gesture of gratitude. our
+          heartfelt efforts for SE ELECTRONICS BD have not gone unnoticed.
+        </p>
       </div>
     </div>
   );

@@ -31,7 +31,8 @@ const getVisualStatus = (task: any): TaskStatus => {
 
   const sStatus = task.service.status;
   if (sStatus === "completed") return "completed";
-  if (sStatus === "canceled" || sStatus === "appointment_retry") return "cancelled";
+  if (sStatus === "canceled" || sStatus === "appointment_retry")
+    return "cancelled";
 
   // Respect the task's own status (pending/in_progress) while the service is active
   return tStatus;
@@ -81,7 +82,10 @@ export default function StaffTaskList() {
 
       // Redirect to report page if starting a service task
       if (newStatus === "in_progress" && (selectedTask?.serviceId || taskId)) {
-        const targetTask = selectedTask?.taskId === taskId ? selectedTask : tasks.find(t => t.taskId === taskId);
+        const targetTask =
+          selectedTask?.taskId === taskId
+            ? selectedTask
+            : tasks.find((t) => t.taskId === taskId);
         if (targetTask?.serviceId) {
           router.push(`/service-report?serviceId=${targetTask.serviceId}`);
           return;
@@ -171,7 +175,7 @@ export default function StaffTaskList() {
 
                     {!readTasks.includes(task.taskId) && (
                       <span className="text-[11px] font-bold uppercase px-2 py-0.5 rounded bg-red-100 text-red-600 animate-pulse">
-                        NEW
+                        NEW SERVICE
                       </span>
                     )}
                   </div>
@@ -182,7 +186,8 @@ export default function StaffTaskList() {
                 </div>
 
                 <h3 className="text-sm sm:text-base font-bold text-gray-900 break-words leading-snug">
-                  {task.staff?.name ? `${task.staff.name} - ` : ""}{task.title}
+                  {task.staff?.name ? `${task.staff.name} - ` : ""}
+                  {task.title}
                 </h3>
               </div>
 
@@ -196,7 +201,8 @@ export default function StaffTaskList() {
                 <div className="flex items-center gap-1.5 min-w-0">
                   <Calendar size={12} className="shrink-0 text-gray-400" />
                   <span className="truncate">
-                    Due: {task.dueDate ? formatDate(task.dueDate) : "No Deadline"}
+                    Due:{" "}
+                    {task.dueDate ? formatDate(task.dueDate) : "No Deadline"}
                   </span>
                 </div>
                 <div className="flex items-center gap-1.5 min-w-0">
@@ -263,7 +269,9 @@ export default function StaffTaskList() {
                 </p>
                 <div className="flex items-center gap-2 text-xs font-bold text-gray-900">
                   <Calendar size={14} className="text-brand shrink-0" />
-                  <span className="truncate">{formatDate(selectedTask.createdAt)}</span>
+                  <span className="truncate">
+                    {formatDate(selectedTask.createdAt)}
+                  </span>
                 </div>
               </div>
               <div className="p-3 rounded-md bg-gray-50 border border-gray-100">
@@ -323,14 +331,17 @@ export default function StaffTaskList() {
             )}
 
             <div className="pt-3 border-t border-gray-100 flex flex-wrap gap-2">
-              {(getVisualStatus(selectedTask) === "pending" || getVisualStatus(selectedTask) === "in_progress") && (
+              {(getVisualStatus(selectedTask) === "pending" ||
+                getVisualStatus(selectedTask) === "in_progress") && (
                 <button
                   disabled={isUpdatingStatus}
                   onClick={() => {
                     if (getVisualStatus(selectedTask) === "pending") {
                       handleStatusUpdate(selectedTask.taskId, "in_progress");
                     } else if (selectedTask.serviceId) {
-                      router.push(`/service-report?serviceId=${selectedTask.serviceId}`);
+                      router.push(
+                        `/service-report?serviceId=${selectedTask.serviceId}`,
+                      );
                     }
                   }}
                   className="flex-1 min-w-[120px] py-3 rounded-md bg-blue-600 text-white font-black uppercase tracking-wider text-[10px] sm:text-xs hover:bg-blue-700 transition-all shadow-md shadow-blue-100 flex items-center justify-center gap-2"

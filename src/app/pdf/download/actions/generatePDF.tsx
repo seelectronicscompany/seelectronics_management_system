@@ -751,6 +751,7 @@ export default async function generatePDF({
         `;
 
     await page.setContent(fullHtml, { waitUntil: "networkidle0" });
+    await page.evaluateHandle(() => document.fonts.ready);
     const pdf = await page.pdf(options);
     await browser.close();
 

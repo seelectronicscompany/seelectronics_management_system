@@ -82,6 +82,7 @@ export default async function StaffCertificatePage({
 
         <Link
           href={`/pdf/download?token=${token}`}
+          target="_blank"
           className="flex items-center gap-2 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 px-5 py-2.5 rounded-xl font-black transition-all shadow-lg shadow-amber-500/10 active:scale-[0.98] text-sm"
         >
           <Download className="size-4" /> Download PDF
