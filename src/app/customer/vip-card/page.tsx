@@ -13,6 +13,7 @@ import {
 } from "lucide-react";
 import { revalidatePath } from "next/cache";
 import Link from "next/link";
+import { CustomerLayout } from "@/components/layout/CustomerLayout";
 
 export default async function VipCardPage() {
   const session = await verifyCustomerSession();
@@ -53,9 +54,9 @@ export default async function VipCardPage() {
   }
 
   return (
-    <div className="min-h-screen bg-[#fafafa] py-4 px-4 selection:bg-blue-200">
-      <div className="max-w-2xl mx-auto">
-        <div className="flex items-center gap-4 mb-8">
+    <CustomerLayout>
+      <div className="max-w-2xl mx-auto pb-20">
+        <div className="flex items-center gap-4 mb-6">
           <Link
             href="/customer/profile"
             className="p-1 bg-white rounded-xl shadow-sm border border-gray-100 hover:bg-gray-50 hover:shadow-md transition-all active:scale-95"
@@ -457,6 +458,6 @@ export default async function VipCardPage() {
           </div>
         </div>
       </div>
-    </div>
+    </CustomerLayout>
   );
 }

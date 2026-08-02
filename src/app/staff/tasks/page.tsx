@@ -13,7 +13,7 @@ export default async function StaffTasksPage() {
 
   return (
     <StaffLayout balance={stats?.availableBalance || 0}>
-      <div className="p-3 sm:p-2 lg:p-2">
+      <div>
         <StaffTaskList />
       </div>
     </StaffLayout>

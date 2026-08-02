@@ -35,43 +35,43 @@ export default function NoticeBanner({
   return (
     <div
       className={clsx(
-        "w-full px-6 py-4 flex items-center justify-between gap-4 animate-in slide-in-from-top duration-500",
+        "w-full px-4 py-3 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 animate-in slide-in-from-top duration-500",
         currentNotice.notice?.priority === "urgent"
           ? "bg-rose-600 text-white"
           : "bg-orange-500 text-white",
       )}
     >
-      <div className="flex items-center gap-4 min-w-0">
-        <div className="size-10 rounded-md bg-white/20 flex items-center justify-center shrink-0">
+      <div className="flex items-center gap-3 min-w-0 w-full">
+        <div className="size-9 rounded-md bg-white/20 flex items-center justify-center shrink-0">
           {currentNotice.notice?.priority === "urgent" ? (
-            <Zap size={20} />
+            <Zap size={18} />
           ) : (
-            <AlertTriangle size={20} />
+            <AlertTriangle size={18} />
           )}
         </div>
-        <div className="min-w-0">
-          <p className="text-sm font-black uppercase tracking-[0.2em] opacity-70 mb-0.5">
+        <div className="min-w-0 flex-1">
+          <p className="text-[10px] font-black uppercase tracking-wider opacity-85 mb-0.5">
             {currentNotice.notice?.priority} Announcement
           </p>
-          <h4 className="text-sm font-bold truncate">
+          <h4 className="text-xs sm:text-sm font-bold truncate break-words">
             {currentNotice.notice?.title}
           </h4>
         </div>
       </div>
 
-      <div className="flex items-center gap-3 shrink-0">
+      <div className="flex items-center gap-2 shrink-0 self-end sm:self-auto">
         <Link
-          href="/staff/notifications"
-          className="px-4 py-2 bg-white text-gray-900 rounded-md text-sm font-black uppercase tracking-widest hover:bg-gray-100 transition-all flex items-center gap-2"
+          href="/customer/notifications"
+          className="px-3 py-1.5 bg-white text-gray-900 rounded-md text-[11px] font-black uppercase tracking-wider hover:bg-gray-100 transition-all flex items-center gap-1"
         >
-          View Notice
-          <ChevronRight size={14} />
+          Details
+          <ChevronRight size={12} />
         </Link>
         <button
           onClick={() => setCurrentNotice(null)}
-          className="p-2 hover:bg-white/10 rounded-md transition-colors"
+          className="p-1.5 hover:bg-white/10 rounded-md transition-colors"
         >
-          <X size={18} />
+          <X size={16} />
         </button>
       </div>
     </div>

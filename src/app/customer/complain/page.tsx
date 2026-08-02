@@ -10,6 +10,7 @@ import {
   CheckCircle,
 } from "lucide-react";
 import { formatDate } from "@/utils";
+import { CustomerLayout } from "@/components/layout/CustomerLayout";
 
 export default async function ComplainDashboardPage() {
   const session = await verifyCustomerSession();
@@ -36,162 +37,212 @@ export default async function ComplainDashboardPage() {
   const lastComplaint = complaints.length > 0 ? complaints[0] : null;
 
   return (
-    <div className="min-h-screen bg-gray-50 py-8 px-2">
-      <div className="max-w-6xl mx-auto space-y-4">
+    <CustomerLayout>
+      <div className="space-y-6 pb-20">
         {/* Header Title */}
-        <h1 className="text-2xl sm:text-3xl font-black text-brand border-b-2 border-brand/20 pb-4 mb-6">
-          অভিযোগ ড্যাশবোর্ড
-        </h1>
+        <div className="flex items-center justify-between border-b border-gray-200/60 pb-4">
+          <h1 className="text-xl sm:text-2xl font-black text-brand tracking-tight">
+            অভিযোগ ড্যাশবোর্ড
+          </h1>
+        </div>
 
         {/* Top Action Buttons (Dashboard Style) */}
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3.5">
           <Link
             href="/customer/complain/new"
-            className="flex items-center justify-center gap-2 bg-emerald-100/50 hover:bg-emerald-100 text-emerald-700 font-bold py-5 px-6 rounded-md border border-emerald-200 transition-all shadow-sm"
+            className="flex items-center justify-center gap-3 bg-emerald-50 hover:bg-emerald-100/80 text-emerald-700 font-black py-4 px-6 rounded-xl border border-emerald-100 transition-all shadow-sm active:scale-[0.98]"
           >
-            <PlusCircle size={24} className="text-emerald-600" />
-            <span className="text-lg">নতুন অভিযোগ</span>
+            <PlusCircle size={20} className="text-emerald-600" />
+            <span className="text-sm">নতুন অভিযোগ</span>
           </Link>
           <Link
             href="/customer/complain/history"
-            className="flex items-center justify-center gap-2 bg-blue-100/50 hover:bg-blue-100 text-blue-700 font-bold py-5 px-6 rounded-md border border-blue-200 transition-all shadow-sm"
+            className="flex items-center justify-center gap-3 bg-blue-50 hover:bg-blue-100/80 text-blue-700 font-black py-4 px-6 rounded-xl border border-blue-100 transition-all shadow-sm active:scale-[0.98]"
           >
-            <FileText size={24} className="text-blue-600" />
-            <span className="text-lg">অভিযোগ তালিকা</span>
+            <FileText size={20} className="text-blue-600" />
+            <span className="text-sm">অভিযোগ তালিকা</span>
           </Link>
           <Link
             href="/customer/profile"
-            className="flex items-center justify-center gap-2 bg-rose-100/50 hover:bg-rose-100 text-rose-700 font-bold py-5 px-6 rounded-md border border-rose-200 transition-all shadow-sm"
+            className="flex items-center justify-center gap-3 bg-rose-50 hover:bg-rose-100/80 text-rose-700 font-black py-4 px-6 rounded-xl border border-rose-100 transition-all shadow-sm active:scale-[0.98]"
           >
-            <Home size={24} className="text-rose-600" />
-            <span className="text-lg">ড্যাশবোর্ড</span>
+            <Home size={20} className="text-rose-600" />
+            <span className="text-sm">ড্যাশবোর্ড</span>
           </Link>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 pt-6">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           {/* Last Complaint Box */}
-          <div className="bg-white rounded-md shadow-sm border border-gray-100 p-6 flex flex-col">
-            <h2 className="text-xl font-bold text-gray-900 border-b border-gray-100 pb-4 mb-6">
-          সর্বশেষ অভিযোগ
+          <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-5 flex flex-col">
+            <h2 className="text-base font-black text-gray-900 border-b border-gray-100 pb-3.5 mb-4">
+              সর্বশেষ অভিযোগ
             </h2>
 
             {lastComplaint ? (
-              <div className="flex-1 flex flex-col space-y-6">
+              <div className="flex-1 flex flex-col space-y-5">
                 {/* Vertical Status Tracker */}
-                <div className="space-y-6 pt-2">
-                  <h4 className="text-[10px] font-black text-gray-400 uppercase tracking-widest text-center border-b border-gray-50 pb-4 mb-6">
-                    অগ্রগতির ধাপ
-                  </h4>
-
-                  <div className="flex flex-col gap-6 max-w-[240px] mx-auto">
+                <div className="space-y-4 pt-1">
+                  <div className="flex flex-col gap-4 max-w-[280px] mx-auto w-full">
                     {/* Step 1 */}
-                    <div className="flex items-center gap-4 group">
-                      <div className="size-8 rounded-full border-2 border-emerald-500 bg-emerald-50 flex items-center justify-center shrink-0 shadow-[0_0_10px_rgba(16,185,129,0.15)]">
-                        <CheckCircle size={16} className="text-emerald-500" />
+                    <div className="flex items-center gap-3">
+                      <div className="size-8 rounded-full border-2 border-emerald-500 bg-emerald-50 flex items-center justify-center shrink-0 shadow-[0_0_8px_rgba(16,185,129,0.1)]">
+                        <CheckCircle size={15} className="text-emerald-500" />
                       </div>
-                      <div className="flex-1 bg-emerald-50/50 border border-emerald-100 rounded-md px-3 py-2">
-                        <p className="font-bold text-emerald-800 text-[11px] uppercase tracking-tight">
-                        অপেক্ষমাণ
+                      <div className="flex-1 bg-emerald-50/40 border border-emerald-100/80 rounded-xl px-3 py-1.5">
+                        <p className="font-black text-emerald-800 text-[10px] uppercase tracking-wider">
+                          অপেক্ষমাণ
                         </p>
-                        <p className="text-[9px] text-emerald-600 font-bold">
+                        <p className="text-[9px] text-emerald-600 font-extrabold">
                           {formatDate(lastComplaint.createdAt)}
                         </p>
                       </div>
                     </div>
 
                     {/* Step 2 */}
-                    <div className="flex items-center gap-4 group">
+                    <div className="flex items-center gap-3">
                       <div
-                        className={`size-8 rounded-full border-2 flex items-center justify-center shrink-0 ${lastComplaint.status !== "under_trial" ? "border-emerald-500 bg-emerald-50 shadow-[0_0_10px_rgba(16,185,129,0.15)]" : "border-gray-200 bg-white"}`}
+                        className={`size-8 rounded-full border-2 flex items-center justify-center shrink-0 ${
+                          lastComplaint.status !== "under_trial"
+                            ? "border-emerald-500 bg-emerald-50 shadow-[0_0_8px_rgba(16,185,129,0.1)]"
+                            : "border-gray-200 bg-white"
+                        }`}
                       >
                         <CheckCircle
-                          size={16}
+                          size={15}
                           className={
                             lastComplaint.status !== "under_trial"
                               ? "text-emerald-500"
-                              : "text-gray-200"
+                              : "text-gray-300"
                           }
                         />
                       </div>
                       <div
-                        className={`flex-1 border rounded-md px-3 py-2 ${lastComplaint.status !== "under_trial" ? "bg-emerald-50/50 border-emerald-100" : "bg-gray-50 border-gray-100 opacity-60"}`}
+                        className={`flex-1 border rounded-xl px-3 py-1.5 ${
+                          lastComplaint.status !== "under_trial"
+                            ? "bg-emerald-50/40 border-emerald-100/80"
+                            : "bg-gray-55 border-gray-100 opacity-60"
+                        }`}
                       >
                         <p
-                          className={`font-bold text-[11px] uppercase tracking-tight ${lastComplaint.status !== "under_trial" ? "text-emerald-800" : "text-gray-400"}`}
+                          className={`font-black text-[10px] uppercase tracking-wider ${
+                            lastComplaint.status !== "under_trial"
+                              ? "text-emerald-800"
+                              : "text-gray-400"
+                          }`}
                         >
                           প্রক্রিয়াধীন
                         </p>
                         <p
-                          className={`text-[9px] font-bold ${lastComplaint.status !== "under_trial" ? "text-emerald-600" : "text-gray-300"}`}
+                          className={`text-[9px] font-extrabold ${
+                            lastComplaint.status !== "under_trial"
+                              ? "text-emerald-600"
+                              : "text-gray-300"
+                          }`}
                         >
                           {lastComplaint.status !== "under_trial"
-                           ? "পর্যালোচনায়"
+                            ? "পর্যালোচনায়"
                             : "অপেক্ষায়"}
                         </p>
                       </div>
                     </div>
 
                     {/* Step 3 */}
-                    <div className="flex items-center gap-4 group">
+                    <div className="flex items-center gap-3">
                       <div
-                        className={`size-8 rounded-full border-2 flex items-center justify-center shrink-0 ${lastComplaint.status === "hearing" || lastComplaint.status === "completed" ? "border-emerald-500 bg-emerald-50 shadow-[0_0_10px_rgba(16,185,129,0.15)]" : "border-gray-200 bg-white"}`}
+                        className={`size-8 rounded-full border-2 flex items-center justify-center shrink-0 ${
+                          lastComplaint.status === "hearing" ||
+                          lastComplaint.status === "completed"
+                            ? "border-emerald-500 bg-emerald-50 shadow-[0_0_8px_rgba(16,185,129,0.1)]"
+                            : "border-gray-200 bg-white"
+                        }`}
                       >
                         <CheckCircle
-                          size={16}
+                          size={15}
                           className={
                             lastComplaint.status === "hearing" ||
                             lastComplaint.status === "completed"
                               ? "text-emerald-500"
-                              : "text-gray-200"
+                              : "text-gray-300"
                           }
                         />
                       </div>
                       <div
-                        className={`flex-1 border rounded-md px-3 py-2 ${lastComplaint.status === "hearing" || lastComplaint.status === "completed" ? "bg-emerald-50/50 border-emerald-100" : "bg-gray-50 border-gray-100 opacity-60"}`}
+                        className={`flex-1 border rounded-xl px-3 py-1.5 ${
+                          lastComplaint.status === "hearing" ||
+                          lastComplaint.status === "completed"
+                            ? "bg-emerald-50/40 border-emerald-100/80"
+                            : "bg-gray-55 border-gray-100 opacity-60"
+                        }`}
                       >
                         <p
-                          className={`font-bold text-[11px] uppercase tracking-tight ${lastComplaint.status === "hearing" || lastComplaint.status === "completed" ? "text-emerald-800" : "text-gray-400"}`}
+                          className={`font-black text-[10px] uppercase tracking-wider ${
+                            lastComplaint.status === "hearing" ||
+                            lastComplaint.status === "completed"
+                              ? "text-emerald-800"
+                              : "text-gray-400"
+                          }`}
                         >
-                            শুনানি
+                          শুনানি
                         </p>
                         <p
-                          className={`text-[9px] font-bold ${lastComplaint.status === "hearing" || lastComplaint.status === "completed" ? "text-emerald-600" : "text-gray-300"}`}
+                          className={`text-[9px] font-extrabold ${
+                            lastComplaint.status === "hearing" ||
+                            lastComplaint.status === "completed"
+                              ? "text-emerald-600"
+                              : "text-gray-300"
+                          }`}
                         >
                           {lastComplaint.status === "hearing" ||
                           lastComplaint.status === "completed"
-                             ? "কর্মকর্তা তলব"
+                            ? "कर्मকর্তা তলব"
                             : "পরিকল্পিত"}
                         </p>
                       </div>
                     </div>
 
                     {/* Step 4 */}
-                    <div className="flex items-center gap-4 group">
+                    <div className="flex items-center gap-3">
                       <div
-                        className={`size-8 rounded-full border-2 flex items-center justify-center shrink-0 ${lastComplaint.status === "completed" ? "border-emerald-500 bg-emerald-50 shadow-[0_0_10px_rgba(16,185,129,0.15)]" : "border-gray-200 bg-white"}`}
+                        className={`size-8 rounded-full border-2 flex items-center justify-center shrink-0 ${
+                          lastComplaint.status === "completed"
+                            ? "border-emerald-500 bg-emerald-50 shadow-[0_0_8px_rgba(16,185,129,0.1)]"
+                            : "border-gray-200 bg-white"
+                        }`}
                       >
                         <CheckCircle
-                          size={16}
+                          size={15}
                           className={
                             lastComplaint.status === "completed"
                               ? "text-emerald-500"
-                              : "text-gray-200"
+                              : "text-gray-300"
                           }
                         />
                       </div>
                       <div
-                        className={`flex-1 border rounded-md px-3 py-2 ${lastComplaint.status === "completed" ? "bg-emerald-600 text-white" : "bg-gray-50 border-gray-100 opacity-60"}`}
+                        className={`flex-1 border rounded-xl px-3 py-1.5 ${
+                          lastComplaint.status === "completed"
+                            ? "bg-emerald-600 text-white border-transparent"
+                            : "bg-gray-55 border-gray-100 opacity-60"
+                        }`}
                       >
                         <p
-                          className={`font-bold text-[11px] uppercase tracking-tight ${lastComplaint.status === "completed" ? "text-white" : "text-gray-400"}`}
+                          className={`font-black text-[10px] uppercase tracking-wider ${
+                            lastComplaint.status === "completed"
+                              ? "text-white"
+                              : "text-gray-400"
+                          }`}
                         >
-                           নিষ্পত্তি
+                          নিষ্পত্তি
                         </p>
                         <p
-                          className={`text-[9px] font-bold ${lastComplaint.status === "completed" ? "text-white/80" : "text-gray-300"}`}
+                          className={`text-[9px] font-extrabold ${
+                            lastComplaint.status === "completed"
+                              ? "text-white/80"
+                              : "text-gray-300"
+                          }`}
                         >
                           {lastComplaint.status === "completed"
-                              ? "সম্পন্ন"
+                            ? "সম্পন্ন"
                             : "চূড়ান্ত ধাপ"}
                         </p>
                       </div>
@@ -199,35 +250,37 @@ export default async function ComplainDashboardPage() {
                   </div>
                 </div>
 
-                <div className="space-y-3 flex-1 bg-gray-50 p-4 rounded-md border border-gray-100">
-                  <div className="text-sm">
-                    <span className="font-bold text-gray-800">
-                       ট্র্যাকিং নম্বর:{" "}
+                <div className="space-y-2.5 flex-1 bg-gray-50/50 p-4 rounded-xl border border-gray-100/80">
+                  <div className="text-xs">
+                    <span className="font-extrabold text-gray-400 uppercase tracking-wider block mb-0.5">
+                      ট্র্যাকিং নম্বর:
                     </span>
-                    <span className="text-gray-600 font-mono">
+                    <span className="text-gray-800 font-bold font-mono">
                       {lastComplaint.complaintId}
                     </span>
                   </div>
-                  <div className="text-sm">
-                    <span className="font-bold text-gray-800">
-                      অভিযুক্ত কর্মী:{" "}
+                  <div className="text-xs">
+                    <span className="font-extrabold text-gray-400 uppercase tracking-wider block mb-0.5">
+                      অভিযুক্ত কর্মী:
                     </span>
-                    <span className="text-gray-600">
+                    <span className="text-gray-800 font-bold">
                       {lastComplaint.staff?.name || "প্রযোজ্য নয়"}
                     </span>
                   </div>
-                  <div className="text-sm">
-                    <span className="font-bold text-gray-800">বিষয়: </span>
-                    <span className="text-gray-600">
+                  <div className="text-xs">
+                    <span className="font-extrabold text-gray-400 uppercase tracking-wider block mb-0.5">
+                      বিষয়:
+                    </span>
+                    <span className="text-gray-800 font-bold">
                       {lastComplaint.subject}
                     </span>
                   </div>
                   {lastComplaint.serviceId && (
-                    <div className="text-sm">
-                      <span className="font-bold text-gray-800">
-                        সেবা আইডি:{" "}
+                    <div className="text-xs">
+                      <span className="font-extrabold text-gray-400 uppercase tracking-wider block mb-0.5">
+                        সেবা আইডি:
                       </span>
-                      <span className="text-gray-600 font-mono">
+                      <span className="text-gray-800 font-bold font-mono">
                         {lastComplaint.serviceId}
                       </span>
                     </div>
@@ -236,34 +289,31 @@ export default async function ComplainDashboardPage() {
 
                 <div className="flex items-center justify-between pt-2">
                   <div className="flex items-center gap-2">
-                    <span className="text-xs font-semibold text-white bg-amber-500 px-1.5 py-2 rounded-md shadow-sm">
-                     আবেদনের অবস্থা
+                    <span className="text-[10px] font-black text-amber-800 bg-amber-100 border border-amber-200/50 px-2 py-1 rounded-md uppercase tracking-wider">
+                      আবেদনের অবস্থা
                     </span>
-                    
-                    <span
-                      className={`text-xs font-semibold px-1.5 py-2 rounded-md border bg-white shadow-sm capitalize ${lastComplaint.status === "completed" ? "text-emerald-600 border-emerald-200" : "text-amber-600 border-amber-200"}`}
-                    >
+                    <span className="text-[10px] font-black text-gray-700 bg-gray-100 border border-gray-200 px-2 py-1 rounded-md uppercase tracking-wider capitalize">
                       {lastComplaint.status.replace("_", " ")}
                     </span>
                   </div>
                   <Link
                     href={`/customer/complain/doc/${lastComplaint.complaintId}`}
-                    className="bg-emerald-600/90 hover:bg-emerald-600 text-white font-semibold py-2 px-1.5 rounded-md transition-all text-sm shadow-sm hover:shadow-md"
+                    className="bg-brand hover:bg-brand-hover text-white font-extrabold py-2 px-3.5 rounded-lg transition-all text-xs shadow-sm active:scale-95"
                   >
                     বিস্তারিত দেখুন
                   </Link>
                 </div>
               </div>
             ) : (
-              <div className="flex-1 flex items-center justify-center text-gray-400 font-medium pb-8">
-               কোনো সাম্প্রতিক অভিযোগ পাওয়া যায়নি।
+              <div className="flex-1 flex items-center justify-center text-gray-400 font-medium py-12 text-sm">
+                কোনো সাম্প্রতিক অভিযোগ পাওয়া যায়নি।
               </div>
             )}
           </div>
 
           {/* Hearing Notice / Recent Summary Table */}
-          <div className="bg-white rounded-md shadow-sm border border-gray-100 p-6 flex flex-col">
-            <h2 className="text-xl font-bold text-gray-900 border-b border-gray-100 pb-4 mb-6">
+          <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-5 flex flex-col">
+            <h2 className="text-base font-black text-gray-900 border-b border-gray-100 pb-3.5 mb-4">
               সাম্প্রতিক অভিযোগ নোটিশ
             </h2>
 
@@ -271,33 +321,39 @@ export default async function ComplainDashboardPage() {
               <div className="overflow-x-auto">
                 <table className="w-full text-left border-collapse">
                   <thead>
-                    <tr className="bg-gray-50 border-y border-gray-200">
-                      <th className="py-3 px-2 text-sm font-black text-gray-600 uppercase tracking-wide">
-                       অভিযুক্ত কর্মী
+                    <tr className="border-b border-gray-100">
+                      <th className="py-2.5 px-2 text-xs font-black text-gray-400 uppercase tracking-wider">
+                        অভিযুক্ত কর্মী
                       </th>
-                      <th className="py-3 px-2 text-sm font-black text-gray-600 uppercase tracking-wide">
+                      <th className="py-2.5 px-2 text-xs font-black text-gray-400 uppercase tracking-wider">
                         তারিখ
                       </th>
-                      <th className="py-3 px-2 text-sm font-black text-gray-600 uppercase tracking-wide">
+                      <th className="py-2.5 px-2 text-xs font-black text-gray-400 uppercase tracking-wider">
                         অবস্থা
                       </th>
                     </tr>
                   </thead>
-                  <tbody className="divide-y divide-gray-100">
+                  <tbody className="divide-y divide-gray-50">
                     {complaints.slice(0, 4).map((c: any) => (
                       <tr
                         key={c.complaintId}
-                        className="hover:bg-gray-50 transition-colors"
+                        className="hover:bg-gray-50/50 transition-colors"
                       >
-                        <td className="py-3 px-2 text-sm font-bold text-gray-800">
+                        <td className="py-3 px-2 text-xs font-bold text-gray-800">
                           {c.staff?.name}
                         </td>
-                        <td className="py-3 px-2 text-sm text-gray-600">
+                        <td className="py-3 px-2 text-xs text-gray-500">
                           {formatDate(c.createdAt)}
                         </td>
                         <td className="py-3 px-2">
                           <span
-                            className={`text-xs font-bold px-1 py-2 rounded-sm uppercase ${c.status === "completed" ? "bg-emerald-100 text-emerald-700" : c.status === "hearing" ? "bg-amber-100 text-amber-700" : "bg-blue-100 text-blue-700"}`}
+                            className={`text-[9px] font-black px-2 py-0.5 rounded-full uppercase border ${
+                              c.status === "completed"
+                                ? "bg-emerald-50 text-emerald-700 border-emerald-100"
+                                : c.status === "hearing"
+                                  ? "bg-amber-50 text-amber-700 border-amber-100"
+                                  : "bg-blue-50 text-blue-700 border-blue-100"
+                            }`}
                           >
                             {c.status.replace("_", " ")}
                           </span>
@@ -308,13 +364,13 @@ export default async function ComplainDashboardPage() {
                 </table>
               </div>
             ) : (
-              <div className="flex-1 flex items-center justify-center text-gray-400 font-medium">
+              <div className="flex-1 flex items-center justify-center text-gray-400 font-medium py-12 text-sm">
                 কোনো নোটিশ পাওয়া যায়নি।
               </div>
             )}
           </div>
         </div>
       </div>
-    </div>
+    </CustomerLayout>
   );
 }
