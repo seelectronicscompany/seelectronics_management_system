@@ -73,10 +73,7 @@ export default function CertificateTemplate({
               </div>
             </div>
             <div className="w-full">
-              <div
-                className="text-3xl relative top-0 left-[115px] font-semibold"
-                style={{ fontFamily: '"font3"' }}
-              >
+              <div className="text-xl relative top-0 left-[115px]">
                 {data.shopId}
               </div>
             </div>
