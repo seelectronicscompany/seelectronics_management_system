@@ -47,7 +47,7 @@ export default function StaffDashboardClient({
 
   return (
     <StaffLayout balance={stats?.availableBalance || 0}>
-      <div className="flex flex-col gap-4 p-4 sm:p-2 text-gray-800 pb-24">
+      <div className="flex flex-col gap-4 px-1 text-gray-800 pb-24">
         {/* Banner */}
         <div className="w-full overflow-hidden shadow-md">
           <Banner />
@@ -237,11 +237,15 @@ export default function StaffDashboardClient({
               {
                 label: "Certificate",
                 icon: Award,
-                href: certificateToken ? `/staff/certificate?token=${certificateToken}` : "#",
+                href: certificateToken
+                  ? `/staff/certificate?token=${certificateToken}`
+                  : "#",
                 onClick: (e: any) => {
                   if (!certificateToken) {
                     e.preventDefault();
-                    toast.error("আপনার জন্য কোনো সার্টিফিকেট ইস্যু করা হয়নি। অনুগ্রহ করে এডমিনের সাথে যোগাযোগ করুন।");
+                    toast.error(
+                      "আপনার জন্য কোনো সার্টিফিকেট ইস্যু করা হয়নি। অনুগ্রহ করে এডমিনের সাথে যোগাযোগ করুন।",
+                    );
                   }
                 },
                 color: "text-amber-500",
