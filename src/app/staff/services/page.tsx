@@ -35,33 +35,34 @@ export default async function StaffServicesPage() {
 
   return (
     <StaffLayout balance={stats?.availableBalance || 0}>
-      {/* <MobilePageHeader 
-        title="My Services" 
-        backHref="/staff/profile" 
-        Icon={Wrench}
-      /> */}
-
-      <div className="p-3 space-y-1">
-        {/* Page Title (Desktop Only) */}
-        <div className="hidden md:flex items-center gap-3 mb-2">
-          <div className="p-2 bg-brand/10 rounded-md text-brand">
-            <Wrench size={20} />
+      <div className="p-4 space-y-4 pb-28">
+        {/* Page Title */}
+        <div className="flex items-center gap-3 mb-1 bg-white p-4 rounded-2xl border border-slate-100 shadow-sm">
+          <div className="p-2.5 bg-brand/5 rounded-xl text-brand">
+            <Wrench size={22} className="stroke-[2.5]" />
           </div>
-          <h1 className="text-xl font-bold text-gray-800">
-            My Assigned Services
-          </h1>
+          <div>
+            <h1 className="text-xl font-extrabold text-slate-800 uppercase tracking-wide">
+              Assigned Services
+            </h1>
+            <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">
+              Track and update your client service reports
+            </p>
+          </div>
         </div>
 
         {services.length === 0 ? (
-          <div className="bg-white p-12 rounded-md shadow-sm border border-gray-100 text-center text-gray-500">
-            <Wrench size={48} className="mx-auto mb-4 text-gray-200" />
-            <p className="font-bold text-gray-700">No services assigned yet.</p>
-            <p className="text-sm mt-1 text-gray-400 font-medium">
-              When you get assigned a service, it will appear here.
+          <div className="bg-white p-12 rounded-3xl shadow-sm border border-slate-100 text-center text-slate-400">
+            <div className="size-16 rounded-2xl bg-slate-50 flex items-center justify-center mx-auto mb-4 border border-slate-100">
+              <Wrench size={28} className="text-slate-300" />
+            </div>
+            <p className="font-extrabold text-slate-700">No services assigned yet.</p>
+            <p className="text-xs mt-1 text-slate-400 font-bold max-w-xs mx-auto">
+              When you get assigned a service request, it will show up here.
             </p>
           </div>
         ) : (
-          <div className="space-y-2">
+          <div className="grid gap-4">
             {services.map((service: any) => {
               const currentStatus =
                 service.statusHistory?.[0]?.status || "pending";
@@ -75,23 +76,23 @@ export default async function StaffServicesPage() {
               return (
                 <div
                   key={service.serviceId}
-                  className="bg-white rounded-md p-5 shadow-sm border border-gray-100 hover:shadow-md transition-shadow"
+                  className="bg-white rounded-3xl p-5 shadow-sm border border-slate-100/60 hover:shadow-md transition-all duration-300"
                 >
                   <div className="flex items-start justify-between gap-3 mb-4">
                     <div className="min-w-0 flex-1">
-                      <p className="text-[12px] font-bold font-mono text-gray-500 mb-1">
-                        SERVICE ID: #{service.serviceId.substring(0, 12)}...
+                      <p className="text-[10px] font-black font-mono text-slate-400 tracking-wider mb-1">
+                        ID: #{service.serviceId.substring(0, 8).toUpperCase()}
                       </p>
-                      <h3 className="text-lg font-bold text-gray-900 truncate">
+                      <h3 className="text-lg font-black text-slate-800 truncate">
                         {service.customerName}
                       </h3>
-                      <p className="text-sm font-semibold text-gray-500 mt-1 uppercase tracking-tight">
-                        {service.productType} • {service.productModel}
+                      <p className="text-xs font-bold text-slate-500 mt-1 uppercase tracking-wider">
+                        {service.productType} <span className="text-slate-300 mx-1">•</span> {service.productModel}
                       </p>
                     </div>
                     <span
                       className={clsx(
-                        "px-2.5 py-1 rounded text-[10px] font-bold uppercase tracking-wider whitespace-nowrap shadow-sm",
+                        "px-3 py-1 rounded-full text-[9px] font-black uppercase tracking-wider whitespace-nowrap shadow-sm border",
                         getStatusColor(displayStatus),
                       )}
                     >
@@ -99,37 +100,44 @@ export default async function StaffServicesPage() {
                     </span>
                   </div>
 
-                  <div className="flex flex-wrap items-center justify-between gap-3 pt-4 border-t border-gray-50">
-                    <div className="flex flex-col">
-                      <span className="text-[10px] text-gray-400 font-bold uppercase">
-                        Created On
-                      </span>
-                      <span className="text-sm text-gray-600 font-bold">
-                        {new Date(service.createdAt).toLocaleDateString()}
-                      </span>
+                  <div className="flex flex-col gap-4 pt-4 border-t border-slate-50">
+                    <div className="flex items-center justify-between">
+                      <div className="flex flex-col">
+                        <span className="text-[9px] text-slate-400 font-extrabold uppercase tracking-wider">
+                          Created On
+                        </span>
+                        <span className="text-xs text-slate-600 font-bold">
+                          {new Date(service.createdAt).toLocaleDateString(undefined, {
+                            year: 'numeric',
+                            month: 'short',
+                            day: 'numeric'
+                          })}
+                        </span>
+                      </div>
                     </div>
-                    <div className="flex items-center gap-2">
+                    
+                    <div className="flex flex-wrap items-center gap-2 pt-1">
                       {currentStatus !== "completed" &&
                         currentStatus !== "canceled" &&
                         currentStatus !== "appointment_retry" && (
-                          <>
-                            <Link
-                              href={`/service-report?serviceId=${service.serviceId}`}
-                              className="text-sm font-bold bg-brand text-white px-4 py-2 rounded-md hover:bg-brand-800 transition-all active:scale-95 shadow-sm"
-                            >
-                              Send Report
-                            </Link>
-                          </>
+                          <Link
+                            href={`/service-report?serviceId=${service.serviceId}`}
+                            className="flex-1 min-w-[120px] text-center text-xs font-black bg-brand hover:bg-brand-600 text-white py-3 px-4 rounded-xl transition-all duration-200 active:scale-95 shadow-sm shadow-brand/10 uppercase tracking-wider"
+                          >
+                            Send Report
+                          </Link>
                         )}
                       {currentStatus === "completed" && (
-                        <StaffDashboardActions
-                          staffId={userId}
-                          serviceId={service.serviceId}
-                        />
+                        <div className="flex-1 min-w-[140px]">
+                          <StaffDashboardActions
+                            staffId={userId}
+                            serviceId={service.serviceId}
+                          />
+                        </div>
                       )}
                       <Link
                         href={`/service-track?trackingId=${service.serviceId}`}
-                        className="text-sm font-bold text-gray-600 bg-gray-100 px-4 py-2 rounded-md hover:bg-brand-200 transition-all active:scale-95"
+                        className="flex-1 min-w-[120px] text-center text-xs font-black text-slate-600 bg-slate-50 border border-slate-100 hover:bg-slate-100 py-3 px-4 rounded-xl transition-all duration-200 active:scale-95 uppercase tracking-wider"
                       >
                         Track Status
                       </Link>

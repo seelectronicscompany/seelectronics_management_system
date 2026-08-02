@@ -175,239 +175,208 @@ export default async function StaffDetailsPage() {
 
   return (
     <StaffLayout balance={stats?.availableBalance || 0}>
-      {/* <MobilePageHeader
-        title="Staff Profile"
-        backHref="/staff/profile"
-        Icon={User}
-      /> */}
-
-      <div className="min-h-screen bg-gray-100 ">
-        {/* HEADER (Desktop Only) */}
-        <div className="hidden md:block bg-brand text-white px-3 sm:px-3 py-5 sm:py-3 mt-5 rounded-t-md shadow-sm mx-2">
-          <div className="max-w-6xl mx-auto flex  justify-between items-center gap-2  ">
-            {/* Title */}
-            <h1 className="text-lg sm:text-xl font-bold tracking-wide">
-              Staff Profile
-            </h1>
+      <div className="min-h-screen bg-slate-50/50 pb-28">
+        <div className="p-4 space-y-4">
+          
+          {/* Page Title */}
+          <div className="flex items-center gap-3 bg-white p-4 rounded-2xl border border-slate-100 shadow-sm">
+            <div className="p-2.5 bg-brand/5 rounded-xl text-brand">
+              <User size={22} className="stroke-[2.5]" />
+            </div>
+            <div>
+              <h1 className="text-xl font-extrabold text-slate-800 uppercase tracking-wide">
+                Staff Profile
+              </h1>
+              <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">
+                View your credentials, experience and stats
+              </p>
+            </div>
           </div>
-        </div>
 
-        <div className="max-w-6xl mx-auto px-3 mt-2 pb-5 space-y-2 ">
           {/* PROFILE CARD */}
-          <div className="bg-white rounded shadow-sm p-2 flex flex-col md:flex-row items-center gap-2 mb-4 relative">
-            <div className="w-24 h-24 rounded-full overflow-hidden border-4 border-white shadow">
+          <div className="bg-white rounded-3xl p-5 border border-slate-100 shadow-sm flex flex-col items-center gap-4 relative overflow-hidden">
+            <div className="absolute top-0 right-0 w-32 h-32 bg-brand/5 rounded-full -mr-8 -mt-8 blur-xl"></div>
+            
+            <div className="relative size-24 rounded-full overflow-hidden border-4 border-slate-50 shadow-md">
               <Image
                 src={staffData.photoUrl}
                 alt={staffData.name}
                 width={96}
                 height={96}
-                className="object-cover"
+                className="object-cover w-full h-full"
               />
             </div>
 
-            <div className="text-center md:text-left flex-1">
-              <h2 className="text-xl font-bold text-gray-900">
+            <div className="text-center w-full z-10">
+              <h2 className="text-xl font-black text-slate-800">
                 {staffData.name}
               </h2>
-
-              <p className="text-lg text-gray-600">
+              <p className="text-xs font-bold text-slate-400 uppercase tracking-wider mt-0.5">
                 Staff ID: {staffData.staffId}
               </p>
-              <a
-                target="_blank"
-                href={`/pdf/download?type=id-card&id=${staffData.staffId}`}
-                className="inline-flex items-center gap-2 mt-3 px-4 py-2 bg-sky-50 text-sky-600 rounded-md hover:bg-sky-100 transition-all border border-sky-200 text-xs font-bold uppercase tracking-wider"
-              >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  strokeWidth={1.5}
-                  stroke="currentColor"
-                  className="size-4"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5M16.5 12 12 16.5m0 0L7.5 12m4.5 4.5V3"
-                  />
-                </svg>
-                Download ID
-              </a>
 
-              <div className="flex flex-wrap justify-center md:justify-start gap-2 mt-2">
-                <span className="bg-brand/10 text-brand text-sm font-bold px-3 py-2 rounded capitalize">
+              <div className="flex flex-wrap justify-center gap-2 mt-3">
+                <span className="bg-brand/5 border border-brand/10 text-brand text-[10px] font-black px-3 py-1 rounded-full uppercase tracking-wider">
                   {staffData.role}
                 </span>
 
                 {staffData.isVerified && (
-                  <span className="bg-green-100 text-green-600 text-sm font-bold px-3 py-2 rounded">
+                  <span className="bg-emerald-50 border border-emerald-100 text-emerald-600 text-[10px] font-black px-3 py-1 rounded-full uppercase tracking-wider">
                     Verified
                   </span>
                 )}
 
                 {staffData.isActiveStaff && (
-                  <span className="bg-blue-100 text-blue-600 text-sm font-bold px-3 py-2 rounded">
+                  <span className="bg-blue-50 border border-blue-100 text-blue-600 text-[10px] font-black px-3 py-1 rounded-full uppercase tracking-wider">
                     Active
                   </span>
                 )}
+              </div>
+
+              <div className="mt-5 w-full pt-4 border-t border-slate-50">
+                <a
+                  target="_blank"
+                  href={`/pdf/download?type=id-card&id=${staffData.staffId}`}
+                  className="flex items-center justify-center gap-2 py-3 px-4 bg-sky-50 border border-sky-100 hover:bg-sky-100 text-sky-600 rounded-xl transition-all font-black text-xs uppercase tracking-wider active:scale-95 shadow-sm"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    strokeWidth={2.5}
+                    stroke="currentColor"
+                    className="size-4"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5M16.5 12 12 16.5m0 0L7.5 12m4.5 4.5V3"
+                    />
+                  </svg>
+                  Download ID Card
+                </a>
               </div>
             </div>
           </div>
 
           {/* PERFORMANCE STATS */}
-          <div className="grid grid-cols-2 md:grid-cols-5 gap-2 ">
-            <div className="bg-green-50/70 border border-green-400  p-3 rounded shadow-sm  text-center">
-              <p className="text-2xl font-bold text-green-600">
-                {staffData.totalServices}
-              </p>
-              <p className="text-sm text-green-600 font-bold uppercase">
-                Total Services
-              </p>
-            </div>
-
-            <div className="bg-blue-50/70 border border-blue-400  p-3 rounded shadow-sm  text-center">
-              <p className="text-2xl font-bold text-blue-600">
-                {staffData.serviceCenterServices}
-              </p>
-              <p className="text-sm text-blue-600 font-bold uppercase">
-                Service Center
-              </p>
-            </div>
-
-            <div className="bg-violet-50/70 border border-violet-400  p-3 rounded shadow-sm  text-center">
-              <p className="text-2xl font-bold text-violet-600">
-                {staffData.successfulServices}
-              </p>
-              <p className="text-sm text-violet-600 font-bold uppercase">
-                Successful
-              </p>
-            </div>
-
-            <div className="bg-red-50/70 border border-red-400  p-3 rounded shadow-sm  text-center">
-              <p className="text-2xl font-bold text-red-500">
-                {staffData.canceledServices}
-              </p>
-              <p className="text-sm text-red-500 font-bold uppercase">
-                Canceled
-              </p>
-            </div>
-
-            <div className="bg-orange-50/50 border border-orange-400  p-3 rounded shadow-sm  text-center">
-              <p className="text-2xl font-bold text-orange-500">
-                {staffData.rating}
-              </p>
-              <p className="text-sm text-orange-500 font-bold uppercase">
-                Rating
-              </p>
-            </div>
+          <div className="grid grid-cols-2 sm:grid-cols-5 gap-3">
+            {[
+              { label: "Total Services", value: staffData.totalServices, color: "text-slate-800 bg-white" },
+              { label: "Service Center", value: staffData.serviceCenterServices, color: "text-blue-600 bg-white" },
+              { label: "Successful", value: staffData.successfulServices, color: "text-emerald-600 bg-white" },
+              { label: "Canceled", value: staffData.canceledServices, color: "text-rose-600 bg-white" },
+              { label: "Rating", value: staffData.rating, color: "text-amber-500 bg-white" }
+            ].map((stat, idx) => (
+              <div key={idx} className={`${stat.color} p-4 rounded-2xl border border-slate-100/80 shadow-sm text-center`}>
+                <p className="text-2xl font-black tracking-tight">{stat.value}</p>
+                <p className="text-[9px] font-black uppercase text-slate-400 mt-1 tracking-wider leading-tight">
+                  {stat.label}
+                </p>
+              </div>
+            ))}
           </div>
 
           {/* INFO GRID */}
-          <div className="grid md:grid-cols-2 gap-2">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {/* CONTACT */}
-            <div className="bg-white p-6 rounded shadow-sm border space-y-3">
-              <h3 className="text-sm font-bold text-gray-400 uppercase">
-                Contact
+            <div className="bg-white p-5 rounded-3xl border border-slate-100 shadow-sm space-y-3">
+              <h3 className="text-[10px] font-black text-slate-400 uppercase tracking-widest border-b border-slate-50 pb-2">
+                Contact details
               </h3>
-
-              <p className="text-md font-semibold text-gray-800">
-                Phone: {staffData.phone}
-              </p>
-
-              <p className="text-md text-gray-700">
-                Father: {staffData.fatherName}
-              </p>
+              <div className="space-y-2">
+                <p className="text-xs font-bold text-slate-500">
+                  Phone: <span className="text-slate-800 ml-1 font-extrabold">{staffData.phone}</span>
+                </p>
+                <p className="text-xs font-bold text-slate-500">
+                  Father Name: <span className="text-slate-800 ml-1 font-extrabold">{staffData.fatherName}</span>
+                </p>
+              </div>
             </div>
 
             {/* EXPERIENCE */}
-            <div className="bg-white p-6 rounded shadow-sm border space-y-3">
-              <h3 className="text-sm font-bold text-gray-400 uppercase">
+            <div className="bg-white p-5 rounded-3xl border border-slate-100 shadow-sm space-y-3">
+              <h3 className="text-[10px] font-black text-slate-400 uppercase tracking-widest border-b border-slate-50 pb-2">
                 Experience
               </h3>
-
-              <p className="text-md text-gray-700">
-                Repair Experience:{" "}
-                {staffData.hasRepairExperience
-                  ? `${staffData.repairExperienceYears} Years`
-                  : "No"}
-              </p>
-
-              <p className="text-md text-gray-700">
-                Installation Experience:{" "}
-                {staffData.hasInstallationExperience
-                  ? `${staffData.installationExperienceYears} Years`
-                  : "No"}
-              </p>
+              <div className="space-y-2">
+                <p className="text-xs font-bold text-slate-500">
+                  Repair: <span className="text-slate-800 ml-1 font-extrabold">{staffData.hasRepairExperience ? `${staffData.repairExperienceYears} Years` : "No"}</span>
+                </p>
+                <p className="text-xs font-bold text-slate-500">
+                  Installation: <span className="text-slate-800 ml-1 font-extrabold">{staffData.hasInstallationExperience ? `${staffData.installationExperienceYears} Years` : "No"}</span>
+                </p>
+              </div>
             </div>
 
             {/* ADDRESSES */}
-            <div className="bg-white p-6 rounded shadow-sm border space-y-3">
-              <h3 className="text-sm font-bold text-gray-400 uppercase">
+            <div className="bg-white p-5 rounded-3xl border border-slate-100 shadow-sm space-y-3">
+              <h3 className="text-[10px] font-black text-slate-400 uppercase tracking-widest border-b border-slate-50 pb-2">
                 Current Address
               </h3>
-
-              <p className="text-md text-gray-700">
+              <p className="text-xs text-slate-600 font-extrabold leading-relaxed">
                 {staffData.currentStreetAddress}, {staffData.currentDistrict}
               </p>
             </div>
 
-            <div className="bg-white p-6 rounded shadow-sm border space-y-3">
-              <h3 className="text-md font-bold text-gray-400 uppercase">
+            <div className="bg-white p-5 rounded-3xl border border-slate-100 shadow-sm space-y-3">
+              <h3 className="text-[10px] font-black text-slate-400 uppercase tracking-widest border-b border-slate-50 pb-2">
                 Permanent Address
               </h3>
-
-              <p className="text-md text-gray-700">
-                {staffData.permanentStreetAddress},{" "}
-                {staffData.permanentDistrict}
+              <p className="text-xs text-slate-600 font-extrabold leading-relaxed">
+                {staffData.permanentStreetAddress}, {staffData.permanentDistrict}
               </p>
             </div>
           </div>
 
           {/* PAYMENT */}
-          <div className="bg-white p-6 rounded shadow-sm border">
-            <h3 className="text-sm font-bold text-gray-400 uppercase mb-3">
-              Payment Method
+          <div className="bg-white p-5 rounded-3xl border border-slate-100 shadow-sm space-y-2">
+            <h3 className="text-[10px] font-black text-slate-400 uppercase tracking-widest border-b border-slate-50 pb-2">
+              Payment Method Preference
             </h3>
-
-            <p className="text-md font-semibold text-gray-800 uppercase">
+            <p className="text-sm font-extrabold text-slate-700 uppercase tracking-wider">
               {staffData.paymentPreference}
             </p>
           </div>
 
           {/* NID DOCUMENTS */}
-          <div className="bg-white p-6 rounded shadow-sm border">
-            <h3 className="text-sm font-bold text-gray-400 uppercase mb-4">
-              NID Documents
+          <div className="bg-white p-5 rounded-3xl border border-slate-100 shadow-sm space-y-4">
+            <h3 className="text-[10px] font-black text-slate-400 uppercase tracking-widest border-b border-slate-50 pb-2">
+              NID Documents front & back
             </h3>
 
-            <div className="grid grid-cols-2 gap-2">
-              <Image
-                src={staffData.nidFrontPhotoUrl}
-                alt="NID Front"
-                width={300}
-                height={200}
-                className="rounded border"
-              />
+            <div className="grid grid-cols-2 gap-3">
+              <div className="rounded-2xl overflow-hidden border border-slate-100 shadow-sm bg-slate-50">
+                <Image
+                  src={staffData.nidFrontPhotoUrl}
+                  alt="NID Front"
+                  width={300}
+                  height={200}
+                  className="w-full h-auto object-cover"
+                />
+              </div>
 
-              <Image
-                src={staffData.nidBackPhotoUrl}
-                alt="NID Back"
-                width={300}
-                height={200}
-                className="rounded border"
-              />
+              <div className="rounded-2xl overflow-hidden border border-slate-100 shadow-sm bg-slate-50">
+                <Image
+                  src={staffData.nidBackPhotoUrl}
+                  alt="NID Back"
+                  width={300}
+                  height={200}
+                  className="w-full h-auto object-cover"
+                />
+              </div>
             </div>
           </div>
+
           {/* Logout */}
-          <div className="">
+          <div className="pt-2">
             <form action={staffLogout}>
               <button
                 type="submit"
-                className="flex w-full items-center justify-center gap-2 px-5 py-2.5 rounded bg-red-500 hover:bg-red-600 active:scale-95 transition-all text-white text-sm font-bold shadow-sm"
+                className="flex w-full items-center justify-center gap-2 py-3.5 rounded-2xl bg-rose-600 hover:bg-rose-700 active:scale-95 transition-all text-white text-xs font-black uppercase tracking-wider shadow-sm"
               >
-                <LogOut size={18} />
-                Logout
+                <LogOut size={16} />
+                Logout Account
               </button>
             </form>
           </div>
