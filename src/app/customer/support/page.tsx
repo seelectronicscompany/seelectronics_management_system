@@ -171,22 +171,7 @@ export default function SupportPage() {
         </div>
 
       </div>
-    </CustomerLayout>className="text-sm font-black text-gray-900 uppercase tracking-widest">ইমেইল করুন</h4>
-                        <p className="text-xs text-gray-500 font-medium">যেকোনো তথ্যের জন্য: support@seelectronics.com</p>
-                    </div>
-                </div>
-                <ExternalLink size={16} className="text-gray-300 group-hover:text-brand" />
-            </div>
-        </div>
-
-        {/* Help Note */}
-        <div className="mt-8 text-center px-4">
-            <p className="text-xs text-gray-400 font-medium leading-relaxed max-w-lg mx-auto">
-                আমাদের সাপোর্ট টিম আপনার সেবার জন্য সর্বদাই তৎপর। কল করতে কোনো সমস্যা হলে আপনি ইমেইল অথবা ফেসবুক পেজে মেসেজ দিতে পারেন।
-            </p>
-        </div>
-
-      </div>
     </CustomerLayout>
   );
 }
+

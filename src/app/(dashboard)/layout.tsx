@@ -1,3 +1,5 @@
+export const dynamic = "force-dynamic";
+
 import { DashboardLayout } from "@/components/layout";
 import { verifySession } from "@/lib";
 
