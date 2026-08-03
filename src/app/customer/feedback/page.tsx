@@ -69,7 +69,7 @@ export default async function CustomerFeedbackPage() {
             </Link>
           </div>
         ) : (
-          <div className="space-y-4">
+          <div className="space-y-2">
             {completedServices.map((service: any) => (
               <div
                 key={service.serviceId}
@@ -104,7 +104,7 @@ export default async function CustomerFeedbackPage() {
                 </div>
                 <div className="flex flex-col items-end gap-2">
                   {service.feedback?.serviceId ? (
-                    <div className="inline-flex items-center gap-2 bg-emerald-50 text-emerald-700 border border-emerald-100 px-4 py-2 rounded-2xl text-sm font-bold shadow-sm">
+                    <div className="inline-flex items-center gap-2 bg-emerald-50 text-emerald-700 border border-emerald-100 px-4 py-2 rounded-lg text-sm font-bold shadow-sm">
                       <CheckCircle2 className="size-4 text-emerald-600" />
                       ফিডব্যাক দিয়েছেন
                     </div>
