@@ -95,7 +95,7 @@ export default function FeedbackForm({
           আপনার ফিডব্যাক এর মতামত এর প্রেক্ষিতে আমাদের কোম্পানি SE ELECTRONICS
           আরো ভালো সার্ভিস দেওয়ার আপ্রান চেষ্টা করবে
         </p>
-        <a href="https://seipsbd.com/" className="__btn">
+        <a href="/customer/profile" className="__btn">
           Go to home
         </a>
       </div>
