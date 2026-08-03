@@ -38,7 +38,7 @@ export function CustomerBottomNav() {
   ];
 
   return (
-    <nav className="sm:hidden fixed bottom-4 left-4 right-4 bg-white/90 backdrop-blur-lg px-2 py-1.5 flex items-center justify-around z-50 shadow-[0_12px_40px_rgba(10,26,58,0.15)] rounded-2xl border border-gray-100/80">
+    <nav className="sm:hidden fixed bottom-0 left-0 w-full bg-white px-1 py-1 flex items-center justify-around z-50 shadow-[0_-8px_30px_rgba(0,0,0,0.08)] rounded-tl-3xl rounded-tr-3xl">
       {navItems.map((item) => {
         const isActive =
           pathname === item.href || pathname.startsWith(item.href + "/");
@@ -47,25 +47,25 @@ export function CustomerBottomNav() {
             key={item.label}
             href={item.href}
             className={clsx(
-              "flex flex-col items-center gap-0.5 py-1 px-2 min-w-[56px] transition-all duration-300 relative",
-              isActive ? "text-brand" : "text-gray-400 hover:text-brand/80",
+              "flex flex-col items-center gap-0.5 py-1 px-1.5 min-w-[56px] transition-all duration-300 relative",
+              isActive ? "text-[#0A1A3A]" : "text-gray-400 hover:text-brand",
             )}
           >
             {isActive && (
-              <span className="absolute -top-1 w-5 h-1 bg-brand rounded-full animate-pulse" />
+              <span className="absolute -top-1 left-1/2 -translate-x-1/2 w-6 h-1 bg-[#0A1A3A] rounded-full" />
             )}
             <div
               className={clsx(
-                "p-1.5 rounded-xl transition-all duration-300",
-                isActive ? "bg-brand/10 text-brand" : "text-gray-400",
+                "p-1 rounded-md transition-all duration-300",
+                isActive ? "bg-brand/10" : "",
               )}
             >
-               <item.icon size={20} strokeWidth={isActive ? 2.5 : 2} className="transition-transform duration-300 hover:scale-115" />
+               <item.icon size={18} strokeWidth={isActive ? 2.5 : 2} />
             </div>
             <span
               className={clsx(
-                "text-[8px] uppercase tracking-wider font-extrabold text-center transition-all duration-300",
-                isActive ? "opacity-100 font-extrabold text-brand" : "opacity-60 font-medium",
+                "text-[8px] uppercase tracking-wider font-extrabold text-center",
+                isActive ? "opacity-100 font-black" : "opacity-60",
               )}
             >
               {item.label}

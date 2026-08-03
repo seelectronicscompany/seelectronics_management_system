@@ -32,7 +32,7 @@ export function StaffBottomNav() {
   ];
 
   return (
-    <nav className="sm:hidden fixed bottom-4 left-4 right-4 bg-white/95 backdrop-blur-md px-2 py-1 flex items-center justify-around z-50 shadow-[0_10px_30px_rgba(0,0,0,0.12)] border border-gray-100 rounded-2xl">
+    <nav className="sm:hidden fixed bottom-0 left-0 w-full bg-white px-4 py-2 flex items-center justify-around z-50 shadow-[0_-8px_30px_rgba(0,0,0,0.08)] rounded-tl-3xl rounded-tr-3xl">
       {navItems.map((item) => {
         const isActive = pathname === item.href;
         return (
@@ -40,22 +40,25 @@ export function StaffBottomNav() {
             key={item.label}
             href={item.href}
             className={clsx(
-              "flex flex-col items-center gap-0.5 py-1.5 px-3 min-w-16 transition-all duration-300 relative",
-              isActive ? "text-brand scale-105" : "text-gray-400 active:scale-95",
+              "flex flex-col items-center gap-1 p-2 min-w-16 transition-all duration-300 relative",
+              isActive ? "text-brand" : "text-gray-400 hover:text-brand",
             )}
           >
+            {isActive && (
+              <span className="absolute -top-2 left-1/2 -translate-x-1/2 w-8 h-1 bg-brand rounded-full" />
+            )}
             <div
               className={clsx(
-                "p-2 rounded-xl transition-all duration-300",
-                isActive ? "bg-brand/10 text-brand shadow-sm shadow-brand/5" : "hover:bg-gray-50",
+                "p-1.5 rounded-md transition-all duration-300",
+                isActive ? "bg-brand/10" : "",
               )}
             >
               <item.icon size={20} strokeWidth={isActive ? 2.5 : 2} />
             </div>
             <span
               className={clsx(
-                "text-[9px] uppercase tracking-wider font-extrabold transition-all duration-300",
-                isActive ? "opacity-100 font-black text-brand" : "opacity-50",
+                "text-[10px] uppercase tracking-widest font-black",
+                isActive ? "opacity-100" : "opacity-60",
               )}
             >
               {item.label}

@@ -6,7 +6,19 @@ import {
 } from "@/actions/staffActions";
 import { MobilePageHeader, StaffLayout } from "@/components/layout";
 import { getObjectUrl } from "@/lib/s3";
-import { LogOut, User } from "lucide-react";
+import {
+  LogOut,
+  User,
+  Phone,
+  MapPin,
+  Briefcase,
+  CreditCard,
+  ShieldCheck,
+  Users,
+  Wrench,
+  Hammer,
+  Home,
+} from "lucide-react";
 import Image from "next/image";
 
 export default async function StaffDetailsPage() {
@@ -21,138 +33,6 @@ export default async function StaffDetailsPage() {
 
   const staffData = profileRes.success ? profileRes.data : null;
   const stats = statsRes.success ? statsRes.data : null;
-  //   bankInfo
-  // :
-  // null
-  // bio
-  // :
-  // null
-  // canceledServices
-  // :
-  // 2
-  // createdAt
-  // :
-  // Thu Mar 12 2026 12:53:07 GMT-0700 (Pacific Daylight Time) {}
-  // createdFrom
-  // :
-  // "dashboard"
-  // currentDistrict
-  // :
-  // "Dhaka"
-  // currentPoliceStation
-  // :
-  // null
-  // currentPostOffice
-  // :
-  // null
-  // currentStreetAddress
-  // :
-  // "778 Zulauf Manors"
-  // docs
-  // :
-  // null
-  // fatherName
-  // :
-  // "Wilbur Marks"
-  // hasInstallationExperience
-  // :
-  // false
-  // hasRepairExperience
-  // :
-  // false
-  // id
-  // :
-  // "3b7a79d6-8d7a-4bf1-bb5b-c740b9cee891"
-  // installationExperienceYears
-  // :
-  // 0
-  // ipAddress
-  // :
-  // null
-  // isActiveStaff
-  // :
-  // true
-  // isVerified
-  // :
-  // true
-  // name
-  // :
-  // "Mrs. Blanche DuBuque"
-  // nidBackPhotoKey
-  // :
-  // "demo/nid_back.jpg"
-  // nidBackPhotoUrl
-  // :
-  // "https://service-manager.45739e2ef39226b7c581576fc26bd700.r2.cloudflarestorage.com/demo/nid_back.jpg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=14d657e13ee022a16c895beca8ac3d24%2F20260314%2Fauto%2Fs3%2Faws4_request&X-Amz-Date=20260314T173120Z&X-Amz-Expires=86400&X-Amz-Signature=f922893a809d27b3beb9651fb843148ab8fa116225d32fab57923a65c61f7a49&X-Amz-SignedHeaders=host&x-amz-checksum-mode=ENABLED&x-id=GetObject"
-  // nidFrontPhotoKey
-  // :
-  // "demo/nid_front.jpg"
-  // nidFrontPhotoUrl
-  // :
-  // "https://service-manager.45739e2ef39226b7c581576fc26bd700.r2.cloudflarestorage.com/demo/nid_front.jpg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=14d657e13ee022a16c895beca8ac3d24%2F20260314%2Fauto%2Fs3%2Faws4_request&X-Amz-Date=20260314T173120Z&X-Amz-Expires=86400&X-Amz-Signature=df08042eebbf84fa7ff90f2511f3276c6b16fd4a4b35631c3e73a1a038036674&X-Amz-SignedHeaders=host&x-amz-checksum-mode=ENABLED&x-id=GetObject"
-  // password
-  // :
-  // "$2b$10$N7CHl3OD7RvpzFVg283vnucmEjsTmC/2/QS.F28Mb4uDH3pC5hUAi"
-  // paymentPreference
-  // :
-  // "cash"
-  // permanentDistrict
-  // :
-  // "Dhaka"
-  // permanentPoliceStation
-  // :
-  // null
-  // permanentPostOffice
-  // :
-  // null
-  // permanentStreetAddress
-  // :
-  // "692 Edward Creek"
-  // phone
-  // :
-  // "+8801317806120"
-  // photoKey
-  // :
-  // "demo/photo.jpg"
-  // photoUrl
-  // :
-  // "https://service-manager.45739e2ef39226b7c581576fc26bd700.r2.cloudflarestorage.com/demo/photo.jpg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=14d657e13ee022a16c895beca8ac3d24%2F20260314%2Fauto%2Fs3%2Faws4_request&X-Amz-Date=20260314T173120Z&X-Amz-Expires=86400&X-Amz-Signature=e239640cace62a6b28119f400fe1fd3677d8a6b65c618ba75534b9e5d496b1d8&X-Amz-SignedHeaders=host&x-amz-checksum-mode=ENABLED&x-id=GetObject"
-  // profileCompleted
-  // :
-  // true
-  // rating
-  // :
-  // 0
-  // repairExperienceYears
-  // :
-  // 0
-  // role
-  // :
-  // "technician"
-  // skills
-  // :
-  // null
-  // staffId
-  // :
-  // "STF79225"
-  // successfulServices
-  // :
-  // 0
-  // totalServices
-  // :
-  // 4
-  // updatedAt
-  // :
-  // Sat Mar 14 2026 05:39:49 GMT-0700 (Pacific Daylight Time) {}
-  // userAgent
-  // :
-  // null
-  // username
-  // :
-  // "01310673602"
-  // walletNumber
-  // :
-  // null
   if (!staffData) {
     return (
       <div className="p-6 text-center">
@@ -175,178 +55,484 @@ export default async function StaffDetailsPage() {
 
   return (
     <StaffLayout balance={stats?.availableBalance || 0}>
-      <div className="min-h-screen bg-slate-50/50 pb-28">
-        <div className="p-4 space-y-4">
-          
-          {/* Page Title */}
-          <div className="flex items-center gap-3 bg-white p-4 rounded-2xl border border-slate-100 shadow-sm">
-            <div className="p-2.5 bg-brand/5 rounded-xl text-brand">
-              <User size={22} className="stroke-[2.5]" />
-            </div>
-            <div>
-              <h1 className="text-xl font-extrabold text-slate-800 uppercase tracking-wide">
-                Staff Profile
-              </h1>
-              <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">
-                View your credentials, experience and stats
-              </p>
-            </div>
+      {/* <MobilePageHeader
+        title="Staff Profile"
+        backHref="/staff/profile"
+        Icon={User}
+      /> */}
+
+      <div className="min-h-screen bg-gray-100 ">
+        {/* HEADER (Desktop Only) */}
+        <div className="hidden md:block bg-brand text-white px-3 sm:px-3 py-5 sm:py-3 mt-5 rounded-t-md shadow-sm mx-2">
+          <div className="max-w-6xl mx-auto flex  justify-between items-center gap-2  ">
+            {/* Title */}
+            <h1 className="text-lg sm:text-xl font-bold tracking-wide">
+              Staff Profile
+            </h1>
           </div>
+        </div>
 
+        <div className="max-w-6xl mx-auto px-3 mt-2 pb-5 space-y-2 ">
           {/* PROFILE CARD */}
-          <div className="bg-white rounded-3xl p-5 border border-slate-100 shadow-sm flex flex-col items-center gap-4 relative overflow-hidden">
-            <div className="absolute top-0 right-0 w-32 h-32 bg-brand/5 rounded-full -mr-8 -mt-8 blur-xl"></div>
-            
-            <div className="relative size-24 rounded-full overflow-hidden border-4 border-slate-50 shadow-md">
-              <Image
-                src={staffData.photoUrl}
-                alt={staffData.name}
-                width={96}
-                height={96}
-                className="object-cover w-full h-full"
-              />
-            </div>
+          <div className="bg-white rounded-xl shadow-sm overflow-hidden mb-4 relative pb-6 flex flex-col items-center">
+            {/* Rounded Curved Background Banner */}
+            <div className="w-full h-28 sm:h-32 bg-[#eef2f6] rounded-b-[40%] absolute top-0 left-0 z-0"></div>
 
-            <div className="text-center w-full z-10">
-              <h2 className="text-xl font-black text-slate-800">
+            {/* Content Wrapper */}
+            <div className="relative z-10 mt-8 sm:mt-12 flex flex-col items-center text-center px-4 w-full">
+              {/* Avatar with Gold Metallic Ring */}
+              <div className="w-28 h-28 sm:w-32 sm:h-32 rounded-full p-[3px] bg-gradient-to-tr from-[#c5a059] via-[#fdf0cd] to-[#d4af37] shadow-md flex items-center justify-center">
+                <div className="w-full h-full rounded-full overflow-hidden border-2 border-white bg-white">
+                  <Image
+                    src={staffData.photoUrl}
+                    alt={staffData.name}
+                    width={128}
+                    height={128}
+                    className="object-cover w-full h-full"
+                  />
+                </div>
+              </div>
+
+              {/* Name & ID */}
+              <h2 className="text-2xl sm:text-3xl font-extrabold text-[#0a192f] mt-4">
                 {staffData.name}
               </h2>
-              <p className="text-xs font-bold text-slate-400 uppercase tracking-wider mt-0.5">
+
+              <p className="text-base sm:text-lg font-medium text-gray-700 mt-1">
                 Staff ID: {staffData.staffId}
               </p>
 
+              {/* Badges */}
               <div className="flex flex-wrap justify-center gap-2 mt-3">
-                <span className="bg-brand/5 border border-brand/10 text-brand text-[10px] font-black px-3 py-1 rounded-full uppercase tracking-wider">
+                <span className="bg-[#7f8c8d] text-white text-xs sm:text-sm font-bold px-3.5 py-1.5 rounded-lg uppercase tracking-wider">
                   {staffData.role}
                 </span>
 
                 {staffData.isVerified && (
-                  <span className="bg-emerald-50 border border-emerald-100 text-emerald-600 text-[10px] font-black px-3 py-1 rounded-full uppercase tracking-wider">
+                  <span className="bg-[#27ae60] text-white text-xs sm:text-sm font-bold px-3.5 py-1.5 rounded-lg uppercase tracking-wider">
                     Verified
                   </span>
                 )}
 
                 {staffData.isActiveStaff && (
-                  <span className="bg-blue-50 border border-blue-100 text-blue-600 text-[10px] font-black px-3 py-1 rounded-full uppercase tracking-wider">
+                  <span className="bg-[#2980b9] text-white text-xs sm:text-sm font-bold px-3.5 py-1.5 rounded-lg uppercase tracking-wider">
                     Active
                   </span>
                 )}
               </div>
 
-              <div className="mt-5 w-full pt-4 border-t border-slate-50">
-                <a
-                  target="_blank"
-                  href={`/pdf/download?type=id-card&id=${staffData.staffId}`}
-                  className="flex items-center justify-center gap-2 py-3 px-4 bg-sky-50 border border-sky-100 hover:bg-sky-100 text-sky-600 rounded-xl transition-all font-black text-xs uppercase tracking-wider active:scale-95 shadow-sm"
+              {/* Download ID Button */}
+              <a
+                target="_blank"
+                href={`/pdf/download?type=id-card&id=${staffData.staffId}`}
+                className="inline-flex items-center gap-2 mt-4 px-6 py-2.5 bg-white text-[#0a192f] rounded-lg hover:bg-gray-50 transition-all border border-gray-300 text-xs sm:text-sm font-bold tracking-wider uppercase shadow-sm"
+              >
+                <svg
+                  className="size-5 text-[#0a192f]"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2.5"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
                 >
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    strokeWidth={2.5}
-                    stroke="currentColor"
-                    className="size-4"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5M16.5 12 12 16.5m0 0L7.5 12m4.5 4.5V3"
-                    />
-                  </svg>
-                  Download ID Card
-                </a>
-              </div>
+                  <rect width="20" height="14" x="2" y="5" rx="2" />
+                  <path d="M6 14v-1a2 2 0 0 1 2-2h0a2 2 0 0 1 2 2v1" />
+                  <circle cx="8" cy="8" r="1.5" />
+                  <line x1="14" x2="18" y1="9" y2="9" />
+                  <line x1="14" x2="18" y1="13" y2="13" />
+                </svg>
+                Download ID
+              </a>
             </div>
           </div>
 
           {/* PERFORMANCE STATS */}
-          <div className="grid grid-cols-2 sm:grid-cols-5 gap-3">
-            {[
-              { label: "Total Services", value: staffData.totalServices, color: "text-slate-800 bg-white" },
-              { label: "Service Center", value: staffData.serviceCenterServices, color: "text-blue-600 bg-white" },
-              { label: "Successful", value: staffData.successfulServices, color: "text-emerald-600 bg-white" },
-              { label: "Canceled", value: staffData.canceledServices, color: "text-rose-600 bg-white" },
-              { label: "Rating", value: staffData.rating, color: "text-amber-500 bg-white" }
-            ].map((stat, idx) => (
-              <div key={idx} className={`${stat.color} p-4 rounded-2xl border border-slate-100/80 shadow-sm text-center`}>
-                <p className="text-2xl font-black tracking-tight">{stat.value}</p>
-                <p className="text-[9px] font-black uppercase text-slate-400 mt-1 tracking-wider leading-tight">
-                  {stat.label}
-                </p>
+          <div className="grid grid-cols-3 gap-3">
+            {/* Total Services */}
+            <div className="bg-[#f4fbf5] border border-[#2fb344] p-3 sm:p-4 rounded-xl flex flex-col justify-between shadow-sm">
+              <div className="flex justify-between items-center mb-1">
+                <span className="text-3xl sm:text-4xl font-extrabold text-[#2fb344]">
+                  {staffData.totalServices}
+                </span>
+                <svg
+                  className="w-6 h-6 sm:w-7 sm:h-7 text-[#2fb344]"
+                  viewBox="0 0 24 24"
+                  fill="currentColor"
+                >
+                  <path d="M22.7 19l-9.1-9.1c.9-2.3.4-5-1.5-6.9-2-2-5-2.4-7.4-1.3L9 6 6 9 1.7 4.7C.6 7.1 1 10.1 3 12.1c1.9 1.9 4.6 2.4 6.9 1.5l9.1 9.1c.4.4 1 .4 1.4 0l2.3-2.3c.4-.4.4-1.1 0-1.4zM9.2 11.3L2.5 18c-.4.4-.4 1 0 1.4l2.1 2.1c.4.4 1 .4 1.4 0l6.7-6.7-3.5-3.5z" />
+                </svg>
               </div>
-            ))}
+              <span className="text-[10px] sm:text-xs font-bold tracking-wider text-gray-900 uppercase">
+                Total Services
+              </span>
+            </div>
+
+            {/* Successful */}
+            <div className="bg-[#f8f5fd] border border-[#8e44ad] p-3 sm:p-4 rounded-xl flex flex-col justify-between shadow-sm">
+              <div className="flex justify-between items-center mb-1">
+                <span className="text-3xl sm:text-4xl font-extrabold text-[#8e44ad]">
+                  {staffData.successfulServices}
+                </span>
+                <svg
+                  className="w-6 h-6 sm:w-7 sm:h-7 text-[#8e44ad]"
+                  viewBox="0 0 24 24"
+                  fill="currentColor"
+                >
+                  <path d="M2 21h4V9H2v12zM20 8h-7l1.12-5.37a1.015 1.015 0 0 0-.25-.83c-.19-.2-.47-.3-.77-.3L12.3 2 6.6 7.7C6.22 8.07 6 8.58 6 9v10c0 1.1.9 2 2 2h9c.75 0 1.41-.41 1.75-1.03l3.12-7.29c.08-.2.13-.42.13-.68V10c0-1.1-.9-2-2-2z" />
+                </svg>
+              </div>
+              <span className="text-[10px] sm:text-xs font-bold tracking-wider text-gray-900 uppercase">
+                Successful
+              </span>
+            </div>
+
+            {/* Canceled */}
+            <div className="bg-[#fdf3f3] border border-[#dc3545] p-3 sm:p-4 rounded-xl flex flex-col justify-between shadow-sm">
+              <div className="flex justify-between items-center mb-1">
+                <span className="text-3xl sm:text-4xl font-extrabold text-[#dc3545]">
+                  {staffData.canceledServices}
+                </span>
+                <svg
+                  className="w-6 h-6 sm:w-7 sm:h-7 text-[#dc3545]"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="3"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                >
+                  <circle cx="12" cy="12" r="10" />
+                  <line x1="19.07" y1="4.93" x2="4.93" y2="19.07" />
+                </svg>
+              </div>
+              <span className="text-[10px] sm:text-xs font-bold tracking-wider text-gray-900 uppercase">
+                Canceled
+              </span>
+            </div>
+
+            {/* Pending */}
+            <div className="bg-[#f0f7ff] border border-[#007bff] p-3 sm:p-4 rounded-xl flex flex-col justify-between shadow-sm">
+              <div className="flex justify-between items-center mb-1">
+                <span className="text-3xl sm:text-4xl font-extrabold text-[#007bff]">
+                  {staffData.pendingServices}
+                </span>
+                <svg
+                  className="w-6 h-6 sm:w-7 sm:h-7 text-[#007bff]"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="3"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                >
+                  <circle cx="12" cy="12" r="10" />
+                  <polyline points="12 6 12 12 16 12" />
+                </svg>
+              </div>
+              <span className="text-[10px] sm:text-xs font-bold tracking-wider text-gray-900 uppercase">
+                Pending
+              </span>
+            </div>
+
+            {/* Service Center Services */}
+            <div className="bg-[#f0fcfc] border border-[#00a8a8] p-3 sm:p-4 rounded-xl flex flex-col justify-between shadow-sm">
+              <div className="flex justify-between items-center mb-1">
+                <span className="text-3xl sm:text-4xl font-extrabold text-[#00a8a8]">
+                  {staffData.serviceCenterServices || 0}
+                </span>
+                <svg
+                  className="w-6 h-6 sm:w-7 sm:h-7 text-[#00a8a8]"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2.5"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                >
+                  <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
+                  <polyline points="9 22 9 12 15 12 15 22" />
+                </svg>
+              </div>
+              <span className="text-[10px] sm:text-xs font-bold tracking-wider text-gray-900 uppercase">
+                Center Services
+              </span>
+            </div>
+
+            {/* Rating */}
+            <div className="bg-[#fffaf0] border border-[#fd7e14] p-3 sm:p-4 rounded-xl flex flex-col justify-between shadow-sm">
+              <div className="flex justify-between items-center mb-1">
+                <span className="text-3xl sm:text-4xl font-extrabold text-[#fd7e14]">
+                  {staffData.rating}
+                </span>
+                <svg
+                  className="w-6 h-6 sm:w-7 sm:h-7 text-[#fd7e14]"
+                  viewBox="0 0 24 24"
+                  fill="currentColor"
+                >
+                  <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z" />
+                </svg>
+              </div>
+              <span className="text-[10px] sm:text-xs font-bold tracking-wider text-gray-900 uppercase">
+                Rating
+              </span>
+            </div>
           </div>
 
           {/* INFO GRID */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {/* CONTACT */}
-            <div className="bg-white p-5 rounded-3xl border border-slate-100 shadow-sm space-y-3">
+            <div className="bg-white p-5 rounded-lg border border-slate-100 shadow-sm space-y-4">
               <h3 className="text-[10px] font-black text-slate-400 uppercase tracking-widest border-b border-slate-50 pb-2">
                 Contact details
               </h3>
-              <div className="space-y-2">
-                <p className="text-xs font-bold text-slate-500">
-                  Phone: <span className="text-slate-800 ml-1 font-extrabold">{staffData.phone}</span>
-                </p>
-                <p className="text-xs font-bold text-slate-500">
-                  Father Name: <span className="text-slate-800 ml-1 font-extrabold">{staffData.fatherName}</span>
-                </p>
+              <div className="space-y-4">
+                {/* Name */}
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 bg-slate-100 rounded-xl flex items-center justify-center text-slate-700 shrink-0 shadow-sm border border-slate-200/50">
+                    <User size={18} />
+                  </div>
+                  <div className="flex flex-col">
+                    <span className="text-xs font-medium text-slate-500">
+                      Name:
+                    </span>
+                    <span className="text-sm font-extrabold text-[#0a192f] mt-0.5">
+                      {staffData.name}
+                    </span>
+                  </div>
+                </div>
+
+                {/* Father Name */}
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 bg-slate-100 rounded-xl flex items-center justify-center text-slate-700 shrink-0 shadow-sm border border-slate-200/50">
+                    <Users size={18} />
+                  </div>
+                  <div className="flex flex-col">
+                    <span className="text-xs font-medium text-slate-500">
+                      Father's Name:
+                    </span>
+                    <span className="text-sm font-extrabold text-[#0a192f] mt-0.5">
+                      {staffData.fatherName}
+                    </span>
+                  </div>
+                </div>
+
+                {/* Phone */}
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 bg-slate-100 rounded-xl flex items-center justify-center text-slate-700 shrink-0 shadow-sm border border-slate-200/50">
+                    <Phone size={18} />
+                  </div>
+                  <div className="flex flex-col">
+                    <span className="text-xs font-medium text-slate-500">
+                      Phone:
+                    </span>
+                    <span className="text-sm font-extrabold text-[#0a192f] mt-0.5">
+                      {staffData.phone}
+                    </span>
+                  </div>
+                </div>
               </div>
             </div>
 
             {/* EXPERIENCE */}
-            <div className="bg-white p-5 rounded-3xl border border-slate-100 shadow-sm space-y-3">
+            <div className="bg-white p-5 rounded-lg border border-slate-100 shadow-sm space-y-4">
               <h3 className="text-[10px] font-black text-slate-400 uppercase tracking-widest border-b border-slate-50 pb-2">
                 Experience
               </h3>
-              <div className="space-y-2">
-                <p className="text-xs font-bold text-slate-500">
-                  Repair: <span className="text-slate-800 ml-1 font-extrabold">{staffData.hasRepairExperience ? `${staffData.repairExperienceYears} Years` : "No"}</span>
-                </p>
-                <p className="text-xs font-bold text-slate-500">
-                  Installation: <span className="text-slate-800 ml-1 font-extrabold">{staffData.hasInstallationExperience ? `${staffData.installationExperienceYears} Years` : "No"}</span>
-                </p>
+              <div className="space-y-4">
+                {/* Repair */}
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 bg-slate-100 rounded-xl flex items-center justify-center text-slate-700 shrink-0 shadow-sm border border-slate-200/50">
+                    <Wrench size={18} />
+                  </div>
+                  <div className="flex flex-col">
+                    <span className="text-xs font-medium text-slate-500">
+                      Repair:
+                    </span>
+                    <span className="text-sm font-extrabold text-[#0a192f] mt-0.5">
+                      {staffData.hasRepairExperience
+                        ? `${staffData.repairExperienceYears} Years`
+                        : "No"}
+                    </span>
+                  </div>
+                </div>
+
+                {/* Installation */}
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 bg-slate-100 rounded-xl flex items-center justify-center text-slate-700 shrink-0 shadow-sm border border-slate-200/50">
+                    <Hammer size={18} />
+                  </div>
+                  <div className="flex flex-col">
+                    <span className="text-xs font-medium text-slate-500">
+                      Installation:
+                    </span>
+                    <span className="text-sm font-extrabold text-[#0a192f] mt-0.5">
+                      {staffData.hasInstallationExperience
+                        ? `${staffData.installationExperienceYears} Years`
+                        : "No"}
+                    </span>
+                  </div>
+                </div>
               </div>
             </div>
 
             {/* ADDRESSES */}
-            <div className="bg-white p-5 rounded-3xl border border-slate-100 shadow-sm space-y-3">
-              <h3 className="text-[10px] font-black text-slate-400 uppercase tracking-widest border-b border-slate-50 pb-2">
-                Current Address
-              </h3>
-              <p className="text-xs text-slate-600 font-extrabold leading-relaxed">
-                {staffData.currentStreetAddress}, {staffData.currentDistrict}
-              </p>
+            <div className="bg-white p-5 rounded-lg border border-slate-100 shadow-sm flex items-center gap-3">
+              <div className="w-10 h-10 bg-slate-100 rounded-xl flex items-center justify-center text-slate-700 shrink-0 shadow-sm border border-slate-200/50 mt-1">
+                <MapPin size={18} />
+              </div>
+              <div className="flex flex-col space-y-1.5 w-full">
+                <h3 className="text-[10px] font-black text-slate-400 uppercase tracking-widest border-b border-slate-50 pb-2">
+                  Current Address
+                </h3>
+                <p className="text-xs text-slate-600 font-extrabold leading-relaxed">
+                  {staffData.currentStreetAddress}, {staffData.currentDistrict}
+                </p>
+              </div>
             </div>
 
-            <div className="bg-white p-5 rounded-3xl border border-slate-100 shadow-sm space-y-3">
-              <h3 className="text-[10px] font-black text-slate-400 uppercase tracking-widest border-b border-slate-50 pb-2">
-                Permanent Address
-              </h3>
-              <p className="text-xs text-slate-600 font-extrabold leading-relaxed">
-                {staffData.permanentStreetAddress}, {staffData.permanentDistrict}
-              </p>
+            <div className="bg-white p-5 rounded-lg border border-slate-100 shadow-sm flex items-center gap-3">
+              <div className="w-10 h-10 bg-slate-100 rounded-xl flex items-center justify-center text-slate-700 shrink-0 shadow-sm border border-slate-200/50 mt-1">
+                <Home size={18} />
+              </div>
+              <div className="flex flex-col space-y-1.5 w-full">
+                <h3 className="text-[10px] font-black text-slate-400 uppercase tracking-widest border-b border-slate-50 pb-2">
+                  Permanent Address
+                </h3>
+                <p className="text-xs text-slate-600 font-extrabold leading-relaxed">
+                  {staffData.permanentStreetAddress},{" "}
+                  {staffData.permanentDistrict}
+                </p>
+              </div>
             </div>
           </div>
 
           {/* PAYMENT */}
-          <div className="bg-white p-5 rounded-3xl border border-slate-100 shadow-sm space-y-2">
-            <h3 className="text-[10px] font-black text-slate-400 uppercase tracking-widest border-b border-slate-50 pb-2">
-              Payment Method Preference
-            </h3>
-            <p className="text-sm font-extrabold text-slate-700 uppercase tracking-wider">
-              {staffData.paymentPreference}
-            </p>
+          <div className="bg-white p-5 rounded-lg border border-slate-100 shadow-sm flex items-center justify-between">
+            <div className="space-y-1.5">
+              <h3 className="text-[10px] font-black text-slate-400 uppercase tracking-widest border-b border-slate-50 pb-2">
+                Payment Method Preference
+              </h3>
+              <p className="text-sm font-extrabold text-slate-700 uppercase tracking-wider">
+                {staffData.paymentPreference}
+              </p>
+              {["bkash", "nagad", "rocket"].includes(
+                staffData.paymentPreference,
+              ) &&
+                staffData.walletNumber && (
+                  <p className="text-xs font-semibold text-slate-500 mt-1">
+                    {staffData.walletNumber}
+                  </p>
+                )}
+              {staffData.paymentPreference === "bank" && staffData.bankInfo && (
+                <div className="text-xs font-semibold text-slate-500 mt-1 space-y-0.5">
+                  <p className="font-bold">{staffData.bankInfo.bankName}</p>
+                  <p className="font-mono">
+                    {staffData.bankInfo.accountNumber}
+                  </p>
+                </div>
+              )}
+            </div>
+
+            {/* Icon */}
+            <div className="shrink-0 ml-4">
+              {staffData.paymentPreference === "bkash" && (
+                <div className="w-12 h-12 rounded-lg bg-white shadow-sm flex items-center justify-center border border-slate-100">
+                  <svg
+                    className="w-8 h-8"
+                    xmlns="http://www.w3.org/2000/svg"
+                    height="800"
+                    width="1200"
+                    viewBox="-18.0015 -28.3525 156.013 170.115"
+                  >
+                    <g fill="none">
+                      <path
+                        fill="#D12053"
+                        d="M96.58 62.45l-53.03-8.31 7.03 31.6z"
+                      />
+                      <path
+                        fill="#E2136E"
+                        d="M96.58 62.45L56.62 6.93 43.56 54.15z"
+                      />
+                      <path fill="#D12053" d="M42.32 53.51L.45 0l54.83 6.55z" />
+                      <path fill="#9E1638" d="M23.25 31.15L0 9.24h6.12z" />
+                      <path
+                        fill="#D12053"
+                        d="M107.89 35.46l-9.84 26.69L82.1 40.09z"
+                      />
+                      <path
+                        fill="#E2136E"
+                        d="M56.77 84.14l38.61-15.51L97 63.7z"
+                      />
+                      <path
+                        fill="#9E1638"
+                        d="M25.89 113.41l16.54-58.02 8.39 37.75z"
+                      />
+                      <path
+                        fill="#E2136E"
+                        d="M109.43 35.67l-4.06 11.02 14.64-.24z"
+                      />
+                    </g>
+                  </svg>
+                </div>
+              )}
+              {staffData.paymentPreference === "nagad" && (
+                <div className="w-12 h-12 rounded-lg bg-[#F15A22] flex items-center justify-center shadow-sm text-white font-extrabold text-xl select-none">
+                  ন
+                </div>
+              )}
+              {staffData.paymentPreference === "rocket" && (
+                <div className="w-12 h-12 rounded-lg bg-[#8C3494] flex items-center justify-center shadow-sm text-white font-extrabold text-lg select-none">
+                  🚀
+                </div>
+              )}
+              {staffData.paymentPreference === "bank" && (
+                <div className="w-12 h-12 rounded-lg bg-blue-600 flex items-center justify-center shadow-sm text-white">
+                  <svg
+                    className="w-6 h-6"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2.5"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"
+                    />
+                  </svg>
+                </div>
+              )}
+              {staffData.paymentPreference === "cash" && (
+                <div className="w-12 h-12 rounded-lg bg-emerald-600 flex items-center justify-center shadow-sm text-white">
+                  <svg
+                    className="w-6 h-6"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2.5"
+                    viewBox="0 0 24 24"
+                  >
+                    <rect x="2" y="6" width="20" height="12" rx="2" />
+                    <circle cx="12" cy="12" r="3" />
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M6 12h.01M18 12h.01"
+                    />
+                  </svg>
+                </div>
+              )}
+            </div>
           </div>
 
           {/* NID DOCUMENTS */}
-          <div className="bg-white p-5 rounded-3xl border border-slate-100 shadow-sm space-y-4">
+          <div className="bg-white p-5 rounded-lg border border-slate-100 shadow-sm space-y-4">
             <h3 className="text-[10px] font-black text-slate-400 uppercase tracking-widest border-b border-slate-50 pb-2">
               NID Documents front & back
             </h3>
 
             <div className="grid grid-cols-2 gap-3">
-              <div className="rounded-2xl overflow-hidden border border-slate-100 shadow-sm bg-slate-50">
+              <div className="rounded-lg overflow-hidden border border-slate-100 shadow-sm bg-slate-50">
                 <Image
                   src={staffData.nidFrontPhotoUrl}
                   alt="NID Front"
@@ -356,7 +542,7 @@ export default async function StaffDetailsPage() {
                 />
               </div>
 
-              <div className="rounded-2xl overflow-hidden border border-slate-100 shadow-sm bg-slate-50">
+              <div className="rounded-lg overflow-hidden border border-slate-100 shadow-sm bg-slate-50">
                 <Image
                   src={staffData.nidBackPhotoUrl}
                   alt="NID Back"
@@ -369,14 +555,14 @@ export default async function StaffDetailsPage() {
           </div>
 
           {/* Logout */}
-          <div className="pt-2">
+          <div className="mt-4">
             <form action={staffLogout}>
               <button
                 type="submit"
-                className="flex w-full items-center justify-center gap-2 py-3.5 rounded-2xl bg-rose-600 hover:bg-rose-700 active:scale-95 transition-all text-white text-xs font-black uppercase tracking-wider shadow-sm"
+                className="flex w-full items-center justify-center gap-2 px-5 py-2.5 rounded-xl bg-red-500 hover:bg-red-600 active:scale-95 transition-all text-white text-sm font-bold shadow-sm"
               >
-                <LogOut size={16} />
-                Logout Account
+                <LogOut size={18} />
+                Logout
               </button>
             </form>
           </div>

@@ -47,119 +47,120 @@ export default function StaffDashboardClient({
 
   return (
     <StaffLayout balance={stats?.availableBalance || 0}>
-      <div className="flex flex-col gap-5 px-3 md:px-4 text-gray-800 pb-28">
+      <div className="flex flex-col gap-4 px-1 text-gray-800 pb-24">
         {/* Banner */}
-        <div className="w-full overflow-hidden rounded-2xl shadow-lg border border-gray-100">
+        <div className="w-full overflow-hidden shadow-md">
           <Banner />
         </div>
 
         {showMarquee && (
-          <div className="bg-amber-50/70 backdrop-blur-sm border border-amber-200/50 rounded-2xl py-2.5 overflow-hidden shadow-sm">
-            <Marquee
-              speed={50}
-              gradient={false}
-              pauseOnHover={true}
-              className="flex items-center"
-            >
-              {/* Active Complaints */}
-              {activeComplaints.map((c) => (
-                <Link
-                  key={c.complaintId}
-                  href={`/staff/complaints/${c.complaintId}`}
-                  className="flex items-center mx-6 group font-extrabold"
-                >
-                  <div className="flex items-center gap-2">
-                    <span className="bg-rose-600 text-white text-[9px] font-black px-2 py-0.5 rounded-full uppercase tracking-wider shadow-sm animate-pulse">
-                      অভিযোগ
-                    </span>
-                    <span className="text-rose-700 text-xs tracking-wide group-hover:underline uppercase">
-                      সতর্কতা: আপনার বিরুদ্ধে একটি অভিযোগ জমা হয়েছে (আইডি: {c.complaintId})। বিস্তারিত দেখতে ক্লিক করুন।
-                    </span>
-                  </div>
-                </Link>
-              ))}
+          <Marquee
+            speed={50}
+            gradient={false}
+            pauseOnHover={true}
+            className="py-1"
+          >
+            {/* Active Complaints */}
+            {activeComplaints.map((c) => (
+              <Link
+                key={c.complaintId}
+                href={`/staff/complaints/${c.complaintId}`}
+                className="flex items-center mx-6 group font-black"
+              >
+                <div className="flex items-center gap-2">
+                  <span className="bg-red-600 text-white text-[10px] font-black px-2 py-0.5 rounded uppercase tracking-tighter">
+                    অভিযোগ
+                  </span>
+                  <span className="text-red-700 text-sm tracking-wide group-hover:underline uppercase">
+                    সতর্কতা: আপনার বিরুদ্ধে একটি অভিযোগ জমা হয়েছে (আইডি:{" "}
+                    {c.complaintId})। বিস্তারিত দেখতে এখানে ক্লিক করুন।
+                  </span>
+                </div>
+              </Link>
+            ))}
 
-              {/* Unread Notices */}
-              {unreadNotices.map((n) => (
-                <Link
-                  key={n.id}
-                  href="/staff/notifications"
-                  className="flex items-center mx-6 group font-extrabold"
-                >
-                  <div className="flex items-center gap-2">
-                    <span
-                      className={`${n.notice.priority === "urgent" ? "bg-amber-600 animate-bounce" : "bg-brand"} text-white text-[9px] font-black px-2 py-0.5 rounded-full uppercase tracking-wider shadow-sm`}
-                    >
-                      নোটিশ
-                    </span>
-                    <span className="text-slate-700 text-xs tracking-wide group-hover:underline">
-                      {n.notice.title}: {n.notice.content.substring(0, 55)}...
-                    </span>
-                  </div>
-                </Link>
-              ))}
+            {/* Unread Notices */}
+            {unreadNotices.map((n) => (
+              <Link
+                key={n.id}
+                href="/staff/notifications"
+                className="flex items-center mx-6 group font-black"
+              >
+                <div className="flex items-center gap-2">
+                  <span
+                    className={`${n.notice.priority === "urgent" ? "bg-amber-600" : "bg-blue-600"} text-white text-[10px] font-black px-2 py-0.5 rounded uppercase tracking-tighter`}
+                  >
+                    নোটিশ
+                  </span>
+                  <span className="text-slate-900 text-sm tracking-wide group-hover:underline uppercase">
+                    {n.notice.title}: {n.notice.content.substring(0, 50)}...
+                    বিস্তারিত দেখুন।
+                  </span>
+                </div>
+              </Link>
+            ))}
 
-              {/* Assigned Services */}
-              {(stats?.pendingServices || 0) > 0 && (
-                <Link
-                  href="/staff/services"
-                  className="flex items-center mx-6 group font-extrabold"
-                >
-                  <div className="flex items-center gap-2">
-                    <span className="bg-emerald-600 text-white text-[9px] font-black px-2 py-0.5 rounded-full uppercase tracking-wider shadow-sm">
-                      সার্ভিস
-                    </span>
-                    <span className="text-emerald-700 text-xs tracking-wide group-hover:underline">
-                      পেন্ডিং সার্ভিস: {stats.pendingServices}টি। দ্রুত কাজ শুরু করুন।
-                    </span>
-                  </div>
-                </Link>
-              )}
-            </Marquee>
-          </div>
+            {/* Assigned Services */}
+            {(stats?.pendingServices || 0) > 0 && (
+              <Link
+                href="/staff/services"
+                className="flex items-center mx-6 group font-black"
+              >
+                <div className="flex items-center gap-2">
+                  <span className="bg-emerald-600 text-white text-[10px] font-black px-2 py-0.5 rounded uppercase tracking-tighter">
+                    সার্ভিস
+                  </span>
+                  <span className="text-slate-900 text-sm tracking-wide group-hover:underline uppercase">
+                    আপনার জন্য {stats.pendingServices}টি সার্ভিস পেন্ডিং আছে।
+                    দ্রুত কাজ শুরু করুন।
+                  </span>
+                </div>
+              </Link>
+            )}
+          </Marquee>
         )}
 
         {/* Stats */}
-        <div className="grid grid-cols-2 gap-3 md:grid-cols-4 md:gap-4">
-          <div className="bg-white hover:bg-emerald-50/30 border border-slate-100 hover:border-emerald-100 p-4 rounded-2xl shadow-sm flex items-center text-center justify-center transition-all duration-300">
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 sm:gap-6">
+          <div className="bg-emerald-50 border-emerald-200 p-2 sm:p-4 rounded-md shadow-sm border flex items-center text-center justify-center">
             <div>
-              <p className="text-3xl font-black text-emerald-600 tracking-tight">
+              <p className="text-2xl sm:text-3xl font-black text-emerald-600">
                 {staffData.completedServices || 0}
               </p>
-              <p className="text-[10px] uppercase font-bold text-slate-400 mt-1 tracking-wider">
-                Completed
+              <p className="text-[10px] sm:text-xs uppercase font-black text-emerald-600/70 tracking-tighter sm:tracking-widest">
+                Service Completed
               </p>
             </div>
           </div>
 
-          <div className="bg-white hover:bg-amber-50/30 border border-slate-100 hover:border-amber-100 p-4 rounded-2xl shadow-sm flex items-center text-center justify-center transition-all duration-300">
+          <div className="bg-amber-50 border-amber-200 p-2 sm:p-4 rounded-md shadow-sm border flex items-center text-center justify-center">
             <div>
-              <p className="text-3xl font-black text-amber-600 tracking-tight">
+              <p className="text-2xl sm:text-3xl font-black text-amber-600">
                 {staffData.pendingServices || 0}
               </p>
-              <p className="text-[10px] uppercase font-bold text-slate-400 mt-1 tracking-wider">
-                Pending
+              <p className="text-[10px] sm:text-xs uppercase font-black text-amber-600/70 tracking-tighter sm:tracking-widest">
+                Service Pending
               </p>
             </div>
           </div>
 
-          <div className="bg-white hover:bg-rose-50/30 border border-slate-100 hover:border-rose-100 p-4 rounded-2xl shadow-sm flex items-center text-center justify-center transition-all duration-300">
+          <div className="bg-rose-50 border-rose-200 p-2 sm:p-4 rounded-md shadow-sm border flex items-center text-center justify-center">
             <div>
-              <p className="text-3xl font-black text-rose-600 tracking-tight">
+              <p className="text-2xl sm:text-3xl font-black text-rose-600">
                 {staffData.canceledServices || 0}
               </p>
-              <p className="text-[10px] uppercase font-bold text-slate-400 mt-1 tracking-wider">
-                Canceled
+              <p className="text-[10px] sm:text-xs uppercase font-black text-rose-600/70 tracking-tighter sm:tracking-widest">
+                Service Canceled
               </p>
             </div>
           </div>
 
-          <div className="bg-white hover:bg-blue-50/30 border border-slate-100 hover:border-blue-100 p-4 rounded-2xl shadow-sm flex items-center text-center justify-center transition-all duration-300">
+          <div className="bg-blue-50 border-blue-200 p-2 sm:p-4 rounded-md shadow-sm border flex items-center text-center justify-center">
             <div>
-              <p className="text-3xl font-black text-blue-600 tracking-tight">
+              <p className="text-2xl sm:text-3xl font-black text-blue-600">
                 {staffData.serviceCenterServices || 0}
               </p>
-              <p className="text-[10px] uppercase font-bold text-slate-400 mt-1 tracking-wider">
+              <p className="text-[10px] sm:text-xs uppercase font-black text-blue-600/70 tracking-tighter sm:tracking-widest">
                 Service Center
               </p>
             </div>
@@ -167,71 +168,71 @@ export default function StaffDashboardClient({
         </div>
 
         {/* Action Grid */}
-        <div className="bg-white rounded-3xl shadow-sm border border-slate-100/50 p-6 md:p-8">
-          <div className="grid grid-cols-4 sm:grid-cols-4 md:grid-cols-5 gap-6 md:gap-8">
+        <div className="bg-white rounded-md shadow-sm  p-6 sm:p-10">
+          <div className="grid grid-cols-4 sm:grid-cols-4 md:grid-cols-8 gap-6 sm:gap-10">
             {[
               {
                 label: "Services",
                 icon: Wrench,
                 href: "/staff/services",
                 color: "text-emerald-500",
-                bg: "bg-emerald-50/80 border-emerald-100/50",
+                bg: "bg-emerald-50",
               },
               {
                 label: "Profile",
                 icon: User,
                 href: "/staff/details",
                 color: "text-indigo-500",
-                bg: "bg-indigo-50/80 border-indigo-100/50",
+                bg: "bg-indigo-50",
               },
               {
                 label: "Payment",
                 icon: Wallet,
                 href: "/staff/payment",
                 color: "text-rose-500",
-                bg: "bg-rose-50/80 border-rose-100/50",
+                bg: "bg-rose-50",
               },
               {
                 label: "History",
                 icon: Activity,
                 href: "/staff/tracking",
                 color: "text-blue-500",
-                bg: "bg-blue-50/80 border-blue-100/50",
+                bg: "bg-blue-50",
               },
               {
                 label: "Feedbacks",
                 icon: Star,
                 href: "/staff/feedbacks",
                 color: "text-orange-500",
-                bg: "bg-orange-50/80 border-orange-100/50",
+                bg: "bg-orange-50",
               },
               {
                 label: "WhatsApp",
                 icon: MessageSquare,
                 href: "https://wa.me/8801310673600",
                 color: "text-green-500",
-                bg: "bg-green-50/80 border-green-100/50",
+                bg: "bg-green-50",
               },
               {
                 label: "Support",
                 icon: PhoneCall,
                 href: `/staff/support`,
                 color: "text-brand",
-                bg: "bg-brand/5 border-brand/10",
+                bg: "bg-brand/5",
               },
               {
                 label: "Complains",
                 icon: ShieldAlert,
                 href: "/staff/complaints",
                 color: "text-red-500",
-                bg: "bg-red-50/80 border-red-100/50",
+                bg: "bg-red-50",
               },
               {
-                label: "Emergency",
+                label: "Emergency Services",
                 icon: AlertCircle,
                 href: "/staff/jorori-seba",
-                color: "text-rose-600",
-                bg: "bg-rose-50/80 border-rose-100/50",
+                color: "text-red-500",
+                bg: "bg-red-50",
               },
               {
                 label: "Certificate",
@@ -248,26 +249,26 @@ export default function StaffDashboardClient({
                   }
                 },
                 color: "text-amber-500",
-                bg: "bg-amber-50/80 border-amber-100/50",
+                bg: "bg-amber-50",
               },
             ].map((action, i) => (
               <Link
                 key={action.label}
                 href={action.href}
                 onClick={action.onClick}
-                className="flex flex-col items-center gap-2 group cursor-pointer"
+                className="flex flex-col items-center gap-3 group"
               >
                 <div
-                  className={`${action.bg} ${action.color} border size-14 sm:size-16 rounded-2xl flex items-center justify-center shadow-sm transition-all duration-300 group-hover:scale-105 group-hover:shadow-md group-active:scale-95`}
+                  className={`${action.bg} ${action.color} size-14 sm:size-20 rounded-2xl sm:rounded-3xl shadow-sm flex items-center justify-center transition-all group-hover:scale-105 group-active:scale-95 animate-in zoom-in-90 duration-300`}
                   style={{
-                    animationDelay: `${i * 40}ms`,
+                    animationDelay: `${i * 50}ms`,
                     animationFillMode: "both",
                   }}
                 >
-                  <action.icon className="size-6 sm:size-7" />
+                  <action.icon className="size-6 sm:size-8" />
                 </div>
 
-                <span className="text-[10px] sm:text-xs font-bold text-slate-600 tracking-tight text-center">
+                <span className="text-[10px] sm:text-xs font-black text-gray-700 uppercase tracking-tighter sm:tracking-normal text-center">
                   {action.label}
                 </span>
               </Link>
@@ -276,9 +277,7 @@ export default function StaffDashboardClient({
         </div>
 
         {/* Prayer Times Widget */}
-        <div className="bg-white rounded-3xl shadow-sm border border-slate-100/50 p-1">
-          <PrayerTimes />
-        </div>
+        <PrayerTimes />
       </div>
     </StaffLayout>
   );

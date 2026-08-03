@@ -27,15 +27,15 @@ export function CustomerLayout({ children }: CustomerLayoutProps) {
   }, []);
 
   return (
-    <div className="min-h-screen bg-gradient-to-tr from-slate-50 via-gray-50 to-blue-50/30 flex flex-col overflow-x-hidden selection:bg-brand/10 selection:text-brand">
+    <div className="min-h-screen bg-gray-50 flex flex-col overflow-x-hidden">
       <CustomerHeader />
 
       <NoticeBanner notifications={notifications} />
 
-      <main className="flex-1 w-full max-w-4xl mx-auto px-4 py-4 pb-28 sm:pb-24 lg:py-6 overflow-x-hidden">
+      <main className="flex-1 w-full max-w-4xl mx-auto pb-24 lg:pb-8 overflow-x-hidden">
         <div
           key={pathname}
-          className="animate-in fade-in slide-in-from-bottom-3 duration-500 w-full"
+          className="animate-in fade-in slide-in-from-bottom-2 duration-300 w-full"
         >
           {children}
         </div>
