@@ -254,7 +254,7 @@ export default async function StaffDetailsPage() {
                   <polyline points="9 22 9 12 15 12 15 22" />
                 </svg>
               </div>
-              <span className="text-[10px] sm:text-xs font-bold tracking-wider text-gray-900 uppercase">
+              <span className="text-[10px]  font-bold tracking-wider text-gray-900 uppercase">
                 Center Services
               </span>
             </div>

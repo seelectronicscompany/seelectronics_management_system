@@ -35,9 +35,9 @@ export default async function StaffPaymentRequestPage() {
 
   return (
     <StaffLayout balance={stats?.availableBalance || 0}>
-      <div className="space-y-8">
+      <div className="">
         {/* Profile, Balance & Payout Destination Display */}
-        <div className="relative bg-white rounded-lg py-6 px-3  border border-gray-100 flex flex-col items-center overflow-hidden">
+        <div className="relative bg-white rounded-lg px-3  border border-gray-100 flex flex-col items-center overflow-hidden">
           {/* Isometric Pattern in the background */}
           <div className="absolute right-0 top-0 opacity-10 pointer-events-none select-none">
             <svg
