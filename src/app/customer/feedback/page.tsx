@@ -36,10 +36,10 @@ export default async function CustomerFeedbackPage() {
           <div className="relative overflow-hidden rounded-lg border border-brand/10 px-6 py-6 mb-6 group">
             <div className="relative z-10 flex flex-col sm:flex-row items-start gap-4">
               <div className="space-y-1">
-                <h3 className="font-bold text-gray-900 text-lg">
+                <h3 className="font-bold text-gray-900 text-sm">
                   প্রিয় গ্রাহক {customer.name},
                 </h3>
-                <p className="text-gray-600 text-xl leading-relaxed font-medium">
+                <p className="text-gray-600 text-sm leading-relaxed font-medium">
                   আপনার মূল্যবান ফিডব্যাক আমাদের জন্য অত্যন্ত গুরুত্বপূর্ণ।
                   আপনার মতামতের ভিত্তিতে{" "}
                   <strong className="text-brand">SE ELECTRONICS</strong> আরও
@@ -106,7 +106,7 @@ export default async function CustomerFeedbackPage() {
                   {service.feedback?.serviceId ? (
                     <div className="inline-flex items-center gap-2 bg-emerald-50 text-emerald-700 border border-emerald-100 px-4 py-2 rounded-2xl text-sm font-bold shadow-sm">
                       <CheckCircle2 className="size-4 text-emerald-600" />
-                      ফিডব্যাক দেওয়া হয়েছে
+                      ফিডব্যাক দিয়েছেন
                     </div>
                   ) : (
                     <Link
