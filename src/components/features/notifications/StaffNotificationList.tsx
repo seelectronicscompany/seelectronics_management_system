@@ -173,7 +173,7 @@ export default function StaffNotificationList() {
                 <div className="flex items-center gap-2 mb-0.5">
                   <h3
                     className={clsx(
-                      "text-sm sm:text-base font-bold truncate leading-tight tracking-tight",
+                      "text-base sm:text-lg font-bold truncate leading-tight tracking-tight",
                       item.isRead ? "text-gray-700" : "text-gray-900",
                     )}
                   >
@@ -184,11 +184,11 @@ export default function StaffNotificationList() {
                   )}
                 </div>
 
-                <p className="text-xs sm:text-sm text-gray-500 line-clamp-1 leading-snug">
+                <p className="text-sm sm:text-base text-gray-500 line-clamp-1 leading-snug">
                   {message}
                 </p>
 
-                <span className="text-[9px] sm:text-[10px] text-gray-400 font-extrabold block mt-1 uppercase tracking-wider">
+                <span className="text-xs sm:text-sm text-gray-400 font-extrabold block mt-1 uppercase tracking-wider">
                   {formatDate(item.createdAt, true)}
                 </span>
               </div>
@@ -196,7 +196,7 @@ export default function StaffNotificationList() {
               {/* Right Side */}
               <div className="shrink-0 flex items-center self-center gap-1.5 pl-2">
                 {!item.isRead && (
-                  <span className="hidden sm:inline-block text-[9px] font-black uppercase px-2 py-0.5 rounded-full bg-blue-100 text-blue-700 tracking-wider">
+                  <span className="hidden sm:inline-block text-[11px] sm:text-xs font-black uppercase px-2 py-0.5 rounded-full bg-blue-100 text-blue-700 tracking-wider">
                     NEW
                   </span>
                 )}
@@ -265,7 +265,7 @@ export default function StaffNotificationList() {
                 )}
               </div>
               <div className="min-w-0">
-                <h3 className="text-base sm:text-lg font-black text-gray-900 leading-snug">
+                <h3 className="text-lg sm:text-xl font-black text-gray-900 leading-snug">
                   {selectedItem.itemType === "action"
                     ? selectedItem.type === "balance_added"
                       ? "Balance Added"
@@ -275,7 +275,7 @@ export default function StaffNotificationList() {
                 {selectedItem.itemType === "notice" && (
                   <span
                     className={clsx(
-                      "text-[9px] font-black uppercase px-2 py-0.5 rounded-full tracking-wider mt-1 inline-block",
+                      "text-[11px] sm:text-xs font-black uppercase px-2 py-0.5 rounded-full tracking-wider mt-1 inline-block",
                       selectedItem.notice?.priority === "urgent"
                         ? "bg-rose-100 text-rose-700"
                         : selectedItem.notice?.priority === "high"
@@ -290,28 +290,28 @@ export default function StaffNotificationList() {
             </div>
 
             <div className="bg-gray-50/80 rounded-2xl p-4 sm:p-5 border border-gray-100/80">
-              <p className="text-xs sm:text-sm text-gray-700 whitespace-pre-wrap leading-relaxed">
+              <p className="text-sm sm:text-base text-gray-700 whitespace-pre-wrap leading-relaxed">
                 {selectedItem.itemType === "action"
                   ? selectedItem.message
                   : selectedItem.notice?.content}
               </p>
             </div>
 
-            <div className="text-[10px] sm:text-xs font-bold text-gray-400 uppercase tracking-widest border-t border-gray-100 pt-4">
+            <div className="text-xs sm:text-sm font-bold text-gray-400 uppercase tracking-widest border-t border-gray-100 pt-4">
               Received: {formatDate(selectedItem.createdAt, true)}
             </div>
 
             <div className="flex justify-end gap-2 pt-1">
               <button
                 onClick={() => setSelectedItem(null)}
-                className="px-4 py-2 text-xs sm:text-sm font-bold text-gray-500 hover:bg-gray-100 rounded-xl transition-all"
+                className="px-4 py-2 text-sm sm:text-base font-bold text-gray-500 hover:bg-gray-100 rounded-xl transition-all"
               >
                 Close
               </button>
               {selectedItem.itemType === "action" && selectedItem.link && (
                 <Link
                   href={selectedItem.link}
-                  className="px-4 py-2 text-xs sm:text-sm font-bold bg-brand text-white rounded-xl hover:bg-brand/90 flex items-center gap-1.5 transition-all shadow-sm"
+                  className="px-4 py-2 text-sm sm:text-base font-bold bg-brand text-white rounded-xl hover:bg-brand/90 flex items-center gap-1.5 transition-all shadow-sm"
                 >
                   Learn More <ExternalLink size={14} />
                 </Link>

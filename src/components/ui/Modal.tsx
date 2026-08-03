@@ -55,7 +55,7 @@ export default function Modal({
         <div
           className={clsx(
             "relative w-full bg-white shadow-2xl overflow-hidden flex flex-col max-h-[95vh] sm:max-h-[90vh]",
-            "rounded-sm",
+            "rounded-t-3xl sm:rounded-3xl",
             "animate-in slide-in-from-bottom-full sm:slide-in-from-bottom-0 sm:zoom-in-95 duration-300 ease-out",
             width ? widthVariants[width] : "sm:max-w-[800px]",
           )}
