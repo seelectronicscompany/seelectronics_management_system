@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Maximize, Minus, Plus } from "lucide-react";
 
 export default function ZoomableView({
@@ -10,29 +10,9 @@ export default function ZoomableView({
 }) {
   const [scale, setScale] = useState(1);
 
-  useEffect(() => {
-    const handleResize = () => {
-      if (window.innerWidth < 640) {
-        setScale(0.5);
-      } else if (window.innerWidth < 768) {
-        setScale(0.6);
-      } else if (window.innerWidth < 1024) {
-        setScale(0.8);
-      } else {
-        setScale(1);
-      }
-    };
-    handleResize(); // set initial scale
-  }, []);
-
   const handleZoomIn = () => setScale((s) => Math.min(s + 0.1, 2.5));
   const handleZoomOut = () => setScale((s) => Math.max(s - 0.1, 0.3));
-  const handleReset = () => {
-    if (window.innerWidth < 640) setScale(0.5);
-    else if (window.innerWidth < 768) setScale(0.6);
-    else if (window.innerWidth < 1024) setScale(0.8);
-    else setScale(1);
-  };
+  const handleReset = () => setScale(1);
 
   return (
     <div className="flex flex-col items-center w-full h-full relative">
