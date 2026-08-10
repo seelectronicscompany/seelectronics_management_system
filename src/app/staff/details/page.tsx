@@ -163,7 +163,7 @@ export default async function StaffDetailsPage() {
                   <path d="M22.7 19l-9.1-9.1c.9-2.3.4-5-1.5-6.9-2-2-5-2.4-7.4-1.3L9 6 6 9 1.7 4.7C.6 7.1 1 10.1 3 12.1c1.9 1.9 4.6 2.4 6.9 1.5l9.1 9.1c.4.4 1 .4 1.4 0l2.3-2.3c.4-.4.4-1.1 0-1.4zM9.2 11.3L2.5 18c-.4.4-.4 1 0 1.4l2.1 2.1c.4.4 1 .4 1.4 0l6.7-6.7-3.5-3.5z" />
                 </svg>
               </div>
-              <span className="text-sm sm:text-xs font-bold tracking-wider text-gray-900 uppercase">
+              <span className="text-[12px] leading-[1rem] tracking-wider text-gray-900 uppercase">
                 Total Services
               </span>
             </div>
@@ -182,7 +182,7 @@ export default async function StaffDetailsPage() {
                   <path d="M2 21h4V9H2v12zM20 8h-7l1.12-5.37a1.015 1.015 0 0 0-.25-.83c-.19-.2-.47-.3-.77-.3L12.3 2 6.6 7.7C6.22 8.07 6 8.58 6 9v10c0 1.1.9 2 2 2h9c.75 0 1.41-.41 1.75-1.03l3.12-7.29c.08-.2.13-.42.13-.68V10c0-1.1-.9-2-2-2z" />
                 </svg>
               </div>
-              <span className="text-sm sm:text-xs font-bold tracking-wider text-gray-900 uppercase">
+              <span className="text-[12px] leading-[1rem] tracking-wider text-gray-900 uppercase">
                 Successful
               </span>
             </div>
@@ -206,7 +206,7 @@ export default async function StaffDetailsPage() {
                   <line x1="19.07" y1="4.93" x2="4.93" y2="19.07" />
                 </svg>
               </div>
-              <span className="text-sm sm:text-xs font-bold tracking-wider text-gray-900 uppercase">
+              <span className="text-[12px] leading-[1rem] tracking-wider text-gray-900 uppercase">
                 Canceled
               </span>
             </div>
@@ -230,7 +230,7 @@ export default async function StaffDetailsPage() {
                   <polyline points="12 6 12 12 16 12" />
                 </svg>
               </div>
-              <span className="text-sm sm:text-xs font-bold tracking-wider text-gray-900 uppercase">
+              <span className="text-[12px] leading-[1rem] tracking-wider text-gray-900 uppercase">
                 Pending
               </span>
             </div>
@@ -273,7 +273,7 @@ export default async function StaffDetailsPage() {
                   <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z" />
                 </svg>
               </div>
-              <span className="text-sm sm:text-xs font-bold tracking-wider text-gray-900 uppercase">
+              <span className="text-[12px] leading-[1rem] tracking-wider text-gray-900 uppercase">
                 Rating
               </span>
             </div>

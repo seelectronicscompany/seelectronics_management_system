@@ -134,7 +134,7 @@ export default function StaffNotificationList() {
                 setSelectedItem({ ...item, isRead: true });
               }}
               className={clsx(
-                "group flex items-start sm:items-center gap-3.5 p-3.5 sm:p-4 rounded-2xl border transition-all duration-200 cursor-pointer",
+                "group flex items-start sm:items-center gap-3.5 p-3.5 sm:p-4 rounded-2xl border transition-all duration-200 cursor-pointer overflow-hidden relative",
                 item.isRead
                   ? "bg-white/60 border-gray-100/80 text-gray-500 opacity-90 hover:opacity-100 hover:bg-white hover:border-gray-200 hover:shadow-sm"
                   : "bg-gradient-to-br from-brand/[0.02] to-brand/[0.05] border-brand/20 shadow-[0_4px_16px_rgba(10,26,58,0.04)] hover:shadow-[0_6px_20px_rgba(10,26,58,0.06)] hover:border-brand/40"
@@ -184,7 +184,7 @@ export default function StaffNotificationList() {
                   )}
                 </div>
 
-                <p className="text-sm sm:text-base text-gray-500 line-clamp-1 leading-snug">
+                <p className="text-sm sm:text-base text-gray-500 line-clamp-1 leading-snug break-all">
                   {message}
                 </p>
 
