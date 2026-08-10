@@ -15,13 +15,12 @@ export default async function PaymentHistoryPage() {
   const paymentsRes = await getStaffPaymentHistory(userId);
 
   const paymentsList = (
-    paymentsRes.success ? paymentsRes.data ?? [] : []
+    paymentsRes.success ? (paymentsRes.data ?? []) : []
   ) as PaymentDataType[];
 
   return (
     <StaffLayout balance={0}>
       <div className="min-h-screen bg-gray-50 p-3 space-y-3">
-
         {/* Title */}
         <h1 className="text-xl font-black text-gray-900 uppercase tracking-wide">
           All Payment History
@@ -30,34 +29,32 @@ export default async function PaymentHistoryPage() {
         {paymentsList.length === 0 ? (
           <div className="bg-white p-12 rounded-md border text-center text-gray-500 shadow-sm">
             <CreditCard size={40} className="mx-auto mb-4 text-gray-200" />
-            <p className="text-lg font-black text-gray-800">
-              No History Yet
-            </p>
+            <p className="text-lg font-black text-gray-800">No History Yet</p>
           </div>
         ) : (
           <div className="space-y-3">
             {paymentsList.map((payment: PaymentDataType) => {
               const isRequest = payment.status === "requested";
 
-             const statusLabel =
-  payment.status === "completed"
-    ? "PAID"
-    : payment.status === "requested"
-    ? "REQUESTED"
-    : payment.status === "credited"
-    ? "RECEIVED"
-    : payment.status === "rejected"
-    ? "REJECTED"
-    : "PROCESSING";
+              const statusLabel =
+                payment.status === "completed"
+                  ? "PAID"
+                  : payment.status === "requested"
+                    ? "REQUESTED"
+                    : payment.status === "credited"
+                      ? "RECEIVED"
+                      : payment.status === "rejected"
+                        ? "REJECTED"
+                        : "PROCESSING";
 
               const statusStyle =
                 payment.status === "completed" || payment.status === "credited"
                   ? "bg-green-100 text-green-700 border border-green-700"
                   : payment.status === "rejected"
-                  ? "bg-red-100 text-red-700 border border-red-700"
-                  : payment.status === "requested"
-                  ? "bg-blue-100 text-blue-700 border border-blue-700"
-                  : "bg-yellow-100 text-yellow-700 border border-yellow-700";
+                    ? "bg-red-100 text-red-700 border border-red-700"
+                    : payment.status === "requested"
+                      ? "bg-blue-100 text-blue-700 border border-blue-700"
+                      : "bg-yellow-100 text-yellow-700 border border-yellow-700";
 
               return (
                 <Link
@@ -66,7 +63,6 @@ export default async function PaymentHistoryPage() {
                   className="block bg-white rounded-lg p-4 border border-gray-300 shadow-sm active:scale-[0.98] transition-all"
                 >
                   <div className="flex justify-between gap-3">
-
                     {/* LEFT SIDE */}
                     <div className="flex flex-col justify-between flex-1">
                       <div>
@@ -100,20 +96,19 @@ export default async function PaymentHistoryPage() {
 
                     {/* RIGHT SIDE */}
                     <div className="flex flex-col items-end justify-between gap-2">
-
                       {/* Payment Method (always show) */}
-                       {isRequest ? (
+                      {isRequest ? (
                         <span
                           className={clsx(
                             "px-2 py-[2px] rounded text-xs font-semibold capitalize",
                             payment.paymentMethod === "bkash" &&
-                            "bg-pink-100 text-pink-600 border border-pink-600",
+                              "bg-pink-100 text-pink-600 border border-pink-600",
                             payment.paymentMethod === "nagad" &&
-                            "bg-orange-100 text-orange-600 border border-orange-600",
+                              "bg-orange-100 text-orange-600 border border-orange-600",
                             payment.paymentMethod === "cash" &&
-                            "bg-blue-100 text-blue-700 border border-blue-700",
+                              "bg-blue-100 text-blue-700 border border-blue-700",
                             payment.paymentMethod === "bank" &&
-                            "bg-emerald-100 text-emerald-600 border border-emerald-600"
+                              "bg-emerald-100 text-emerald-600 border border-emerald-600",
                           )}
                         >
                           {payment.paymentMethod}
@@ -122,7 +117,7 @@ export default async function PaymentHistoryPage() {
                         // <span className="px-2 py-[2px] rounded text-xs font-bold bg-green-100 text-green-700 border border-green-600">
                         //   Balance Added
                         // </span>
-                        ''
+                        ""
                       )}
 
                       {/* Amount */}
@@ -131,7 +126,12 @@ export default async function PaymentHistoryPage() {
                       </span>
 
                       {/* Status Badge */}
-                      <span className={clsx("text-xs font-bold px-2 py-[2px] rounded border", statusStyle)}>
+                      <span
+                        className={clsx(
+                          "text-xs font-bold px-2 py-[2px] rounded border",
+                          statusStyle,
+                        )}
+                      >
                         {statusLabel}
                       </span>
 
@@ -142,7 +142,6 @@ export default async function PaymentHistoryPage() {
                         </span>
                       )}
                     </div>
-
                   </div>
                 </Link>
               );
