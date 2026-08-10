@@ -163,7 +163,7 @@ export default function CustomerNotificationsPage() {
                         <span className="shrink-0 size-2 rounded-full bg-blue-600 animate-pulse" />
                       )}
                     </div>
-                    <p className="text-xs sm:text-sm text-gray-500 line-clamp-1 leading-snug">
+                    <p className="text-xs sm:text-sm text-gray-500 line-clamp-4 leading-snug break-all">
                       {message}
                     </p>
                     <span className="text-[9px] sm:text-[10px] text-gray-400 font-extrabold block mt-1 uppercase tracking-wider">

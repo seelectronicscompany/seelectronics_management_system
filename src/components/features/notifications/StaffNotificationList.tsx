@@ -184,7 +184,7 @@ export default function StaffNotificationList() {
                   )}
                 </div>
 
-                <p className="text-sm sm:text-base text-gray-500 line-clamp-1 leading-snug break-all">
+                <p className="text-sm sm:text-base text-gray-500 line-clamp-4 leading-snug break-all">
                   {message}
                 </p>
 
