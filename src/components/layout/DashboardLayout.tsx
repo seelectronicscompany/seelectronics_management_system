@@ -42,6 +42,12 @@ const links = [
     sectionTitle: "Customer Management",
   },
   {
+    name: "Team Members",
+    href: "/team-members",
+    icon: Users,
+    sectionTitle: "Team Members",
+  },
+  {
     name: "Invoices",
     href: "/invoices",
     icon: FileText,

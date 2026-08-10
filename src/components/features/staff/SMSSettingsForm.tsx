@@ -176,8 +176,14 @@ export default function SMSSettingsForm({ initialData }: SMSSettingsFormProps) {
         disabled={isPending}
         className="w-full py-5 rounded-[2rem] bg-brand text-white font-black uppercase tracking-widest text-sm hover:bg-brand-800 transition-all shadow-xl shadow-brand/20 flex items-center justify-center gap-3"
       >
-        {isPending ? <Spinner message="" /> : <Save size={20} />}
-        Save Notification Preferences
+        {isPending ? (
+          <Spinner message="Saving..." />
+        ) : (
+          <>
+            <Save size={20} />
+            Save Notification Preferences
+          </>
+        )}
       </button>
     </form>
   );
