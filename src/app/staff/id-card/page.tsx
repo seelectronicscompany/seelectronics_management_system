@@ -7,10 +7,11 @@ import { notFound } from "next/navigation";
 import fs from "fs";
 import path from "path";
 import { qrcode, barcode } from "@/lib/id-gen";
+import ZoomableView from "./ZoomableView";
 
 export default async function IdCardPage() {
   const session = await verifyStaffSession();
-  
+
   if (!session.isAuth || !session.userId) {
     notFound();
   }
@@ -64,15 +65,17 @@ export default async function IdCardPage() {
     "src",
     "assets",
     "images",
-    staff.role === "technician" ? "technician-card.jpg" : "electrician-card.jpg"
+    staff.role === "technician"
+      ? "technician-card.jpg"
+      : "electrician-card.jpg",
   );
-  
+
   const backTemplatePath = path.join(
     process.cwd(),
     "src",
     "assets",
     "images",
-    "id-card-back.jpg"
+    "id-card-back.jpg",
   );
 
   const frontBase64 = await convertToBase64(frontTemplatePath);
@@ -118,16 +121,14 @@ export default async function IdCardPage() {
           target="_blank"
           className="flex items-center gap-2 bg-gradient-to-r from-fuchsia-500 to-fuchsia-600 hover:from-fuchsia-400 hover:to-fuchsia-500 text-white px-5 py-2.5 rounded-xl font-black transition-all shadow-lg shadow-fuchsia-500/10 active:scale-[0.98] text-sm"
         >
-          <Download className="size-4" /> Download PDF
+          <Download className="size-2" /> Download
         </Link>
       </header>
 
-      <main className="flex-1 flex items-center justify-center p-6 overflow-auto">
-        <div className="w-full max-w-[900px] flex items-center justify-center p-4">
-          <div className="origin-center scale-[0.4] sm:scale-[0.6] md:scale-[0.8] lg:scale-100 transition-all duration-300">
-            <IdCardTemplate data={data as any} />
-          </div>
-        </div>
+      <main className="flex-1 flex flex-col overflow-hidden p-2 sm:p-6">
+        <ZoomableView>
+          <IdCardTemplate data={data as any} />
+        </ZoomableView>
       </main>
     </div>
   );
