@@ -84,11 +84,11 @@ export default async function StaffDetailsPage() {
               <div className="w-28 h-28 sm:w-32 sm:h-32 rounded-full p-[3px] bg-gradient-to-tr from-[#c5a059] via-[#fdf0cd] to-[#d4af37] shadow-md flex items-center justify-center">
                 <div className="w-full h-full rounded-full overflow-hidden border-2 border-white bg-white">
                   <Image
-                    src={staffData.photoUrl}
+                    src={staffData.photoUrl || "/placeholder-avatar.png"}
                     alt={staffData.name}
                     width={128}
                     height={128}
-
+                    className="w-full h-full object-cover"
                   />
                 </div>
               </div>
@@ -534,7 +534,7 @@ export default async function StaffDetailsPage() {
             <div className="grid grid-cols-2 gap-3">
               <div className="rounded-lg overflow-hidden border border-slate-100 shadow-sm bg-slate-50">
                 <Image
-                  src={staffData.nidFrontPhotoUrl}
+                  src={nidFrontUrl || "/placeholder.jpg"}
                   alt="NID Front"
                   width={300}
                   height={200}
@@ -544,7 +544,7 @@ export default async function StaffDetailsPage() {
 
               <div className="rounded-lg overflow-hidden border border-slate-100 shadow-sm bg-slate-50">
                 <Image
-                  src={staffData.nidBackPhotoUrl}
+                  src={nidBackUrl || "/placeholder.jpg"}
                   alt="NID Back"
                   width={300}
                   height={200}
