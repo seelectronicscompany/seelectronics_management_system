@@ -10,6 +10,8 @@ import {
   User,
   Wallet,
   Wrench,
+  Banknote,
+  Contact,
   Award,
 } from "lucide-react";
 import Link from "next/link";
@@ -250,6 +252,20 @@ export default function StaffDashboardClient({
                 },
                 color: "text-amber-500",
                 bg: "bg-amber-50",
+              },
+              {
+                label: "Loan",
+                icon: Banknote,
+                href: "/staff/loan",
+                color: "text-teal-500",
+                bg: "bg-teal-50",
+              },
+              {
+                label: "ID Card",
+                icon: Contact,
+                href: "/staff/id-card",
+                color: "text-fuchsia-500",
+                bg: "bg-fuchsia-50",
               },
             ].map((action, i) => (
               <Link
