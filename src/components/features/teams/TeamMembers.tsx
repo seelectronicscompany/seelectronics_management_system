@@ -91,7 +91,7 @@ export default function TeamMembers({
           }}
         >
           <div className="bg-white overflow-hidden w-full">
-            <div className="space-y-3 bg-blue-50/60 border border-blue-200 rounded-md p-2 text-primary text-center">
+            <div className="bg-blue-50/60 border border-blue-200 rounded-md text-primary text-center">
               {/* <div className="bg-primary/15 border border-primary p-6  rounded-md"> */}
               {/* <!-- Profile Image Placeholder --> */}
               <div className="size-48 rounded-full overflow-hidden __center mx-auto mb-5">
