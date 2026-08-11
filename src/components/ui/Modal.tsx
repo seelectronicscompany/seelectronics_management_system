@@ -74,7 +74,7 @@ export default function Modal({
           </header>
 
           {/* Content */}
-          <div className="flex-1 overflow-y-auto p-6 custom-scrollbar">
+          <div className="flex-1 overflow-y-auto px-4 py-3 custom-scrollbar">
             {children}
           </div>
         </div>

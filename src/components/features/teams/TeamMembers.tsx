@@ -13,6 +13,7 @@ import {
   MapPin,
   Phone,
   XCircle,
+  AlertTriangle,
 } from "lucide-react";
 import Image from "next/image";
 import { useState } from "react";
@@ -41,6 +42,7 @@ export default function TeamMembers({
     canceledServices: number;
     pendingServices: number;
     serviceCenterServices: number;
+    complaintsCount: number;
   }[];
   staffId?: string;
 }) {
@@ -94,7 +96,7 @@ export default function TeamMembers({
             <div className="bg-blue-50/60 border border-blue-200 rounded-md text-primary text-center">
               {/* <div className="bg-primary/15 border border-primary p-6  rounded-md"> */}
               {/* <!-- Profile Image Placeholder --> */}
-              <div className="size-48 rounded-full overflow-hidden __center mx-auto mb-5">
+              <div className="size-48 rounded-full overflow-hidden __center mx-auto my-5">
                 <ImageWithLightbox src={selectedProfile?.photoUrl || ""} />
               </div>
               <h1 className="text-2xl font-bold mb-1">
@@ -109,20 +111,20 @@ export default function TeamMembers({
 
             <div className="py-4 flex items-center justify-between border-b border-gray-100">
               <div className="flex flex-col gap-1">
-                 <div className="flex items-center space-x-2 border rounded-md px-2 py-0.5">
-                   <span className="text-accent-yellow text-xl">⭐</span>
-                   <span className="text-xl font-bold text-gray-800">
-                     {Number(selectedProfile.rating).toFixed(1)}
-                   </span>
-                   <span className="text-sm text-gray-500">
-                     ({selectedProfile.totalFeedbacks} রেটিং)
-                   </span>
-                 </div>
-                 {selectedProfile.fiveStarCount > 0 && (
-                   <span className="text-[11px] text-gray-500 font-bold ml-1">
-                     ({selectedProfile.fiveStarCount} টি ৫ স্টার রেটিং)
-                   </span>
-                 )}
+                <div className="flex items-center space-x-2 border rounded-md px-2 py-0.5">
+                  <span className="text-accent-yellow text-xl">⭐</span>
+                  <span className="text-xl font-bold text-gray-800">
+                    {Number(selectedProfile.rating).toFixed(1)}
+                  </span>
+                  <span className="text-sm text-gray-500">
+                    ({selectedProfile.totalFeedbacks} রেটিং)
+                  </span>
+                </div>
+                {selectedProfile.fiveStarCount > 0 && (
+                  <span className="text-[11px] text-gray-500 font-bold ml-1">
+                    ({selectedProfile.fiveStarCount} টি ৫ স্টার রেটিং)
+                  </span>
+                )}
               </div>
               <div className="flex items-center bg-green-100 text-green-700 px-3 py-1 rounded-md border border-green-500 text-sm font-semibold h-fit">
                 <span className="mr-1">✅</span>
@@ -185,6 +187,17 @@ export default function TeamMembers({
                 </span>
                 <span className="text-xs font-semibold text-rose-700">
                   সার্ভিস সেন্টার
+                </span>
+              </div>
+              <div className="flex flex-col items-center p-2 rounded-md bg-red-50 border border-red-200 text-center">
+                <div className="bg-red-100 rounded-md p-1 mb-2">
+                  <AlertTriangle className="size-5 text-red-600" />
+                </div>
+                <span className="text-xl font-bold text-gray-900">
+                  {selectedProfile.complaintsCount ?? 0}
+                </span>
+                <span className="text-xs font-semibold text-red-700">
+                  অভিযোগ
                 </span>
               </div>
             </div>
@@ -335,7 +348,12 @@ export default function TeamMembers({
               className="bg-white border p-6 rounded-md text-center cursor-pointer"
             >
               <div className="size-44 rounded-full overflow-hidden __center mx-auto">
-                <Image src={staff.photoUrl || ""} alt="" width={176} height={176} />
+                <Image
+                  src={staff.photoUrl || ""}
+                  alt=""
+                  width={176}
+                  height={176}
+                />
               </div>
               <div className="flex flex-col mt-5 gap-2">
                 <div className="flex gap-1 self-center items-center">

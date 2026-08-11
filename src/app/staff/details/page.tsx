@@ -46,11 +46,11 @@ export default async function StaffDetailsPage() {
   // Pre-fetch S3 URLs if not available
   const nidFrontUrl = staffData.nidFrontPhotoKey
     ? staffData.nidFrontPhotoUrl ||
-    (await getObjectUrl(staffData.nidFrontPhotoKey))
+      (await getObjectUrl(staffData.nidFrontPhotoKey))
     : null;
   const nidBackUrl = staffData.nidBackPhotoKey
     ? staffData.nidBackPhotoUrl ||
-    (await getObjectUrl(staffData.nidBackPhotoKey))
+      (await getObjectUrl(staffData.nidBackPhotoKey))
     : null;
 
   return (
@@ -385,7 +385,7 @@ export default async function StaffDetailsPage() {
                 <h3 className="text-sm font-black text-slate-400 uppercase tracking-widest border-b border-slate-50 pb-2">
                   Current Address
                 </h3>
-                <p className="text-xs text-slate-600 font-extrabold leading-relaxed">
+                <p className="text-xs text-[#0a192f] font-extrabold leading-relaxed">
                   {staffData.currentStreetAddress}, {staffData.currentDistrict}
                 </p>
               </div>
@@ -399,7 +399,7 @@ export default async function StaffDetailsPage() {
                 <h3 className="text-sm font-black text-slate-400 uppercase tracking-widest border-b border-slate-50 pb-2">
                   Permanent Address
                 </h3>
-                <p className="text-xs text-slate-600 font-extrabold leading-relaxed">
+                <p className="text-xs text-[#0a192f] font-extrabold leading-relaxed">
                   {staffData.permanentStreetAddress},{" "}
                   {staffData.permanentDistrict}
                 </p>

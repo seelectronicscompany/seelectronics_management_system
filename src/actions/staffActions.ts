@@ -14,6 +14,7 @@ import {
   payments,
   services,
   staffs,
+  staffComplaints,
   userAgreements,
   serviceStatusHistory,
 } from "@/db/schema";
@@ -269,6 +270,19 @@ export const getAllTeamMembers = async () => {
       .where(eq(staffs.isVerified, true))
       .groupBy(staffs.id)
       .orderBy(desc(staffs.createdAt));
+
+    const complaintsCountsData = await db
+      .select({
+        staffId: staffComplaints.staffId,
+        count: sql<number>`count(*)`.mapWith(Number),
+      })
+      .from(staffComplaints)
+      .groupBy(staffComplaints.staffId);
+    
+    const complaintsMap = new Map(
+      complaintsCountsData.map((c) => [c.staffId, c.count])
+    );
+
     const finalStaffData = await Promise.all(
       staffsData.map(async (staff) => {
         const [photoUrl, nidFrontPhotoUrl, nidBackPhotoUrl] = await Promise.all(
@@ -285,6 +299,7 @@ export const getAllTeamMembers = async () => {
           photoUrl,
           nidFrontPhotoUrl,
           nidBackPhotoUrl,
+          complaintsCount: complaintsMap.get(staff.staffId) || 0,
           completedServices: staff.successfulServices || 0,
           canceledServices: staff.canceledServices || 0,
           pendingServices: staff.pendingServices || 0,

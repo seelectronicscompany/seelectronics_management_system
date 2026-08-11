@@ -1,4 +1,3 @@
-import React from "react";
 import { verifyStaffSession } from "@/actions";
 import { getStaffPaymentHistory } from "@/actions/paymentRequestActions";
 import { StaffLayout } from "@/components/layout/StaffLayout";
@@ -6,6 +5,7 @@ import { PaymentDataType } from "@/types";
 import clsx from "clsx";
 import Link from "next/link";
 import { CreditCard } from "lucide-react";
+import React from "react";
 
 export default async function PaymentHistoryPage() {
   const session = await verifyStaffSession();
@@ -134,13 +134,6 @@ export default async function PaymentHistoryPage() {
                       >
                         {statusLabel}
                       </span>
-
-                      {/* Balance Tag */}
-                      {!isRequest && (
-                        <span className="text-xs font-bold px-2 py-[2px] rounded bg-green-100 text-green-700 border border-green-600">
-                          Balance Added
-                        </span>
-                      )}
                     </div>
                   </div>
                 </Link>

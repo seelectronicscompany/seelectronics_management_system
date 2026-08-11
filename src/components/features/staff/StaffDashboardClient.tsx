@@ -49,9 +49,9 @@ export default function StaffDashboardClient({
 
   return (
     <StaffLayout balance={stats?.availableBalance || 0}>
-      <div className="flex flex-col gap-4 px-1 text-gray-800 pb-24">
+      <div className="flex flex-col gap-4 px-2 text-gray-800 pb-24">
         {/* Banner */}
-        <div className="mt-4 w-full overflow-hidden shadow-md">
+        <div className="mt-2 w-full overflow-hidden shadow-md">
           <Banner />
         </div>
 
