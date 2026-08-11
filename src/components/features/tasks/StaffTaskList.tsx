@@ -192,7 +192,7 @@ export default function StaffTaskList() {
               </div>
 
               {/* Description */}
-              <p className="text-xs sm:text-sm text-gray-500 line-clamp-2 break-words">
+              <p className="text-sm text-gray-500 line-clamp-2 break-words">
                 {task.description}
               </p>
 
