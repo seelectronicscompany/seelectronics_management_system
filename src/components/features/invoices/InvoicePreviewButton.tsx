@@ -2,7 +2,7 @@
 
 import { getProducts } from "@/actions/productActions";
 import InvoiceDueBgImage from "@/assets/images/customer-invoice-due.jpg";
-import InvoicePaidBgImage from "@/assets/images/customer-invoice-paid.jpg";
+import InvoicePaidBgImage from "@/assets/images/customer-invoice-paid.png";
 import PaymentReceiptBgImage from "@/assets/images/payment-receipt.jpg";
 import InvoiceWebView from "./InvoiceWebView";
 import PaymentWebView from "../payments/PaymentWebView";
@@ -66,7 +66,9 @@ export default function InvoicePreviewButton({
             <PaymentWebView
               data={{
                 ...paymentData,
-                staff: paymentData.staff ? { name: paymentData.staff.name } : { name: 'N/A' }
+                staff: paymentData.staff
+                  ? { name: paymentData.staff.name }
+                  : { name: "N/A" },
               }}
             />
           )}

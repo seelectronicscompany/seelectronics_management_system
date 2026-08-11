@@ -63,7 +63,7 @@ export default function InvoiceTemplate({
               <tr
                 className={clsx(
                   "border border-black",
-                  data.dueAmount > 0 ? "bg-[#FFD7DD]" : "bg-[#E6EFE6]",
+                  data.dueAmount > 0 ? "bg-[#FFD7DC]" : "bg-[#D7E6F5]",
                 )}
               >
                 <th className="text-left py-2 px-3 font-bold text-sm border-r border-black w-4">
@@ -122,7 +122,9 @@ export default function InvoiceTemplate({
                             {data.subtotal.toLocaleString()} Tk
                           </div>
                           <div className="text-base text-red-600">
-                            <span className="font-semibold">Referral Discount : </span>
+                            <span className="font-semibold">
+                              Referral Discount :{" "}
+                            </span>
                             -{(data.subtotal - data.total).toLocaleString()} Tk
                           </div>
                         </>

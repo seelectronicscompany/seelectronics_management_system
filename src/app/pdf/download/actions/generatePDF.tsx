@@ -118,7 +118,7 @@ export default async function generatePDF({
           "src",
           "assets",
           "images",
-          isDue ? "customer-invoice-due.jpg" : "customer-invoice-paid.jpg",
+          isDue ? "customer-invoice-due.png" : "customer-invoice-paid.png",
         );
         const backgroundBase64 = await convertToBase64(templatePath);
 
@@ -234,14 +234,17 @@ export default async function generatePDF({
           await import("@/components/features/staff/CertificateTemplate")
         ).default;
 
-        let staffInfo: CertificatePayload | null = payload as CertificatePayload;
+        let staffInfo: CertificatePayload | null =
+          payload as CertificatePayload;
 
         if (
           !staffInfo ||
           finalDocType !== "certificate" ||
           !staffInfo.shopName
         ) {
-          throw new AppError("সার্টিফিকেট ডাউনলোড করার জন্য একটি বৈধ ডাউনলোড লিঙ্ক প্রয়োজন।");
+          throw new AppError(
+            "সার্টিফিকেট ডাউনলোড করার জন্য একটি বৈধ ডাউনলোড লিঙ্ক প্রয়োজন।",
+          );
         }
 
         const templatePath = path.join(
@@ -350,8 +353,12 @@ export default async function generatePDF({
 
         // Determine punishment type from adminNote or status
         // Handle punishment type from dynamic DB fields or fallback to adminNote detection
-        let punishment: "warning" | "fine" | "suspension" | "demotion" | "termination" =
-          (c.punishmentType as any) || "warning";
+        let punishment:
+          | "warning"
+          | "fine"
+          | "suspension"
+          | "demotion"
+          | "termination" = (c.punishmentType as any) || "warning";
 
         if (!c.punishmentType && c.adminNote) {
           const note = c.adminNote.toLowerCase();
