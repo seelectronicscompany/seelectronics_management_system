@@ -37,14 +37,7 @@ export function StaffHeader({ balance }: StaffHeaderProps) {
     <header className="sticky top-0 z-50 bg-[#0A1A3A] text-white shadow-lg overflow-hidden w-full">
       <div className="max-w-4xl mx-auto px-4 h-14 md:h-16 flex items-center justify-between gap-3">
         {/* LEFT PROFILE ACCORDION */}
-        <Link
-          href="/staff/profile"
-          className="flex items-center shrink-0 gap-2 hover:bg-white/10 p-1.5 rounded-md transition-colors"
-        >
-          <div className="w-8 h-8 sm:w-10 sm:h-10 bg-white/20 rounded-md flex items-center justify-center border border-white/20 overflow-hidden shrink-0">
-            <span className="text-sm sm:text-base font-bold">SE</span>
-          </div>
-        </Link>
+
         {showBalance && (
           <div className="min-w-0 max-w-[140px] xs:max-w-none">
             <StaffBalanceBar amount={balance} />

@@ -60,7 +60,7 @@ export default function StaffNotificationBell() {
   return (
     <Link
       href="/staff/notifications"
-      className="relative size-10 rounded-md flex items-center justify-center transition-all duration-300 bg-white/10 text-white hover:bg-white/20 border border-white/20 shadow-sm"
+      className="relative size-10 rounded-md flex items-center justify-center transition-all duration-300 text-white   shadow-sm"
     >
       <Bell size={20} />
       {unreadCount > 0 && (
