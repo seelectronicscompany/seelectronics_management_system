@@ -41,7 +41,7 @@ export function StaffPaymentRequestForm({
       <input type="hidden" name="staffId" value={staffId} />
 
       {/* Enter Transaction Details Card (Teal colored container box) */}
-      <div className="rounded-lg p-5 bg-[#f0fcfc] border border-[#00a8a8] space-y-4 ">
+      <div className="rounded-md p-5 bg-[#f0fcfc] border border-[#00a8a8] space-y-4 ">
         <h3 className="text-sm font-bold text-gray-800">
           Enter Transaction Details
         </h3>
@@ -61,7 +61,7 @@ export function StaffPaymentRequestForm({
               name="amount"
               min="1"
               required
-              className="w-full pl-9 pr-4 py-5 bg-white border border-gray-300 rounded-lg text-sm text-gray-800 focus:outline-none focus:border-brand focus:ring-1 focus:ring-brand transition-all"
+              className="w-full pl-9 pr-4 py-4 bg-white border border-gray-300 rounded-md text-sm text-gray-800 focus:outline-none focus:border-brand focus:ring-1 focus:ring-brand transition-all"
             />
           </div>
         </div>
@@ -76,7 +76,7 @@ export function StaffPaymentRequestForm({
             type="text"
             name="description"
             placeholder="Note (Optional)"
-            className="w-full px-5 py-5 bg-white border border-gray-300 rounded-lg text-sm text-gray-800 placeholder-gray-400 focus:outline-none focus:border-brand focus:ring-1 focus:ring-brand transition-all"
+            className="w-full px-5 py-4 bg-white border border-gray-300 rounded-md text-sm text-gray-800 placeholder-gray-400 focus:outline-none focus:border-brand focus:ring-1 focus:ring-brand transition-all"
           />
         </div>
       </div>
@@ -85,7 +85,7 @@ export function StaffPaymentRequestForm({
       <button
         type="submit"
         disabled={isPending}
-        className=" mt-8 w-full bg-[#7aa4f6] hover:bg-[#5b84e6] text-white font-bold py-5 rounded-lg text-sm flex items-center justify-center gap-2 transition-all active:scale-[0.98] disabled:opacity-50"
+        className=" mt-8 w-full bg-[#7aa4f6] hover:bg-[#5b84e6] text-white font-bold py-4 rounded-md text-sm flex items-center justify-center gap-2 transition-all active:scale-[0.98] disabled:opacity-50"
       >
         <span>{isPending ? "Sending..." : "Request Payment"}</span>
         {!isPending && (
@@ -109,7 +109,7 @@ export function StaffPaymentRequestForm({
       {/* Success Modal Overlay - rendered conditionally on successful request */}
       {showSuccess && (
         <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-[60]">
-          <div className="bg-[#f0fcfc] border-2 border-[#00a8a8] rounded-lg p-8 w-full max-w-sm text-center shadow-2xl animate-in zoom-in duration-200">
+          <div className="bg-[#f0fcfc] border-2 border-[#00a8a8] rounded-md p-8 w-full max-w-sm text-center shadow-2xl animate-in zoom-in duration-200">
             {/* Green Success Checkmark Icon */}
             <div className="w-20 h-20 mx-auto rounded-full bg-white border border-[#00a8a8] flex items-center justify-center mb-5 shadow-sm">
               <CircleCheckBig size={40} className="text-[#00a8a8]" />
@@ -131,7 +131,7 @@ export function StaffPaymentRequestForm({
               {/* Close Button - dismisses the success modal but stays on the same page */}
               <button
                 onClick={() => setShowSuccess(false)}
-                className="flex-1 py-3 rounded-lg font-bold text-sm 
+                className="flex-1 py-3 rounded-md font-bold text-sm 
                      border border-slate-200 text-gray-500 bg-white
                      hover:bg-slate-50 transition-all active:scale-[0.98]"
               >
@@ -144,7 +144,7 @@ export function StaffPaymentRequestForm({
                   setShowSuccess(false);
                   window.location.href = "/staff/services";
                 }}
-                className="flex-1 py-3 rounded-lg font-bold text-sm 
+                className="flex-1 py-3 rounded-md font-bold text-sm 
                      bg-[#7aa4f6] text-white hover:bg-[#5b84e6]
                      transition-all active:scale-[0.98]"
               >

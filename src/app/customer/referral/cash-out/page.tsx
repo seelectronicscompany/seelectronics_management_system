@@ -59,7 +59,7 @@ export default function CashOutPage() {
         </div>
 
         {/* AVAILABLE BALANCE Card */}
-        <div className="w-full bg-white rounded-2xl border border-gray-100 p-5 mt-6 flex flex-col items-center z-10 shadow-sm">
+        <div className="w-full bg-white rounded-md border border-gray-100 p-5 mt-6 flex flex-col items-center z-10 shadow-sm">
           <span className="text-[11px] font-bold text-gray-500 uppercase tracking-widest">
             AVAILABLE BALANCE
           </span>
@@ -75,7 +75,7 @@ export default function CashOutPage() {
         </div>
 
         {/* Payout Destination Card (Teal colored container box) */}
-        <div className="rounded-2xl p-5 bg-[#e8f1fd] border border-[#e8f1fd] space-y-4 shadow-sm mt-5">
+        <div className="rounded-md p-5 bg-[#e8f1fd] border border-[#e8f1fd] space-y-4 shadow-sm mt-5">
           <h3 className="text-sm font-bold text-gray-800">
             Payout Destination
           </h3>
@@ -86,7 +86,7 @@ export default function CashOutPage() {
               Payment Method
             </label>
             <div className="flex gap-3">
-              <div className="w-14 h-[54px] rounded-xl bg-white flex items-center justify-center shrink-0 border border-gray-200 shadow-sm">
+              <div className="w-14 h-[54px] rounded-md bg-white flex items-center justify-center shrink-0 border border-gray-200 shadow-sm">
                 {paymentMethod === "bkash" && (
                   <svg
                     className="w-9 h-9"
@@ -631,7 +631,7 @@ export default function CashOutPage() {
               <select
                 value={paymentMethod}
                 onChange={(e) => setPaymentMethod(e.target.value)}
-                className="flex-1 px-4 py-4 bg-white border border-gray-300 rounded-lg text-sm text-gray-800 focus:outline-none focus:border-brand focus:ring-1 focus:ring-brand transition-all appearance-none"
+                className="flex-1 px-4 py-4 bg-white border border-gray-300 rounded-md text-sm text-gray-800 focus:outline-none focus:border-brand focus:ring-1 focus:ring-brand transition-all appearance-none"
               >
                 <option value="bkash">bKash</option>
                 <option value="nagad">Nagad</option>
@@ -650,13 +650,13 @@ export default function CashOutPage() {
               value={walletNumber}
               onChange={(e) => setWalletNumber(e.target.value)}
               placeholder="e.g. 017XXXXXXXX"
-              className="w-full px-4 py-4 bg-white border border-gray-300 rounded-lg text-sm text-gray-800 placeholder-gray-400 focus:outline-none focus:border-brand focus:ring-1 focus:ring-brand transition-all"
+              className="w-full px-4 py-4 bg-white border border-gray-300 rounded-md text-sm text-gray-800 placeholder-gray-400 focus:outline-none focus:border-brand focus:ring-1 focus:ring-brand transition-all"
             />
           </div>
         </div>
 
         {/* Enter Transaction Details Card (Teal colored container box) */}
-        <div className="rounded-2xl p-5 bg-[#e8f1fd] border border-[#e8f1fd] space-y-4 shadow-sm mt-5">
+        <div className="rounded-md p-5 bg-[#e8f1fd] border border-[#e8f1fd] space-y-4 shadow-sm mt-5">
           <h3 className="text-sm font-bold text-gray-800">
             Enter Transaction Details
           </h3>
@@ -677,7 +677,7 @@ export default function CashOutPage() {
                 onChange={(e) => setAmount(e.target.value)}
                 min="1"
                 placeholder="0.00"
-                className="w-full pl-9 pr-4 py-4 bg-white border border-gray-300 rounded-lg text-sm text-gray-800 focus:outline-none focus:border-brand focus:ring-1 focus:ring-brand transition-all"
+                className="w-full pl-9 pr-4 py-4 bg-white border border-gray-300 rounded-md text-sm text-gray-800 focus:outline-none focus:border-brand focus:ring-1 focus:ring-brand transition-all"
               />
             </div>
           </div>
@@ -689,7 +689,7 @@ export default function CashOutPage() {
               value={note}
               onChange={(e) => setNote(e.target.value)}
               placeholder="Note (Optional)"
-              className="w-full px-5 py-4 bg-white border border-gray-300 rounded-lg text-sm text-gray-800 placeholder-gray-400 focus:outline-none focus:border-brand focus:ring-1 focus:ring-brand transition-all"
+              className="w-full px-5 py-4 bg-white border border-gray-300 rounded-md text-sm text-gray-800 placeholder-gray-400 focus:outline-none focus:border-brand focus:ring-1 focus:ring-brand transition-all"
             />
           </div>
         </div>
@@ -698,7 +698,7 @@ export default function CashOutPage() {
         <button
           onClick={() => handleRequest()}
           disabled={isPending || !amount || Number(amount) > data.balance}
-          className=" mt-8 w-full bg-[#7aa4f6] hover:bg-[#5b84e6] text-white font-bold py-5 rounded-lg text-sm flex items-center justify-center gap-2 transition-all active:scale-[0.98] disabled:opacity-50"
+          className=" mt-8 w-full bg-[#7aa4f6] hover:bg-[#5b84e6] text-white font-bold py-5 rounded-md text-sm flex items-center justify-center gap-2 transition-all active:scale-[0.98] disabled:opacity-50"
         >
           <span>{isPending ? "Sending..." : "Request Payment"}</span>
           {!isPending && (
@@ -723,7 +723,7 @@ export default function CashOutPage() {
       {/* Success Modal Overlay - rendered conditionally on successful request */}
       {showSuccessModal && (
         <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-[60]">
-          <div className="bg-[#f0fcfc] border-2 border-[#00a8a8] rounded-lg p-8 w-full max-w-sm text-center shadow-2xl animate-in zoom-in duration-200 m-4">
+          <div className="bg-[#f0fcfc] border-2 border-[#00a8a8] rounded-md p-8 w-full max-w-sm text-center shadow-2xl animate-in zoom-in duration-200 m-4">
             {/* Green Success Checkmark Icon */}
             <div className="w-20 h-20 mx-auto rounded-full bg-white border border-[#00a8a8] flex items-center justify-center mb-5 shadow-sm">
               <CircleCheckBig size={40} className="text-[#00a8a8]" />
@@ -757,7 +757,7 @@ export default function CashOutPage() {
                   setShowSuccessModal(false);
                   router.push("/customer/referral");
                 }}
-                className="flex-1 py-3 rounded-lg font-bold text-sm 
+                className="flex-1 py-3 rounded-md font-bold text-sm 
                      border border-slate-200 text-gray-500 bg-white
                      hover:bg-slate-50 transition-all active:scale-[0.98]"
               >
@@ -770,7 +770,7 @@ export default function CashOutPage() {
                   setShowSuccessModal(false);
                   router.push("/customer/referral/history");
                 }}
-                className="flex-1 py-3 rounded-lg font-bold text-sm 
+                className="flex-1 py-3 rounded-md font-bold text-sm 
                      bg-[#7aa4f6] text-white hover:bg-[#5b84e6]
                      transition-all active:scale-[0.98]"
               >
