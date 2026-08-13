@@ -75,7 +75,7 @@ export default function CashOutPage() {
         </div>
 
         {/* Payout Destination Card (Teal colored container box) */}
-        <div className="rounded-2xl p-5 bg-[#f0fcfc] border border-[#00a8a8] space-y-4 shadow-sm mt-5">
+        <div className="rounded-2xl p-5 bg-[#e8f1fd] border border-[#e8f1fd] space-y-4 shadow-sm mt-5">
           <h3 className="text-sm font-bold text-gray-800">
             Payout Destination
           </h3>
@@ -656,7 +656,7 @@ export default function CashOutPage() {
         </div>
 
         {/* Enter Transaction Details Card (Teal colored container box) */}
-        <div className="rounded-2xl p-5 bg-[#f0fcfc] border border-[#00a8a8] space-y-4 shadow-sm mt-5">
+        <div className="rounded-2xl p-5 bg-[#e8f1fd] border border-[#e8f1fd] space-y-4 shadow-sm mt-5">
           <h3 className="text-sm font-bold text-gray-800">
             Enter Transaction Details
           </h3>

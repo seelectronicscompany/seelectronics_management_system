@@ -192,7 +192,7 @@ export default function StaffTaskList() {
               </div>
 
               {/* Description */}
-              <p className="text-sm text-gray-500 line-clamp-2 break-words">
+              <p className="text-base text-gray-600 line-clamp-2 break-words">
                 {task.description}
               </p>
 
@@ -295,7 +295,7 @@ export default function StaffTaskList() {
                 <FileText size={12} className="text-brand shrink-0" />
                 Task Description
               </h4>
-              <div className="p-4 bg-white rounded-xl border border-gray-100 shadow-sm min-h-24 text-gray-700 leading-relaxed text-xs sm:text-sm font-medium whitespace-pre-wrap break-words">
+              <div className="p-4 bg-white rounded-xl border border-gray-100 shadow-sm min-h-24 text-gray-700 leading-relaxed text-base font-medium whitespace-pre-wrap break-words">
                 {selectedTask.description}
               </div>
             </div>
