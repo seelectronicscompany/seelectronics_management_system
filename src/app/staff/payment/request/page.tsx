@@ -37,7 +37,7 @@ export default async function StaffPaymentRequestPage() {
     <StaffLayout balance={stats?.availableBalance || 0}>
       <div className="">
         {/* Profile, Balance & Payout Destination Display */}
-        <div className="relative bg-white rounded-lg px-3  border border-gray-100 flex flex-col items-center overflow-hidden">
+        <div className="relative bg-white rounded-md px-3  border border-gray-100 flex flex-col items-center overflow-hidden">
           {/* Isometric Pattern in the background */}
           <div className="absolute right-0 top-0 opacity-10 pointer-events-none select-none">
             <svg
@@ -85,7 +85,7 @@ export default async function StaffPaymentRequestPage() {
           </p>
 
           {/* AVAILABLE BALANCE Card */}
-          <div className="w-full  bg-white rounded-2xl  border border-gray-100 p-5 mt-6 flex flex-col items-center z-10">
+          <div className="w-full  bg-white rounded-md  border border-gray-100 p-5 mt-6 flex flex-col items-center z-10">
             <span className="text-[11px] font-bold text-gray-500 uppercase tracking-widest">
               AVAILABLE BALANCE
             </span>
@@ -102,7 +102,7 @@ export default async function StaffPaymentRequestPage() {
 
           {/* Payout Destination Card (Grey Overlay Box) */}
           {canRequest && (
-            <div className="w-full   rounded-2xl p-5 mt-5 bg-[#f0fcfc] border border-[#00a8a8] flex flex-col z-10">
+            <div className="w-full   rounded-md p-5 mt-5 bg-[#f3fbfb] border border-[#00a8a8] flex flex-col z-10">
               <span className="text-sm font-bold text-gray-800 mb-3 block">
                 Payout Destination
               </span>
@@ -111,7 +111,7 @@ export default async function StaffPaymentRequestPage() {
                 <div className="flex items-center gap-3">
                   {/* Styled Payment Logo */}
                   {method === "bkash" && (
-                    <div className="w-10 h-10 rounded-xl bg-white  flex items-center justify-center shrink-0 border border-gray-100">
+                    <div className="w-10 h-10 p-3 rounded-lg bg-white  flex items-center justify-center shrink-0 border border-gray-100">
                       <svg
                         className="w-8 h-8"
                         xmlns="http://www.w3.org/2000/svg"
@@ -154,7 +154,7 @@ export default async function StaffPaymentRequestPage() {
                     </div>
                   )}
                   {method === "nagad" && (
-                    <div className="w-10 h-10 rounded-xl bg-white  flex items-center justify-center shrink-0 border border-gray-100">
+                    <div className="w-10 h-10 p-3 rounded-lg bg-white  flex items-center justify-center shrink-0 border border-gray-100">
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
                         className="w-8 h-8"
@@ -390,7 +390,7 @@ export default async function StaffPaymentRequestPage() {
                     </div>
                   )}
                   {method === "rocket" && (
-                    <div className="w-10 h-10 rounded-xl bg-white  flex items-center justify-center shrink-0 border border-gray-100">
+                    <div className="w-10 h-10 p-3 rounded-lg bg-white  flex items-center justify-center shrink-0 border border-gray-100">
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
                         className="w-10 h-10"
@@ -665,7 +665,7 @@ export default async function StaffPaymentRequestPage() {
                     </div>
                   )}
                   {method === "bank" && (
-                    <div className="w-10 h-10 rounded-xl bg-blue-600 flex items-center justify-center shrink-0  text-white">
+                    <div className="w-10 h-10 p-3 rounded-lg bg-blue-600 flex items-center justify-center shrink-0  text-white">
                       <svg
                         className="w-5 h-5"
                         fill="none"
@@ -682,7 +682,7 @@ export default async function StaffPaymentRequestPage() {
                     </div>
                   )}
                   {method === "cash" && (
-                    <div className="w-10 h-10 rounded-xl bg-emerald-600 flex items-center justify-center shrink-0  text-white">
+                    <div className="w-10 h-10 p-3 rounded-lg bg-emerald-600 flex items-center justify-center shrink-0  text-white">
                       <svg
                         className="w-5 h-5"
                         fill="none"

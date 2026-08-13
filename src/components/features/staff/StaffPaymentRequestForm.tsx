@@ -41,7 +41,7 @@ export function StaffPaymentRequestForm({
       <input type="hidden" name="staffId" value={staffId} />
 
       {/* Enter Transaction Details Card (Teal colored container box) */}
-      <div className="rounded-md p-5 bg-[#f0fcfc] border border-[#00a8a8] space-y-4 ">
+      <div className="rounded-md p-5 bg-[#f3fbfb] border border-[#00a8a8] space-y-4 ">
         <h3 className="text-sm font-bold text-gray-800">
           Enter Transaction Details
         </h3>
