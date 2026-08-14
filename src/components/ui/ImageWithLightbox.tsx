@@ -24,7 +24,7 @@ export default function ImageWithLightbox(
         createPortal(
           <div
             className={
-              "bg-black bg-opacity-[0.8] inset-0 h-screen fixed z-10 __center overflow-auto"
+              "bg-black bg-opacity-[0.8] inset-0 h-screen fixed z-[999] __center overflow-auto"
             }
           >
             <button
