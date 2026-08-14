@@ -33,8 +33,7 @@ export default function StaffProfileModal({
     nidBackPhoto: string;
   } | null>(null);
   const [isLoading, setIsLoading] = useState(staffId ? true : false);
-  const [tosContent, setTosContent] = useState("");
-
+  const [tosContent, setTosContent] = useState<string | null>(null);
   let userAgentInfo;
   if (staffData.userAgent) {
     userAgentInfo = parseUserAgent(staffData.userAgent);
@@ -80,8 +79,11 @@ export default function StaffProfileModal({
     }
 
     getTOSContent("application_declaration")
-      .then((res) => setTosContent(res || ""))
-      .catch((err) => console.error(err));
+      .then((res) => setTosContent(res || "N/A"))
+      .catch((err) => {
+        console.error(err);
+        setTosContent("Error loading agreement");
+      });
   }, []);
   return (
     <Modal onClose={onClose} isVisible={true} title="Profile">
@@ -344,7 +346,7 @@ export default function StaffProfileModal({
               <div className="text-md font-semibold mb-2">
                 <span>Agreement</span>
               </div>
-              {tosContent ? (
+              {tosContent !== null ? (
                 <p className="text-sm">{tosContent}</p>
               ) : (
                 <Spinner />
