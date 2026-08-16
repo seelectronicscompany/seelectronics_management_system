@@ -3,11 +3,18 @@
 import { useEffect, useState } from "react";
 import { Bell, Check, ExternalLink } from "lucide-react";
 import Link from "next/link";
-import { getCustomerNotifications, markCustomerNotificationAsRead } from "@/actions/customerActions";
+import {
+  getCustomerNotifications,
+  markCustomerNotificationAsRead,
+} from "@/actions/customerActions";
 import { formatDate } from "@/utils";
 import clsx from "clsx";
 
-export default function CustomerNotificationBell({ variant = "header" }: { variant?: "header" | "card" }) {
+export default function CustomerNotificationBell({
+  variant = "header",
+}: {
+  variant?: "header" | "card";
+}) {
   const [unreadCount, setUnreadCount] = useState(0);
 
   const fetchNotifications = async () => {
@@ -27,18 +34,20 @@ export default function CustomerNotificationBell({ variant = "header" }: { varia
     <Link
       href="/customer/notifications"
       className={clsx(
-        "relative flex items-center justify-center transition-all duration-300 shadow-sm border",
-        variant === "header" 
-          ? "size-10 rounded-md bg-white/10 text-white hover:bg-white/20 border-white/20" 
-          : "size-10 rounded-md bg-white text-[#0A1A3A] hover:bg-gray-100 border-gray-200"
+        "relative flex items-center justify-center transition-all duration-300",
+        variant === "header"
+          ? "size-10 rounded-md text-white"
+          : "size-10 rounded-md bg-white text-[#0A1A3A] hover:bg-gray-100",
       )}
     >
-      <Bell size={20} /> 
+      <Bell size={20} />
       {unreadCount > 0 && (
-        <span className={clsx(
-          "absolute -top-1 -right-1 bg-[#FF5252] text-white text-[10px] font-black rounded-full flex items-center justify-center border shadow-sm size-5",
-          variant === "header" ? "border-[#0A1A3A]" : "border-white"
-        )}>
+        <span
+          className={clsx(
+            "absolute -top-1 -right-1 bg-[#FF5252] text-white text-[10px] font-black rounded-full flex items-center justify-center border shadow-sm size-5",
+            variant === "header" ? "border-[#0A1A3A]" : "border-white",
+          )}
+        >
           {unreadCount}
         </span>
       )}

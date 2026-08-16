@@ -1,7 +1,6 @@
 "use client";
 
 import React from "react";
-import { CustomerLayout } from "@/components/layout";
 import {
   PhoneCall,
   Headphones,
@@ -12,6 +11,7 @@ import {
   Clock,
   Mail,
 } from "lucide-react";
+import { CustomerLayout } from "@/components";
 
 const SUPPORT_CONTACTS = [
   {
@@ -50,28 +50,28 @@ const SUPPORT_CONTACTS = [
 export default function SupportPage() {
   return (
     <CustomerLayout>
-      <div className="flex flex-col gap-6 text-gray-800 pb-24 font-sans animate-in fade-in slide-in-from-bottom-4 duration-500">
+      <div className="flex flex-col gap-6 p-4 sm:p-6 text-gray-800 pb-24 font-sans">
         {/* Support Hero Header */}
-        <div className="relative overflow-hidden bg-gradient-to-br from-[#0A1A3A] via-brand to-[#001540] rounded-lg p-6 sm:p-10 text-white shadow-md my2">
-          <div className="absolute top-0 right-0 w-80 h-80 bg-brand-400/10 rounded-full blur-[100px] -mr-40 -mt-40 pointer-events-none" />
-          <div className="absolute bottom-0 left-0 w-64 h-64 bg-emerald-500/5 rounded-full blur-[80px] -ml-32 -mb-32 pointer-events-none" />
+        <div className="relative overflow-hidden bg-gradient-to-br from-brand-900 via-brand-800 to-brand-950 rounded-md p-8 sm:p-12 text-white shadow-2xl">
+          <div className="absolute top-0 right-0 w-80 h-80 bg-brand-400/20 rounded-full blur-[100px] -mr-40 -mt-40" />
+          <div className="absolute bottom-0 left-0 w-64 h-64 bg-emerald-500/10 rounded-full blur-[80px] -ml-32 -mb-32" />
 
-          <div className="relative z-10 flex flex-col md:flex-row items-center justify-between gap-6">
-            <div className="text-center md:text-left space-y-3 max-w-xl">
-              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/5 backdrop-blur-md border border-white/10 text-white text-[10px] font-black uppercase tracking-[0.2em] mb-1">
+          <div className="relative z-10 flex flex-col md:flex-row items-center justify-between gap-8">
+            <div className="text-center md:text-left space-y-4 max-w-xl">
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/5 backdrop-blur-md border border-white/10 text-white text-[10px] font-black uppercase tracking-[0.3em] mb-2">
                 <span className="relative flex h-2 w-2">
                   <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
                   <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
                 </span>
                 সরাসরি সাপোর্ট
               </div>
-              <h1 className="text-xl sm:text-2xl font-black tracking-tight leading-tight">
+              <h1 className="text-2xl sm:text-2xl font-black tracking-tight leading-tight">
                 সহযোগিতার জন্য <br />
-                <span className="bg-gradient-to-r from-emerald-400 to-teal-200 bg-clip-text text-transparent">
+                <span className="bg-gradient-to-r from-emerald-400 to-teal-200 bg-clip-text text-transparent ">
                   আমাদের টিম
                 </span>
               </h1>
-              <p className="text-brand-100/80 text-base font-medium leading-relaxed">
+              <p className="text-brand-100/70 text-md font-medium leading-relaxed">
                 আপনার যেকোনো সমস্যা বা জিজ্ঞাসায় আমাদের দক্ষ টিম আপনার সেবায়
                 নিয়োজিত। নিচের বাটনগুলোতে ক্লিক করে সরাসরি যোগাযোগ করুন।
               </p>
@@ -79,40 +79,39 @@ export default function SupportPage() {
 
             <div className="hidden lg:block relative group">
               <div className="absolute inset-0 bg-brand-400/20 blur-3xl animate-pulse" />
-              <div className="relative p-8 bg-white/5 backdrop-blur-2xl rounded-2xl border border-white/10 transform hover:scale-105 transition-all duration-500">
-                <MessageSquare size={48} className="text-emerald-400" />
+              <div className="relative p-10 bg-white/5 backdrop-blur-2xl rounded-md border border-white/10 transform hover:scale-105 transition-all duration-500">
+                <MessageSquare size={56} className="text-emerald-400" />
               </div>
             </div>
           </div>
         </div>
-
         {/* Contact Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {SUPPORT_CONTACTS.map((contact, idx) => (
             <div
               key={idx}
-              className={`group relative overflow-hidden bg-white/80 backdrop-blur-sm rounded-2xl border ${contact.borderColor} p-5 hover:shadow-md transition-all duration-300 transform active:scale-[0.98]`}
+              className={`group relative overflow-hidden bg-white rounded-md border ${contact.borderColor} p-6 hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1`}
             >
               {/* Icon & Label */}
-              <div className="flex items-center gap-3.5 mb-5">
+              <div className="flex items-center gap-4 mb-6">
                 <div
-                  className={`p-3 rounded-xl ${contact.bgColor} ${contact.color} transition-all group-hover:scale-110 duration-300 shrink-0`}
+                  className={`p-4 rounded-md ${contact.bgColor} ${contact.color} transition-all group-hover:scale-110 duration-300`}
                 >
-                  <contact.icon size={22} />
+                  <contact.icon size={28} />
                 </div>
-                <div className="min-w-0">
-                  <h3 className="text-md font-black text-gray-900 leading-tight truncate">
+                <div>
+                  <h3 className="text-xl font-black text-gray-900 leading-tight">
                     {contact.label}
                   </h3>
-                  <p className="text-[9px] font-black uppercase tracking-wider text-gray-400">
+                  <p className="text-[10px] font-black uppercase tracking-widest text-gray-400">
                     {contact.englishLabel}
                   </p>
                 </div>
               </div>
 
               {/* Number & Description */}
-              <div className="mb-6">
-                <div className="text-2xl sm:text-3xl font-black text-gray-900 tracking-tighter tabular-nums mb-2 group-hover:text-brand transition-colors">
+              <div className="mb-8">
+                <div className="text-3xl font-black text-gray-900 tracking-tighter tabular-nums mb-3 group-hover:text-brand transition-colors">
                   {contact.number}
                 </div>
                 <p className="text-sm text-gray-500 font-medium leading-relaxed">
@@ -123,9 +122,9 @@ export default function SupportPage() {
               {/* Call Button */}
               <a
                 href={`tel:${contact.number}`}
-                className={`w-full flex items-center justify-center gap-2 py-3 rounded-xl font-black uppercase tracking-wider text-xs transition-all duration-300 ${contact.bgColor} ${contact.color} hover:shadow-sm border ${contact.borderColor}`}
+                className={`w-full flex items-center justify-center gap-3 py-4 rounded-md font-black uppercase tracking-widest text-xs transition-all duration-300 ${contact.bgColor} ${contact.color} hover:shadow-lg active:scale-95 border ${contact.borderColor}`}
               >
-                <PhoneCall size={14} strokeWidth={2.5} />
+                <PhoneCall size={16} strokeWidth={3} />
                 এখনই কল করুন
               </a>
 
@@ -136,60 +135,57 @@ export default function SupportPage() {
             </div>
           ))}
         </div>
-
-        {/* Secondary Info Area */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        #{/* Secondary Info Area */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-4">
           {/* Quick Stats/Hours */}
-          <div className="bg-gray-50/50 backdrop-blur-sm rounded-2xl p-4 border border-gray-100/80 flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <div className="p-2.5 bg-white rounded-xl shadow-sm border border-gray-100 shrink-0">
-                <Clock size={20} className="text-brand" />
+          <div className="bg-gray-50 rounded-md p-6 border border-gray-100 flex items-center justify-between">
+            <div className="flex items-center gap-4">
+              <div className="p-3 bg-white rounded shadow-sm">
+                <Clock size={24} className="text-brand" />
               </div>
               <div>
-                <h4 className="text-lg font-black text-gray-900 uppercase tracking-widest">
+                <h4 className="text-sm font-black text-gray-900 uppercase tracking-widest">
                   সেবার সময়
                 </h4>
-                <p className="text-sm text-gray-500 font-bold">
+                <p className="text-xs text-gray-500 font-medium">
                   শনিবার - বৃহস্পতিবার: সকাল ০৯:০০ - রাত ০৮:০০
                 </p>
               </div>
             </div>
             <div className="hidden sm:block text-right">
-              <span className="text-[9px] bg-emerald-100 text-emerald-700 px-3 py-1 rounded-full font-black uppercase tracking-wider">
+              <span className="text-[10px] bg-emerald-50 text-emerald-600 px-3 py-1 rounded-full font-black uppercase tracking-tighter">
                 সচল রয়েছে
               </span>
             </div>
           </div>
 
           {/* General Inquiry */}
-          <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-4 border border-gray-200 border-dashed flex items-center justify-between hover:border-brand/40 transition-colors group cursor-pointer">
-            <div className="flex items-center gap-3">
-              <div className="p-2.5 bg-gray-50 rounded-xl group-hover:bg-brand/5 transition-colors shrink-0">
+          <div className="bg-white rounded-md p-6 border border-gray-200 border-dashed flex items-center justify-between hover:border-brand transition-colors group cursor-pointer">
+            <div className="flex items-center gap-4">
+              <div className="p-3 bg-gray-50 rounded group-hover:bg-brand/5 transition-colors">
                 <Mail
-                  size={20}
+                  size={24}
                   className="text-gray-400 group-hover:text-brand"
                 />
               </div>
               <div>
-                <h4 className="text-lg font-black text-gray-900 uppercase tracking-widest">
+                <h4 className="text-sm font-black text-gray-900 uppercase tracking-widest">
                   ইমেইল করুন
                 </h4>
-                <p className="text-sm text-gray-500 font-bold">
-                  {" "}
-                  support@seelectronics.com
+                <p className="text-xs text-gray-500 font-medium">
+                  যেকোনো তথ্যের জন্য: support@seelectronics.com
                 </p>
               </div>
             </div>
             <ExternalLink
-              size={14}
+              size={16}
               className="text-gray-300 group-hover:text-brand"
             />
           </div>
         </div>
-
         {/* Help Note */}
-        <div className="text-center px-4">
-          <p className="text-lg text-gray-400 font-extrabold uppercase tracking-widest leading-relaxed max-w-lg mx-auto">
+        <div className="mt-8 text-center px-4">
+          <p className="text-xs text-gray-400 font-medium leading-relaxed max-w-lg mx-auto">
             আমাদের সাপোর্ট টিম আপনার সেবার জন্য সর্বদাই তৎপর। কল করতে কোনো
             সমস্যা হলে আপনি ইমেইল অথবা ফেসবুক পেজে মেসেজ দিতে পারেন।
           </p>

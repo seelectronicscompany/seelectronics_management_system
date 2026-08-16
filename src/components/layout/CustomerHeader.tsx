@@ -23,7 +23,7 @@ export function CustomerHeader() {
   const { title } = current;
 
   return (
-    <header className="sticky top-0 z-50 bg-[#0A1A3A] text-white shadow-lg overflow-hidden w-full">
+    <header className="sticky top-0 z-50 bg-[#0A1A3A] text-white overflow-hidden w-full">
       <div className="max-w-4xl mx-auto px-4 h-14 md:h-16 flex items-center justify-between gap-3">
         {/* LEFT BRAND LOGO */}
         <Link
