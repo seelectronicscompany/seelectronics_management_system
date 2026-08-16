@@ -40,7 +40,7 @@ export default async function ComplainDashboardPage() {
     <CustomerLayout>
       <div className="space-y-6 pb-20">
         {/* Header Title */}
-        <div className="flex items-center justify-between border-b border-gray-200/60 pb-4">
+        <div className="flex items-center justify-between border-b border-gray-200/60 py-4">
           <h1 className="text-xl sm:text-2xl font-black text-brand tracking-tight">
             অভিযোগ ড্যাশবোর্ড
           </h1>

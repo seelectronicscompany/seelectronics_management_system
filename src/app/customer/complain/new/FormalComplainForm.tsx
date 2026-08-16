@@ -243,7 +243,6 @@ export default function FormalComplainForm({
             <textarea
               name="description"
               required
-              maxLength={200}
               placeholder="ঘটনার বিস্তারিত বিবরণ, তারিখ এবং কী ঘটেছে তা বাংলায় লিখুন..."
               rows={6}
               className="w-full p-3 bg-white border border-gray-300 rounded-md outline-none focus:ring-2 focus:ring-emerald-500 transition-all text-gray-900 resize-y shadow-sm"
