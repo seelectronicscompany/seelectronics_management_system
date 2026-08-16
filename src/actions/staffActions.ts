@@ -423,11 +423,17 @@ export const getStaffById = async (staffId: string) => {
 
     if (!staffData) return { success: false, message: "Staff not found" };
 
-    const [photoUrl, nidFrontPhotoUrl, nidBackPhotoUrl] = await Promise.all([
+    const [photoUrl, nidFrontPhotoUrl, nidBackPhotoUrl, complaintsCountResult] = await Promise.all([
       getObjectUrl(staffData.photoKey),
       getObjectUrl(staffData.nidFrontPhotoKey),
       getObjectUrl(staffData.nidBackPhotoKey),
+      db
+        .select({ count: sql<number>`count(*)`.mapWith(Number) })
+        .from(staffComplaints)
+        .where(eq(staffComplaints.staffId, staffId))
     ]);
+
+    const complaintsCount = complaintsCountResult[0]?.count || 0;
 
     return {
       success: true,
@@ -436,6 +442,7 @@ export const getStaffById = async (staffId: string) => {
         photoUrl,
         nidFrontPhotoUrl,
         nidBackPhotoUrl,
+        complaintsCount,
         completedServices: staffData.successfulServices || 0,
         pendingServices: staffData.pendingServices || 0,
         canceledServices: staffData.canceledServices || 0,

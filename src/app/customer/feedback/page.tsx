@@ -73,7 +73,7 @@ export default async function CustomerFeedbackPage() {
             {completedServices.map((service: any) => (
               <div
                 key={service.serviceId}
-                className="bg-white rounded-md border border-gray-100 shadow-sm px-4 py-4 sm:px-5 sm:py-4 flex items-start justify-between gap-3"
+                className="bg-white rounded-md border border-gray-100 shadow-sm px-4 py-4 sm:px-5 sm:py-4 flex items-start justify-between gap-4 flex-col"
               >
                 <div className="flex-1 min-w-0 text-left">
                   <div className="flex items-center gap-2 text-sm text-gray-400 mb-1">

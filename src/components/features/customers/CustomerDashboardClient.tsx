@@ -152,6 +152,20 @@ export default function CustomerDashboardClient({
       color: "text-red-500",
       bg: "bg-red-50",
     },
+    {
+      label: "Chat Support",
+      icon: MessageSquare,
+      href: "/customer/chat-support",
+      color: "text-blue-500",
+      bg: "bg-blue-50",
+    },
+    {
+      label: "Team Members",
+      icon: User,
+      href: "/team-members",
+      color: "text-blue-500",
+      bg: "bg-blue-50",
+    },
   ];
 
   return (
@@ -348,7 +362,7 @@ export default function CustomerDashboardClient({
             <div className="h-px flex-1 bg-gray-50 ml-4"></div>
           </div>
 
-          <div className="grid grid-cols-4 sm:grid-cols-4 md:grid-cols-8 gap-6 sm:gap-10">
+          <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-8 gap-6 sm:gap-10">
             {Actions.map((action, i) => (
               <Link
                 key={i}

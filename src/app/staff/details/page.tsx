@@ -18,6 +18,13 @@ import {
   Wrench,
   Hammer,
   Home,
+  CheckSquare,
+  Clock,
+  BriefcaseBusiness,
+  XCircle,
+  Building2,
+  AlertTriangle,
+  Star,
 } from "lucide-react";
 import Image from "next/image";
 
@@ -148,133 +155,72 @@ export default async function StaffDetailsPage() {
           </div>
 
           {/* PERFORMANCE STATS */}
-          <div className="grid grid-cols-3 gap-3">
-            {/* Total Services */}
-            <div className="bg-[#f4fbf5] border border-[#2fb344] p-3 sm:p-4 rounded-xl flex flex-col justify-between shadow-sm">
-              <div className="flex justify-between items-center mb-1">
-                <span className="text-3xl sm:text-4xl font-extrabold text-[#2fb344]">
-                  {staffData.totalServices}
-                </span>
-                <svg
-                  className="w-6 h-6 sm:w-7 sm:h-7 text-[#2fb344]"
-                  viewBox="0 0 24 24"
-                  fill="currentColor"
-                >
-                  <path d="M22.7 19l-9.1-9.1c.9-2.3.4-5-1.5-6.9-2-2-5-2.4-7.4-1.3L9 6 6 9 1.7 4.7C.6 7.1 1 10.1 3 12.1c1.9 1.9 4.6 2.4 6.9 1.5l9.1 9.1c.4.4 1 .4 1.4 0l2.3-2.3c.4-.4.4-1.1 0-1.4zM9.2 11.3L2.5 18c-.4.4-.4 1 0 1.4l2.1 2.1c.4.4 1 .4 1.4 0l6.7-6.7-3.5-3.5z" />
-                </svg>
+          <div className="grid grid-cols-3 gap-2.5 py-4">
+            <div className="flex flex-col items-center p-2 rounded-md bg-green-50 border border-green-200 text-center">
+              <div className="bg-green-100 rounded-md p-1 mb-2">
+                <CheckSquare className="size-5 text-green-600" />
               </div>
-              <span className="text-[12px] leading-[1rem] tracking-wider text-gray-900 uppercase">
-                Total Services
+              <span className="text-xl font-bold text-gray-900">
+                {staffData.completedServices ?? 0}
+              </span>
+              <span className="text-xs font-semibold text-green-700">
+                সফল সার্ভিস
               </span>
             </div>
-
-            {/* Successful */}
-            <div className="bg-[#f8f5fd] border border-[#8e44ad] p-3 sm:p-4 rounded-xl flex flex-col justify-between shadow-sm">
-              <div className="flex justify-between items-center mb-1">
-                <span className="text-3xl sm:text-4xl font-extrabold text-[#8e44ad]">
-                  {staffData.successfulServices}
-                </span>
-                <svg
-                  className="w-6 h-6 sm:w-7 sm:h-7 text-[#8e44ad]"
-                  viewBox="0 0 24 24"
-                  fill="currentColor"
-                >
-                  <path d="M2 21h4V9H2v12zM20 8h-7l1.12-5.37a1.015 1.015 0 0 0-.25-.83c-.19-.2-.47-.3-.77-.3L12.3 2 6.6 7.7C6.22 8.07 6 8.58 6 9v10c0 1.1.9 2 2 2h9c.75 0 1.41-.41 1.75-1.03l3.12-7.29c.08-.2.13-.42.13-.68V10c0-1.1-.9-2-2-2z" />
-                </svg>
+            <div className="flex flex-col items-center p-2 rounded-md bg-blue-50 border border-blue-200 text-center">
+              <div className="bg-blue-100 rounded-md p-1 mb-2">
+                <Clock className="size-5 text-blue-600" />
               </div>
-              <span className="text-[12px] leading-[1rem] tracking-wider text-gray-900 uppercase">
-                Successful
+              <span className="text-xl font-bold text-gray-900">
+                {staffData.pendingServices ?? 0}
+              </span>
+              <span className="text-xs font-semibold text-blue-700">
+                পেন্ডিং সার্ভিস
               </span>
             </div>
-
-            {/* Canceled */}
-            <div className="bg-[#fdf3f3] border border-[#dc3545] p-3 sm:p-4 rounded-xl flex flex-col justify-between shadow-sm">
-              <div className="flex justify-between items-center mb-1">
-                <span className="text-3xl sm:text-4xl font-extrabold text-[#dc3545]">
-                  {staffData.canceledServices}
-                </span>
-                <svg
-                  className="w-6 h-6 sm:w-7 sm:h-7 text-[#dc3545]"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="3"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                >
-                  <circle cx="12" cy="12" r="10" />
-                  <line x1="19.07" y1="4.93" x2="4.93" y2="19.07" />
-                </svg>
+            <div className="flex flex-col items-center p-2 rounded-md bg-purple-50 border border-purple-200 text-center">
+              <div className="bg-purple-100 rounded-md p-1 mb-2">
+                <BriefcaseBusiness className="size-5 text-purple-600" />
               </div>
-              <span className="text-[12px] leading-[1rem] tracking-wider text-gray-900 uppercase">
-                Canceled
+              <span className="text-xl font-bold text-gray-900">
+                {staffData.repairExperienceYears ||
+                  staffData.installationExperienceYears}
+              </span>
+              <span className="text-xs font-semibold text-purple-700">
+                বছরের দক্ষতা
               </span>
             </div>
-
-            {/* Pending */}
-            <div className="bg-[#f0f7ff] border border-[#007bff] p-3 sm:p-4 rounded-xl flex flex-col justify-between shadow-sm">
-              <div className="flex justify-between items-center mb-1">
-                <span className="text-3xl sm:text-4xl font-extrabold text-[#007bff]">
-                  {staffData.pendingServices}
-                </span>
-                <svg
-                  className="w-6 h-6 sm:w-7 sm:h-7 text-[#007bff]"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="3"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                >
-                  <circle cx="12" cy="12" r="10" />
-                  <polyline points="12 6 12 12 16 12" />
-                </svg>
+            <div className="flex flex-col items-center p-2 rounded-md bg-amber-50 border border-amber-200 text-center">
+              <div className="bg-amber-100 rounded-md p-1 mb-2">
+                <XCircle className="size-5 text-amber-600" />
               </div>
-              <span className="text-[12px] leading-[1rem] tracking-wider text-gray-900 uppercase">
-                Pending
+              <span className="text-xl font-bold text-gray-900">
+                {staffData.canceledServices ?? 0}
+              </span>
+              <span className="text-xs font-semibold text-amber-700">
+                বাতিল সার্ভিস
               </span>
             </div>
-
-            {/* Service Center Services */}
-            <div className="bg-[#f0fcfc] border border-[#00a8a8] p-3 sm:p-4 rounded-xl flex flex-col justify-between shadow-sm">
-              <div className="flex justify-between items-center mb-1">
-                <span className="text-3xl sm:text-4xl font-extrabold text-[#00a8a8]">
-                  {staffData.serviceCenterServices || 0}
-                </span>
-                <svg
-                  className="w-6 h-6 sm:w-7 sm:h-7 text-[#00a8a8]"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2.5"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                >
-                  <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
-                  <polyline points="9 22 9 12 15 12 15 22" />
-                </svg>
+            <div className="flex flex-col items-center p-2 rounded-md bg-rose-50 border border-rose-200 text-center">
+              <div className="bg-rose-100 rounded-md p-1 mb-2">
+                <Building2 className="size-5 text-rose-600" />
               </div>
-              <span className="text-[12px] leading-[1rem] tracking-wider text-gray-900 uppercase">
-                Service Center
+              <span className="text-xl font-bold text-gray-900">
+                {staffData.serviceCenterServices ?? 0}
+              </span>
+              <span className="text-xs font-semibold text-rose-700">
+                সার্ভিস সেন্টার
               </span>
             </div>
-
-            {/* Rating */}
-            <div className="bg-[#fffaf0] border border-[#fd7e14] p-3 sm:p-4 rounded-xl flex flex-col justify-between shadow-sm">
-              <div className="flex justify-between items-center mb-1">
-                <span className="text-3xl sm:text-4xl font-extrabold text-[#fd7e14]">
-                  {staffData.rating}
-                </span>
-                <svg
-                  className="w-6 h-6 sm:w-7 sm:h-7 text-[#fd7e14]"
-                  viewBox="0 0 24 24"
-                  fill="currentColor"
-                >
-                  <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z" />
-                </svg>
+            <div className="flex flex-col items-center p-2 rounded-md bg-red-50 border border-red-200 text-center">
+              <div className="bg-red-100 rounded-md p-1 mb-2">
+                <Star className="size-5 text-amber-600" />
               </div>
-              <span className="text-[12px] leading-[1rem] tracking-wider text-gray-900 uppercase">
-                Rating
+              <span className="text-xl font-bold text-gray-900">
+                {staffData.rating}
+              </span>
+              <span className="text-xs font-semibold text-amber-700">
+                রেটিং
               </span>
             </div>
           </div>
