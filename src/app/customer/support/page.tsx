@@ -42,7 +42,8 @@ const SUPPORT_CONTACTS = [
     color: "text-emerald-600",
     bgColor: "bg-emerald-50",
     borderColor: "border-emerald-100",
-    description: "অফিসিয়াল অর্ডার স্ট্যাটাস ও অন্যান্য ডকুমেন্টস সংক্রান্ত কাজে।",
+    description:
+      "অফিসিয়াল অর্ডার স্ট্যাটাস ও অন্যান্য ডকুমেন্টস সংক্রান্ত কাজে।",
   },
 ];
 
@@ -50,12 +51,11 @@ export default function SupportPage() {
   return (
     <CustomerLayout>
       <div className="flex flex-col gap-6 text-gray-800 pb-24 font-sans animate-in fade-in slide-in-from-bottom-4 duration-500">
-        
         {/* Support Hero Header */}
-        <div className="relative overflow-hidden bg-gradient-to-br from-[#0A1A3A] via-brand to-[#001540] rounded-2xl p-6 sm:p-10 text-white shadow-md">
+        <div className="relative overflow-hidden bg-gradient-to-br from-[#0A1A3A] via-brand to-[#001540] rounded-lg p-6 sm:p-10 text-white shadow-md my2">
           <div className="absolute top-0 right-0 w-80 h-80 bg-brand-400/10 rounded-full blur-[100px] -mr-40 -mt-40 pointer-events-none" />
           <div className="absolute bottom-0 left-0 w-64 h-64 bg-emerald-500/5 rounded-full blur-[80px] -ml-32 -mb-32 pointer-events-none" />
-          
+
           <div className="relative z-10 flex flex-col md:flex-row items-center justify-between gap-6">
             <div className="text-center md:text-left space-y-3 max-w-xl">
               <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/5 backdrop-blur-md border border-white/10 text-white text-[10px] font-black uppercase tracking-[0.2em] mb-1">
@@ -67,18 +67,21 @@ export default function SupportPage() {
               </div>
               <h1 className="text-xl sm:text-2xl font-black tracking-tight leading-tight">
                 সহযোগিতার জন্য <br />
-                <span className="bg-gradient-to-r from-emerald-400 to-teal-200 bg-clip-text text-transparent">আমাদের টিম</span>
+                <span className="bg-gradient-to-r from-emerald-400 to-teal-200 bg-clip-text text-transparent">
+                  আমাদের টিম
+                </span>
               </h1>
-              <p className="text-brand-100/80 text-xs sm:text-sm font-medium leading-relaxed">
-                আপনার যেকোনো সমস্যা বা জিজ্ঞাসায় আমাদের দক্ষ টিম আপনার সেবায় নিয়োজিত। নিচের বাটনগুলোতে ক্লিক করে সরাসরি যোগাযোগ করুন।
+              <p className="text-brand-100/80 text-base font-medium leading-relaxed">
+                আপনার যেকোনো সমস্যা বা জিজ্ঞাসায় আমাদের দক্ষ টিম আপনার সেবায়
+                নিয়োজিত। নিচের বাটনগুলোতে ক্লিক করে সরাসরি যোগাযোগ করুন।
               </p>
             </div>
-            
+
             <div className="hidden lg:block relative group">
-               <div className="absolute inset-0 bg-brand-400/20 blur-3xl animate-pulse" />
-               <div className="relative p-8 bg-white/5 backdrop-blur-2xl rounded-2xl border border-white/10 transform hover:scale-105 transition-all duration-500">
-                  <MessageSquare size={48} className="text-emerald-400" />
-               </div>
+              <div className="absolute inset-0 bg-brand-400/20 blur-3xl animate-pulse" />
+              <div className="relative p-8 bg-white/5 backdrop-blur-2xl rounded-2xl border border-white/10 transform hover:scale-105 transition-all duration-500">
+                <MessageSquare size={48} className="text-emerald-400" />
+              </div>
             </div>
           </div>
         </div>
@@ -92,7 +95,9 @@ export default function SupportPage() {
             >
               {/* Icon & Label */}
               <div className="flex items-center gap-3.5 mb-5">
-                <div className={`p-3 rounded-xl ${contact.bgColor} ${contact.color} transition-all group-hover:scale-110 duration-300 shrink-0`}>
+                <div
+                  className={`p-3 rounded-xl ${contact.bgColor} ${contact.color} transition-all group-hover:scale-110 duration-300 shrink-0`}
+                >
                   <contact.icon size={22} />
                 </div>
                 <div className="min-w-0">
@@ -110,7 +115,7 @@ export default function SupportPage() {
                 <div className="text-2xl sm:text-3xl font-black text-gray-900 tracking-tighter tabular-nums mb-2 group-hover:text-brand transition-colors">
                   {contact.number}
                 </div>
-                <p className="text-xs text-gray-500 font-medium leading-relaxed">
+                <p className="text-sm text-gray-500 font-medium leading-relaxed">
                   {contact.description}
                 </p>
               </div>
@@ -125,53 +130,71 @@ export default function SupportPage() {
               </a>
 
               {/* Hover Decorative Element */}
-              <div className={`absolute bottom-0 right-0 w-24 h-24 ${contact.bgColor} opacity-0 group-hover:opacity-40 rounded-tl-full transition-all duration-500 -mr-12 -mb-12 blur-2xl`} />
+              <div
+                className={`absolute bottom-0 right-0 w-24 h-24 ${contact.bgColor} opacity-0 group-hover:opacity-40 rounded-tl-full transition-all duration-500 -mr-12 -mb-12 blur-2xl`}
+              />
             </div>
           ))}
         </div>
 
         {/* Secondary Info Area */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {/* Quick Stats/Hours */}
-            <div className="bg-gray-50/50 backdrop-blur-sm rounded-2xl p-4 border border-gray-100/80 flex items-center justify-between">
-                <div className="flex items-center gap-3">
-                    <div className="p-2.5 bg-white rounded-xl shadow-sm border border-gray-100 shrink-0">
-                        <Clock size={20} className="text-brand" />
-                    </div>
-                    <div>
-                        <h4 className="text-xs font-black text-gray-900 uppercase tracking-widest">সেবার সময়</h4>
-                        <p className="text-[10px] text-gray-500 font-bold">শনিবার - বৃহস্পতিবার: সকাল ০৯:০০ - রাত ০৮:০০</p>
-                    </div>
-                </div>
-                <div className="hidden sm:block text-right">
-                    <span className="text-[9px] bg-emerald-100 text-emerald-700 px-3 py-1 rounded-full font-black uppercase tracking-wider">সচল রয়েছে</span>
-                </div>
+          {/* Quick Stats/Hours */}
+          <div className="bg-gray-50/50 backdrop-blur-sm rounded-2xl p-4 border border-gray-100/80 flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <div className="p-2.5 bg-white rounded-xl shadow-sm border border-gray-100 shrink-0">
+                <Clock size={20} className="text-brand" />
+              </div>
+              <div>
+                <h4 className="text-lg font-black text-gray-900 uppercase tracking-widest">
+                  সেবার সময়
+                </h4>
+                <p className="text-sm text-gray-500 font-bold">
+                  শনিবার - বৃহস্পতিবার: সকাল ০৯:০০ - রাত ০৮:০০
+                </p>
+              </div>
             </div>
+            <div className="hidden sm:block text-right">
+              <span className="text-[9px] bg-emerald-100 text-emerald-700 px-3 py-1 rounded-full font-black uppercase tracking-wider">
+                সচল রয়েছে
+              </span>
+            </div>
+          </div>
 
-            {/* General Inquiry */}
-            <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-4 border border-gray-200 border-dashed flex items-center justify-between hover:border-brand/40 transition-colors group cursor-pointer">
-                <div className="flex items-center gap-3">
-                    <div className="p-2.5 bg-gray-50 rounded-xl group-hover:bg-brand/5 transition-colors shrink-0">
-                        <Mail size={20} className="text-gray-400 group-hover:text-brand" />
-                    </div>
-                    <div>
-                        <h4 className="text-xs font-black text-gray-900 uppercase tracking-widest">ইমেইল করুন</h4>
-                        <p className="text-[10px] text-gray-500 font-bold"> support@seelectronics.com</p>
-                    </div>
-                </div>
-                <ExternalLink size={14} className="text-gray-300 group-hover:text-brand" />
+          {/* General Inquiry */}
+          <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-4 border border-gray-200 border-dashed flex items-center justify-between hover:border-brand/40 transition-colors group cursor-pointer">
+            <div className="flex items-center gap-3">
+              <div className="p-2.5 bg-gray-50 rounded-xl group-hover:bg-brand/5 transition-colors shrink-0">
+                <Mail
+                  size={20}
+                  className="text-gray-400 group-hover:text-brand"
+                />
+              </div>
+              <div>
+                <h4 className="text-lg font-black text-gray-900 uppercase tracking-widest">
+                  ইমেইল করুন
+                </h4>
+                <p className="text-sm text-gray-500 font-bold">
+                  {" "}
+                  support@seelectronics.com
+                </p>
+              </div>
             </div>
+            <ExternalLink
+              size={14}
+              className="text-gray-300 group-hover:text-brand"
+            />
+          </div>
         </div>
 
         {/* Help Note */}
         <div className="text-center px-4">
-            <p className="text-[10px] text-gray-400 font-extrabold uppercase tracking-widest leading-relaxed max-w-lg mx-auto">
-                আমাদের সাপোর্ট টিম আপনার সেবার জন্য সর্বদাই তৎপর। কল করতে কোনো সমস্যা হলে আপনি ইমেইল অথবা ফেসবুক পেজে মেসেজ দিতে পারেন।
-            </p>
+          <p className="text-lg text-gray-400 font-extrabold uppercase tracking-widest leading-relaxed max-w-lg mx-auto">
+            আমাদের সাপোর্ট টিম আপনার সেবার জন্য সর্বদাই তৎপর। কল করতে কোনো
+            সমস্যা হলে আপনি ইমেইল অথবা ফেসবুক পেজে মেসেজ দিতে পারেন।
+          </p>
         </div>
-
       </div>
     </CustomerLayout>
   );
 }
-

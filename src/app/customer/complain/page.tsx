@@ -292,7 +292,7 @@ export default async function ComplainDashboardPage() {
                     <span className="text-[10px] font-black text-amber-800 bg-amber-100 border border-amber-200/50 px-2 py-1 rounded-md uppercase tracking-wider">
                       আবেদনের অবস্থা
                     </span>
-                    <span className="text-[10px] font-black text-gray-700 bg-gray-100 border border-gray-200 px-2 py-1 rounded-md uppercase tracking-wider capitalize">
+                    <span className="text-[10px] font-black text-gray-700 bg-gray-100 border border-gray-200 px-2 py-1 rounded-md  tracking-wider capitalize">
                       {lastComplaint.status.replace("_", " ")}
                     </span>
                   </div>
