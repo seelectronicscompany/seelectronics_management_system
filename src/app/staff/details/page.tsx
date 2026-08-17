@@ -25,6 +25,7 @@ import {
   Building2,
   AlertTriangle,
   Star,
+  BadgeCheck,
 } from "lucide-react";
 import Image from "next/image";
 
@@ -101,8 +102,9 @@ export default async function StaffDetailsPage() {
               </div>
 
               {/* Name & ID */}
-              <h2 className="text-2xl sm:text-3xl font-extrabold text-[#0a192f] mt-4">
+              <h2 className="text-2xl sm:text-3xl font-extrabold text-[#0a192f] mt-4 flex items-center justify-center gap-1.5">
                 {staffData.name}
+                <BadgeCheck className="text-blue-500 fill-blue-50 size-6 sm:size-7 mt-1" />
               </h2>
 
               <p className="text-base sm:text-lg font-medium text-gray-700 mt-1">
@@ -155,7 +157,7 @@ export default async function StaffDetailsPage() {
           </div>
 
           {/* PERFORMANCE STATS */}
-          <div className="grid grid-cols-3 gap-2.5 py-4">
+          <div className="grid grid-cols-3 gap-2.5">
             <div className="flex flex-col items-center p-2 rounded-md bg-green-50 border border-green-200 text-center">
               <div className="bg-green-100 rounded-md p-1 mb-2">
                 <CheckSquare className="size-5 text-green-600" />

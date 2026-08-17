@@ -227,7 +227,7 @@ export default function CustomerDashboardClient({
           }`}
         >
           {/* Top Row: Status Badge & Notifications */}
-          <div className="flex items-start justify-between w-full">
+          <div className="flex items-center  justify-between w-full">
             <div
               className={`inline-flex items-center text-[10px] sm:text-xs px-3 py-1.5 rounded font-extrabold uppercase tracking-wider border ${
                 isWarrantyExpired
@@ -329,24 +329,30 @@ export default function CustomerDashboardClient({
         {/* Stats */}
         <div className="grid grid-cols-2 gap-4 sm:gap-6 px-1">
           {/* Services */}
-          <div className="bg-emerald-50 border-emerald-200 p-2 sm:p-4 rounded-md shadow-sm border flex items-center text-center justify-center">
-            <div>
-              <p className="text-2xl sm:text-3xl font-black text-emerald-600">
+          <div className="bg-emerald-50 border-emerald-200 p-3 sm:p-4 rounded-md shadow-sm border flex items-center gap-3 sm:gap-4 justify-center sm:justify-start sm:px-6">
+            <div className="p-2 sm:p-3 bg-emerald-100/50 rounded-full shrink-0">
+              <Boxes className="text-emerald-600 size-6 sm:size-8" />
+            </div>
+            <div className="flex flex-col items-center">
+              <p className="text-2xl sm:text-3xl font-black text-emerald-600 leading-none">
                 {stats?.totalServices || 0}
               </p>
-              <p className="text-[10px] sm:text-xs uppercase font-black text-emerald-600/70 tracking-tighter sm:tracking-widest">
+              <p className="text-[10px] sm:text-xs uppercase font-black text-emerald-600/70 tracking-tighter sm:tracking-widest mt-1">
                 Services
               </p>
             </div>
           </div>
 
           {/* Subscriptions */}
-          <div className="bg-indigo-50 border-indigo-200 p-2 sm:p-4 rounded-md shadow-sm border flex items-center text-center justify-center">
-            <div>
-              <p className="text-2xl sm:text-3xl font-black text-indigo-600">
+          <div className="bg-indigo-50 border-indigo-200 p-3 sm:p-4 rounded-md shadow-sm border flex items-center gap-3 sm:gap-4 justify-center sm:justify-start sm:px-6">
+            <div className="p-2 sm:p-3 bg-indigo-100/50 rounded-full shrink-0">
+              <Zap className="text-indigo-600 size-6 sm:size-8" />
+            </div>
+            <div className="flex flex-col items-center">
+              <p className="text-2xl sm:text-3xl font-black text-indigo-600 leading-none">
                 {stats?.activeSubscriptions || 0}
               </p>
-              <p className="text-[10px] sm:text-xs uppercase font-black text-indigo-600/70 tracking-tighter sm:tracking-widest">
+              <p className="text-[10px] sm:text-xs uppercase font-black text-indigo-600/70 tracking-tighter sm:tracking-widest mt-1">
                 Subscription
               </p>
             </div>
@@ -362,7 +368,7 @@ export default function CustomerDashboardClient({
             <div className="h-px flex-1 bg-gray-50 ml-4"></div>
           </div>
 
-          <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-8 gap-6 sm:gap-10">
+          <div className="grid grid-cols-4 md:grid-cols-8 gap-6 sm:gap-10">
             {Actions.map((action, i) => (
               <Link
                 key={i}
