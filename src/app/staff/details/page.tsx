@@ -104,7 +104,7 @@ export default async function StaffDetailsPage() {
               {/* Name & ID */}
               <h2 className="text-2xl sm:text-3xl font-extrabold text-[#0a192f] mt-4 flex items-center justify-center gap-1.5">
                 {staffData.name}
-                <BadgeCheck className="text-blue-500 fill-blue-50 size-6 sm:size-7 mt-1" />
+                <BadgeCheck className="text-white  fill-blue-500 size-6 sm:size-7 mt-1" />
               </h2>
 
               <p className="text-base sm:text-lg font-medium text-gray-700 mt-1">

@@ -1,7 +1,8 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { MapPin, Moon, Sun, Sunset, Sunrise, Clock } from "lucide-react";
+import { MapPin, Moon, Sun, Sunset, Sunrise, Clock, ChevronDown, Coffee } from "lucide-react";
+import Link from "next/link";
 
 interface PrayerTimings {
   Fajr: string;
@@ -236,6 +237,28 @@ const PrayerTimes = () => {
     setEnglishDate(getEnglishDate());
     setBanglaDate(getBanglaDate());
     fetchHijriDate().then((h) => setHijriDate(h));
+
+    // Get user location
+    if (typeof navigator !== "undefined" && "geolocation" in navigator) {
+      navigator.geolocation.getCurrentPosition(
+        async (position) => {
+          const lat = position.coords.latitude;
+          const lng = position.coords.longitude;
+          setCoords({ lat, lng });
+          try {
+            const res = await fetch(`https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${lat}&longitude=${lng}&localityLanguage=bn`);
+            const data = await res.json();
+            const locName = data.city || data.locality || "আপনার অবস্থান";
+            setLocation(`${locName}, ${data.countryName || "বাংলাদেশ"}`);
+          } catch (e) {
+            setLocation("বর্তমান অবস্থান");
+          }
+        },
+        (error) => {
+          console.log("Geolocation error or denied, falling back to default.", error);
+        }
+      );
+    }
   }, []);
 
   // Fetch prayer timings
@@ -317,158 +340,130 @@ const PrayerTimes = () => {
 
   const prayers: PrayerName[] = ["Fajr", "Dhuhr", "Asr", "Maghrib", "Isha"];
 
+  const getEndTime = (prayer: PrayerName) => {
+    if (!timings) return "";
+    switch (prayer) {
+      case "Fajr": return formatTime(timings.Sunrise);
+      case "Dhuhr": return formatTime(timings.Asr);
+      case "Asr": return formatTime(timings.Maghrib);
+      case "Maghrib": return formatTime(timings.Isha);
+      case "Isha": return formatTime(timings.Fajr);
+    }
+  };
+
+  const [showLocationSelect, setShowLocationSelect] = useState(false);
+
   if (!timings) {
     return (
-      <div className="max-w-sm mx-auto rounded-xl border overflow-hidden">
-        <div className="bg-[#1a3c5e] p-4 text-white text-sm">লোড হচ্ছে...</div>
+      <div className="max-w-sm mx-auto rounded-xl border overflow-hidden bg-white">
+        <div className="p-4 text-gray-500 text-sm text-center">লোড হচ্ছে...</div>
       </div>
     );
   }
 
   return (
-    <div className="w-full mx-auto rounded-xl border overflow-hidden bg-white">
-
+    <div className="w-full mx-auto rounded-xl border border-gray-200 overflow-hidden bg-white">
       {/* ── Header ── */}
-      <div className="bg-[#1a3c5e] px-4 pt-3 pb-3">
-        <p className="text-white text-[15px] font-medium mb-2">নামাজ ও রোজা</p>
-
-        {/* Location */}
-        <div className="flex items-center gap-1 text-[#ddeeff] text-[13px] mb-3">
-          <MapPin size={12} color="#aad4f5" />
-          <span>{location}</span>
-        </div>
-
-        {/* Three date badges */}
-        <div className="flex flex-wrap gap-[6px]">
-          {englishDate && (
-            <span className="text-[11px] bg-white/10 rounded-md px-2 py-[2px] text-[#c8e0f5]">
-              {englishDate}
-            </span>
-          )}
-          {banglaDate && (
-            <span className="text-[11px] bg-white/10 rounded-md px-2 py-[2px] text-[#c8e0f5]">
-              {banglaDate}
-            </span>
-          )}
-          {hijriDate && (
-            <span className="text-[11px] bg-white/10 rounded-md px-2 py-[2px] text-[#c8e0f5]" dir="rtl">
-              {hijriDate}
-            </span>
-          )}
-        </div>
+      <div className="flex justify-between items-center px-4 pt-4 pb-3 border-b border-gray-100">
+        <p className="text-gray-800 text-[15px] font-medium">নামাজ ও রোজা</p>
+        <Link href="/prayer-time" className="text-brand text-[14px] font-medium hover:underline">
+          বিস্তারিত
+        </Link>
       </div>
 
-      {/* ── Suhoor / Iftar ── */}
-      <div className="flex justify-between bg-[#1e4570] px-4 py-2">
-        <div>
-          <p className="text-[11px] text-[#c8e0f5]">পরবর্তী সাহরি</p>
-          <p className="text-[12px] font-medium text-white">{formatTime(timings.Fajr)}</p>
-        </div>
-        <div className="text-right">
-          <p className="text-[11px] text-[#c8e0f5]">আজকের ইফতার</p>
-          <p className="text-[12px] font-medium text-white">{formatTime(timings.Maghrib)}</p>
-        </div>
-      </div>
-
-      {/* ── Division / District selects ── */}
-      <div className="flex gap-2 px-3 pt-3 pb-1">
-        <select
-          value={division}
-          onChange={(e) => {
-            setDivision(e.target.value);
-            setDistrict(bdLocations[e.target.value][0].name);
-          }}
-          className="flex-1 text-xs border rounded-lg px-2 py-[6px] bg-white text-gray-800"
-        >
-          {Object.keys(bdLocations).map((d) => (
-            <option key={d}>{d}</option>
-          ))}
-        </select>
-        <select
-          value={district}
-          onChange={(e) => setDistrict(e.target.value)}
-          className="flex-1 text-xs border rounded-lg px-2 py-[6px] bg-white text-gray-800"
-        >
-          {bdLocations[division].map((d) => (
-            <option key={d.name}>{d.name}</option>
-          ))}
-        </select>
-      </div>
-
-      {/* ── Current Prayer Banner ── */}
-      <div className="mx-3 my-2 bg-[#eaf4ff] border border-[#b8d8f5] rounded-[10px] px-3 py-[10px] flex items-center gap-3">
-        {/* Icon circle */}
-        <div
-          className="w-9 h-9 rounded-full flex items-center justify-center flex-shrink-0 bg-white border border-[#c8e0f5]"
-          style={{ color: prayerIconBg[currentPrayer as PrayerName] || "#1a3c5e" }}
-        >
-          {prayerIcons[currentPrayer as PrayerName] || <Sunrise size={17} />}
-        </div>
-        <div>
-          <p className="text-[11px] text-[#5a7e9c]">এখন :</p>
-          <p className="text-[14px] font-semibold text-[#1a3c5e]">
-            {currentPrayer === "Sunrise" ? "সূর্যোদয় (পরবর্তী ওয়াক্তের অপেক্ষা)" : prayerBangla[currentPrayer as PrayerName]}
-          </p>
-          <div className="flex items-center gap-1 mt-[2px]">
-            <Clock size={11} color="#e05a00" />
-            <p className="text-[12px] text-[#e05a00]">{timeLeft} ওয়াক্ত বাকি</p>
+      <div className="p-4">
+        {/* ── Location & Date ── */}
+        <div className="mb-4">
+          <div 
+            className="flex items-center gap-1 text-brand font-medium text-[16px] cursor-pointer mb-1 w-max"
+            onClick={() => setShowLocationSelect(!showLocationSelect)}
+          >
+            <MapPin size={18} />
+            <span>{location}</span>
+            <ChevronDown size={18} />
+          </div>
+          <div className="text-[13px] text-gray-600">
+            {banglaDate} • {hijriDate}
           </div>
         </div>
-      </div>
 
-      {/* ── Prayer List ── */}
-      <div className="px-3 pb-2 space-y-[3px]">
-        {prayers.map((p) => {
-          const isActive = currentPrayer === p;
-          return (
-            <div
-              key={p}
-              className={`flex items-center gap-[10px] px-2 py-[7px] rounded-lg ${
-                isActive ? "bg-[#fff3e0] border border-[#f5a623]" : ""
-              }`}
+        {/* ── Division / District selects (Toggleable) ── */}
+        {showLocationSelect && (
+          <div className="flex gap-2 mb-4">
+            <select
+              value={division}
+              onChange={(e) => {
+                setDivision(e.target.value);
+                setDistrict(bdLocations[e.target.value][0].name);
+              }}
+              className="flex-1 text-xs border rounded-lg px-2 py-[6px] bg-white text-gray-800 outline-none"
             >
-              {/* Icon */}
-              <div
-                className="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0"
-                style={{
-                  backgroundColor: `${prayerIconBg[p]}22`,
-                  color: prayerIconBg[p],
-                }}
-              >
-                {prayerIcons[p]}
-              </div>
+              {Object.keys(bdLocations).map((d) => (
+                <option key={d}>{d}</option>
+              ))}
+            </select>
+            <select
+              value={district}
+              onChange={(e) => setDistrict(e.target.value)}
+              className="flex-1 text-xs border rounded-lg px-2 py-[6px] bg-white text-gray-800 outline-none"
+            >
+              {bdLocations[division].map((d) => (
+                <option key={d.name}>{d.name}</option>
+              ))}
+            </select>
+          </div>
+        )}
 
-              {/* Name */}
-              <span
-                className={`flex-1 text-[14px] font-medium ${
-                  isActive ? "text-[#c05000]" : "text-gray-800"
-                }`}
-              >
-                {prayerBangla[p]}
-              </span>
-
-              {/* Time */}
-              <span
-                className={`text-[13px] ${
-                  isActive ? "text-[#c05000] font-semibold" : "text-gray-700"
-                }`}
-              >
-                {formatTime(timings[p])}
-              </span>
-            </div>
-          );
-        })}
-      </div>
-
-      {/* ── Footer: Sunrise / Sunset ── */}
-      <div className="flex justify-between items-center px-4 py-[10px] border-t border-gray-100">
-        <div className="flex items-center gap-[6px] text-[12px] text-gray-500">
-          <Sun size={18} />
-          <span>সূর্যোদয় <strong className="text-gray-700">{formatTime(timings.Sunrise)}</strong></span>
+        {/* ── Suhoor / Iftar Info ── */}
+        <div className="flex justify-between items-center mb-4 border-b border-gray-100 pb-4">
+          <div>
+            <span className="text-gray-500 text-[14px]">পরবর্তী সাহরি </span>
+            <span className="text-gray-800 font-medium text-[14px]">{formatTime(timings.Fajr)}</span>
+          </div>
+          <div>
+            <span className="text-gray-500 text-[14px]">আজকের ইফতার </span>
+            <span className="text-gray-800 font-medium text-[14px]">{formatTime(timings.Maghrib)}</span>
+          </div>
         </div>
-        <div className="flex items-center gap-[6px] text-[12px] text-gray-500">
-          <Sunset size={18} />
-          <span>সূর্যাস্ত <strong className="text-gray-700">{formatTime(timings.Maghrib)}</strong></span>
+
+        {/* ── 2 Column Layout ── */}
+        <div className="flex gap-3">
+          {/* Left Column (Countdown) */}
+          <div className="w-[40%] bg-[#f5f5f5] rounded-xl p-3 flex flex-col items-center justify-center text-center">
+            <div className="text-brand mb-3 flex items-center justify-center relative">
+               <Coffee size={24} />
+               <Moon size={14} className="absolute -top-1 -right-2 bg-[#f5f5f5] rounded-full" />
+            </div>
+            <p className="text-gray-800 text-[14px] font-medium mb-3">সাহরির শেষ সময়</p>
+            <div className="bg-white text-brand px-2 py-1 rounded-full text-[13px] font-semibold w-full whitespace-nowrap overflow-hidden text-ellipsis border border-gray-100">
+              {timeLeft} মিনিট
+            </div>
+          </div>
+
+          {/* Right Column (Prayers) */}
+          <div className="w-[60%] flex flex-col gap-[6px]">
+            {prayers.map((p) => {
+              const isActive = currentPrayer === p;
+              return (
+                <div key={p} className={`flex justify-between items-center rounded-lg px-3 py-[6px] ${isActive ? "border border-brand bg-brand-50" : "border border-gray-100"}`}>
+                  <span className={`text-[14px] font-medium ${isActive ? "text-brand" : "text-gray-800"}`}>{prayerBangla[p]}</span>
+                  <span className={`text-[12px] ${isActive ? "text-brand font-medium" : "text-gray-600"}`}>{formatTime(timings[p])} - {getEndTime(p)}</span>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+
+        {/* ── Footer: Sunrise / Sunset ── */}
+        <div className="flex justify-between items-center mt-4 pt-3 border-t border-gray-100">
+          <div className="flex items-center gap-2 text-[13px] text-gray-700 font-medium">
+            <Sun size={18} className="text-yellow-500" />
+            <span>সূর্যোদয় {formatTime(timings.Sunrise)}</span>
+          </div>
+          <div className="flex items-center gap-2 text-[13px] text-gray-700 font-medium">
+            <Sunset size={18} className="text-green-500" />
+            <span>সূর্যাস্ত {formatTime(timings.Maghrib)}</span>
+          </div>
         </div>
       </div>
     </div>
