@@ -1,3 +1,5 @@
+"use client";
+import { useState } from "react";
 import { customerLogout } from "@/actions/customerActions";
 import { CustomerLayout } from "@/components/layout";
 import Banner from "@/components/ui/Banner";
@@ -56,8 +58,10 @@ export default function CustomerDashboardClient({
   stats,
   adminPhone,
 }: CustomerDashboardClientProps) {
+  const [showPopup, setShowPopup] = useState(false);
   // ✅ Warranty expired logic
   const isWarrantyExpired = stats?.isWarrantyExpired ?? false;
+  const isWarrantyCanceled = isWarrantyExpired && !!(stats?.dueAmount && stats.dueAmount > 0);
 
   const Actions = [
     {
@@ -271,7 +275,7 @@ export default function CustomerDashboardClient({
           </div>
 
           {/* Third Row: Phone & Due */}
-          <div className="grid grid-cols-2 gap-3 mt-2">
+          <div className={`grid gap-3 mt-2 ${stats?.dueAmount && stats.dueAmount > 0 ? "grid-cols-2" : "grid-cols-1"}`}>
             {/* Phone */}
             <div className="flex items-center gap-3 px-3 py-2 rounded-md border border-gray-100 bg-gray-50 min-w-0">
               <div className="p-2 rounded-md bg-white border border-gray-200 shrink-0 shadow-sm">
@@ -288,19 +292,21 @@ export default function CustomerDashboardClient({
             </div>
 
             {/* Due Amount */}
-            <div className="bg-rose-50 px-3 py-2 rounded-md border border-rose-100 flex items-center gap-3 min-w-0">
-              <div className="p-2 rounded-md bg-white border border-rose-200 shrink-0 shadow-sm">
-                <Banknote className="text-red-600" size={16} />
+            {!!(stats?.dueAmount && stats.dueAmount > 0) && (
+              <div className="bg-rose-50 px-3 py-2 rounded-md border border-rose-100 flex items-center gap-3 min-w-0">
+                <div className="p-2 rounded-md bg-white border border-rose-200 shrink-0 shadow-sm">
+                  <Banknote className="text-red-600" size={16} />
+                </div>
+                <div className="flex flex-col min-w-0">
+                  <span className="text-sm font-black text-red-600 truncate leading-tight">
+                    ৳{stats.dueAmount.toLocaleString()}
+                  </span>
+                  <span className="text-[10px] uppercase font-bold text-red-400 tracking-widest">
+                    Due
+                  </span>
+                </div>
               </div>
-              <div className="flex flex-col min-w-0">
-                <span className="text-sm font-black text-red-600 truncate leading-tight">
-                  ৳{(stats?.dueAmount || 0).toLocaleString()}
-                </span>
-                <span className="text-[10px] uppercase font-bold text-red-400 tracking-widest">
-                  Due
-                </span>
-              </div>
-            </div>
+            )}
           </div>
 
           {/* Fourth Row: VIP */}
@@ -369,26 +375,51 @@ export default function CustomerDashboardClient({
           </div>
 
           <div className="grid grid-cols-4 md:grid-cols-8 gap-6 sm:gap-10">
-            {Actions.map((action, i) => (
-              <Link
-                key={i}
-                href={action.href}
-                className="flex flex-col items-center gap-3 group"
-              >
-                <div
-                  className={`${action.bg || "bg-gray-50"} ${action.color} size-14 sm:size-20 rounded-2xl sm:rounded-3xl shadow-sm flex items-center justify-center transition-all group-hover:scale-105 group-active:scale-95 animate-in zoom-in-90 duration-300`}
-                  style={{
-                    animationDelay: `${i * 50}ms`,
-                    animationFillMode: "both",
-                  }}
+            {Actions.map((action, i) => {
+              if (isWarrantyCanceled) {
+                return (
+                  <button
+                    key={i}
+                    onClick={() => setShowPopup(true)}
+                    className="flex flex-col items-center gap-3 group opacity-50 cursor-not-allowed"
+                  >
+                    <div
+                      className={`${action.bg || "bg-gray-50"} ${action.color} size-14 sm:size-20 rounded-2xl sm:rounded-3xl shadow-sm flex items-center justify-center transition-all group-active:scale-95 animate-in zoom-in-90 duration-300`}
+                      style={{
+                        animationDelay: `${i * 50}ms`,
+                        animationFillMode: "both",
+                      }}
+                    >
+                      <action.icon className="size-6 sm:size-8" />
+                    </div>
+                    <span className="text-[10px] sm:text-xs font-black text-gray-700 uppercase tracking-tighter sm:tracking-normal text-center">
+                      {action.label}
+                    </span>
+                  </button>
+                );
+              }
+
+              return (
+                <Link
+                  key={i}
+                  href={action.href}
+                  className="flex flex-col items-center gap-3 group"
                 >
-                  <action.icon className="size-6 sm:size-8" />
-                </div>
-                <span className="text-[10px] sm:text-xs font-black text-gray-700 uppercase tracking-tighter sm:tracking-normal text-center">
-                  {action.label}
-                </span>
-              </Link>
-            ))}
+                  <div
+                    className={`${action.bg || "bg-gray-50"} ${action.color} size-14 sm:size-20 rounded-2xl sm:rounded-3xl shadow-sm flex items-center justify-center transition-all group-hover:scale-105 group-active:scale-95 animate-in zoom-in-90 duration-300`}
+                    style={{
+                      animationDelay: `${i * 50}ms`,
+                      animationFillMode: "both",
+                    }}
+                  >
+                    <action.icon className="size-6 sm:size-8" />
+                  </div>
+                  <span className="text-[10px] sm:text-xs font-black text-gray-700 uppercase tracking-tighter sm:tracking-normal text-center">
+                    {action.label}
+                  </span>
+                </Link>
+              );
+            })}
           </div>
         </div>
 
@@ -406,6 +437,28 @@ export default function CustomerDashboardClient({
           SE Electronics Corporate Office
         </p>
       </div>
+
+      {/* Warranty Canceled Popup */}
+      {showPopup && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4">
+          <div className="bg-white rounded-xl shadow-xl max-w-md w-full p-6 text-center animate-in zoom-in-95 duration-200">
+            <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
+              <AlertTriangle className="text-red-600 size-8" />
+            </div>
+            <h3 className="text-xl font-bold text-gray-900 mb-2">ওয়ারেন্টি বাতিল</h3>
+            <p className="text-gray-600 text-sm leading-relaxed mb-6 font-semibold">
+              আপনাকে বিভিন্ন বার কল ও এসএমএস দিয়েও আপনার সাড়া পাওয়া যায়নি এবং টাকাও পরিশোধ করেননি, তাই সেলার কোম্পানির কাছে অভিযোগ দিয়ে আপনার ওয়ারেন্টি বাতিল করেছে। পুনরায় ওয়ারেন্টি বহাল রাখতে সেলারের সাথে যোগাযোগ করুন অথবা কোম্পানিতে সরাসরি টাকা পরিশোধ করে ওয়ারেন্টি চালু করুন।<br /><br />
+              কাস্টমার কেয়ার: <span className="font-bold text-red-600">০৯৬৪৯৩৫৫৫৫৫</span>
+            </p>
+            <button
+              onClick={() => setShowPopup(false)}
+              className="w-full bg-red-500 hover:bg-red-600 text-white font-bold py-3 rounded-lg transition-colors"
+            >
+              বন্ধ করুন
+            </button>
+          </div>
+        </div>
+      )}
     </CustomerLayout>
   );
 }
