@@ -5,11 +5,7 @@ import { usePathname } from "next/navigation";
 import { Home, Activity, Crown, FileText, Bell, Users } from "lucide-react";
 import clsx from "clsx";
 
-interface CustomerBottomNavProps {
-  disabled?: boolean;
-}
-
-export function CustomerBottomNav({ disabled = false }: CustomerBottomNavProps) {
+export function CustomerBottomNav() {
   const pathname = usePathname();
 
   const navItems = [
@@ -42,10 +38,7 @@ export function CustomerBottomNav({ disabled = false }: CustomerBottomNavProps) 
   ];
 
   return (
-    <nav className={clsx(
-      "sm:hidden fixed bottom-0 left-0 w-full bg-white px-1 py-1 flex items-center justify-around z-50 shadow-[0_-8px_30px_rgba(0,0,0,0.08)] rounded-tl-3xl rounded-tr-3xl",
-      disabled && "pointer-events-none opacity-50 grayscale"
-    )}>
+    <nav className="sm:hidden fixed bottom-0 left-0 w-full bg-white px-1 py-1 flex items-center justify-around z-50 shadow-[0_-8px_30px_rgba(0,0,0,0.08)] rounded-tl-3xl rounded-tr-3xl">
       {navItems.map((item) => {
         const isActive =
           pathname === item.href || pathname.startsWith(item.href + "/");

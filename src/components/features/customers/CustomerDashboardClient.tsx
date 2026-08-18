@@ -61,7 +61,8 @@ export default function CustomerDashboardClient({
   const [showPopup, setShowPopup] = useState(false);
   // ✅ Warranty expired logic
   const isWarrantyExpired = stats?.isWarrantyExpired ?? false;
-  const isWarrantyCanceled = isWarrantyExpired;
+  const isWarrantyCanceled =
+    isWarrantyExpired && !!(stats?.dueAmount && stats.dueAmount > 0);
 
   const Actions = [
     {
@@ -173,13 +174,9 @@ export default function CustomerDashboardClient({
   ];
 
   return (
-    <CustomerLayout isWarrantyExpired={isWarrantyExpired}>
+    <CustomerLayout>
       {/* Dashboard Welcome Header */}
-      <div className="bg-[#0A1A3A] text-white rounded-b-3xl sm:rounded-b-[2.5rem]  w-full py-5 flex items-center justify-center z-10 relative mb-2">
-        <h1 className="font-bold text-[13px] sm:text-base md:text-lg tracking-[0.2em] uppercase text-center w-full">
-          Welcome to SE Electronics
-        </h1>
-      </div>
+
       <div className="flex flex-col gap-4 px-2 text-gray-800 pb-24">
         {/* Warranty Marquee */}
         <div className="mt-1 w-full overflow-hidden shadow-md">
@@ -278,9 +275,9 @@ export default function CustomerDashboardClient({
             className={`grid gap-3 mt-2 ${stats?.dueAmount && stats.dueAmount > 0 ? "grid-cols-2" : "grid-cols-1"}`}
           >
             {/* Phone */}
-            <div className="flex items-center gap-3 py-3 rounded-md border-y border-gray-100 bg-white min-w-0">
-              <div className="p-3 rounded-md bg-white border border-gray-200 shrink-0 shadow-sm">
-                <PhoneCall size={20} className="text-gray-600" />
+            <div className="flex items-center gap-3 px-3 py-2 rounded-md border border-gray-100 bg-gray-50 min-w-0">
+              <div className="p-2 rounded-md bg-white border border-gray-200 shrink-0 shadow-sm">
+                <PhoneCall size={16} className="text-gray-600" />
               </div>
               <div className="flex flex-col min-w-0">
                 <span className="text-[10px] uppercase text-gray-400 font-bold tracking-widest">
@@ -312,16 +309,16 @@ export default function CustomerDashboardClient({
 
           {/* Fourth Row: VIP */}
           {customer.vipStatus === "approved" && (
-            <div className="mt-2 flex items-center justify-between p-4 rounded-md bg-yellow-50 border border-yellow-200 shadow-sm">
+            <div className="mt-2 flex items-center justify-between p-7 rounded-md bg-yellow-50 border border-yellow-200 shadow-sm">
               <div className="flex items-center gap-3 min-w-0">
                 <div className="p-2 rounded-md bg-white border border-yellow-200 shrink-0 shadow-sm">
                   <Crown size={18} className="text-yellow-600" />
                 </div>
                 <div className="flex flex-col min-w-0">
-                  <span className="text-base font-black text-yellow-700 uppercase tracking-widest">
+                  <span className="text-xl font-black text-yellow-700 uppercase tracking-widest">
                     VIP Member
                   </span>
-                  <span className="text-sm font-bold text-gray-800 ">
+                  <span className="text-lg font-bold text-gray-800 truncate">
                     Premium Access Enabled
                   </span>
                 </div>
@@ -450,19 +447,11 @@ export default function CustomerDashboardClient({
               ওয়ারেন্টি বাতিল
             </h3>
             <p className="text-gray-600 text-sm leading-relaxed mb-6 font-semibold">
-              {stats?.dueAmount && stats.dueAmount > 0 ? (
-                <>
-                  প্রিয় গ্রাহক আপনার পন্যের বকেয়া টাকা পরিশোধ না করায় আপনার
-                  পন্যটির ওয়ারেন্টি বাতিল করা হয়েছে । পুনারায় ওয়ারেন্টি বহাল
-                  রাখতে সেইলার এর সাথে যোগাযোগ করুন ।
-                </>
-              ) : (
-                <>
-                  প্রিয় গ্রাহক আপনার পন্যের কোম্পানির দেওয়া ওয়ারেন্টি শেষ
-                  হয়ে গেছে। পুনারায় ওয়ারেন্টি বহাল রাখতে সেইলার এর সাথে যোগাযোগ
-                  করুন।
-                </>
-              )}
+              আপনাকে বিভিন্ন বার কল ও এসএমএস দিয়েও আপনার সাড়া পাওয়া যায়নি এবং
+              টাকাও পরিশোধ করেননি, তাই সেলার কোম্পানির কাছে অভিযোগ দিয়ে আপনার
+              ওয়ারেন্টি বাতিল করেছে। পুনরায় ওয়ারেন্টি বহাল রাখতে সেলারের সাথে
+              যোগাযোগ করুন অথবা কোম্পানিতে সরাসরি টাকা পরিশোধ করে ওয়ারেন্টি চালু
+              করুন।
               <br />
               <br />
               কাস্টমার কেয়ার:{" "}

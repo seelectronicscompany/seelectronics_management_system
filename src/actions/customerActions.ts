@@ -225,7 +225,7 @@ export async function getCustomerProfileStats(customerId: string) {
         const invoiceDataPromise = customerData.invoiceNumber
             ? db.select({ id: invoices.id, due: invoices.dueAmount })
                 .from(invoices)
-                .where(eq(invoices.invoiceNumber, String(customerData.invoiceNumber)))
+                .where(eq(invoices.invoiceNumber, customerData.invoiceNumber))
                 .limit(1)
             : Promise.resolve([]);
 

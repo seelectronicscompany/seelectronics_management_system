@@ -10,10 +10,9 @@ import { NoticeRecipientType } from "@/types";
 
 interface CustomerLayoutProps {
   children: React.ReactNode;
-  isWarrantyExpired?: boolean;
 }
 
-export function CustomerLayout({ children, isWarrantyExpired = false }: CustomerLayoutProps) {
+export function CustomerLayout({ children }: CustomerLayoutProps) {
   const pathname = usePathname();
   const [notifications, setNotifications] = useState<NoticeRecipientType[]>([]);
 
@@ -42,7 +41,7 @@ export function CustomerLayout({ children, isWarrantyExpired = false }: Customer
         </div>
       </main>
 
-      <CustomerBottomNav disabled={isWarrantyExpired} />
+      <CustomerBottomNav />
     </div>
   );
 }
