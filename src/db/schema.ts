@@ -324,7 +324,7 @@ export const products = pgTable("products", {
   unitPrice: numeric({ precision: 12, scale: 2, mode: "number" }).notNull(),
   warrantyStartDate: timestamp({ withTimezone: true }).notNull(),
   warrantyDurationMonths: integer().notNull(),
-  warrantyEndDate: timestamp({ withTimezone: true }).notNull(),
+  warrantyEndDate: timestamp({ withTimezone: true }).defaultNow().notNull(),
   createdAt: timestamp({ withTimezone: true }).defaultNow().notNull(),
   updatedAt: timestamp({ withTimezone: true })
     .defaultNow()

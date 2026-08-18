@@ -15,6 +15,13 @@
       "when": 1784978385212,
       "tag": "0001_jittery_young_avengers",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1787062112746,
+      "tag": "0002_sharp_silver_sable",
+      "breakpoints": true
     }
   ]
 }
