@@ -41,6 +41,7 @@ interface CustomerDashboardClientProps {
     address: string | null;
     vipStatus?: string | null;
     vipCardNumber?: string | null;
+    isWarrantyStopped?: boolean;
     warrantyExpiryDate?: string | null; // ✅ added (required for logic)
   };
   stats: {
@@ -59,10 +60,9 @@ export default function CustomerDashboardClient({
   adminPhone,
 }: CustomerDashboardClientProps) {
   const [showPopup, setShowPopup] = useState(false);
-  // ✅ Warranty expired logic
+  // ✅ Dashboard and Warranty logic
   const isWarrantyExpired = stats?.isWarrantyExpired ?? false;
-  const isWarrantyCanceled =
-    isWarrantyExpired && !!(stats?.dueAmount && stats.dueAmount > 0);
+  const isDashboardDisabled = customer.isWarrantyStopped ?? false;
 
   const Actions = [
     {
@@ -183,10 +183,10 @@ export default function CustomerDashboardClient({
           <Banner />
         </div>
         {/* Warranty Notice Marquee */}
-        {isWarrantyExpired && (
+        {(isWarrantyExpired || isDashboardDisabled) && (
           <div className="mt-2 bg-red-50 border border-red-200 rounded-sm overflow-hidden">
             <Marquee speed={45} pauseOnHover={true} gradient={false}>
-              {stats?.dueAmount && stats.dueAmount > 0 ? (
+              {isDashboardDisabled ? (
                 <div className="flex items-center gap-2 text-red-600 font-semibold text-sm px-6 py-2">
                   <AlertTriangle size={18} />
                   প্রিয় গ্রাহক আপনার পন্যের বকেয়া টাকা পরিশোধ না করায় আপনার
@@ -202,7 +202,7 @@ export default function CustomerDashboardClient({
               )}
 
               {/* repeat for smooth loop */}
-              {stats?.dueAmount && stats.dueAmount > 0 ? (
+              {isDashboardDisabled ? (
                 <div className="flex items-center gap-2 text-red-600 font-semibold text-sm px-6 py-2">
                   <AlertTriangle size={18} />
                   প্রিয় গ্রাহক আপনার পন্যের বকেয়া টাকা পরিশোধ না করায় আপনার
@@ -223,7 +223,9 @@ export default function CustomerDashboardClient({
         {/* Customer Info Card */}
         <div
           className={`relative rounded-md p-4 sm:p-6 border overflow-hidden transition-all duration-300 shadow-sm flex flex-col gap-4 ${
-            isWarrantyExpired ? "bg-red-50 border-red-300" : "bg-white"
+            isWarrantyExpired || isDashboardDisabled
+              ? "bg-red-50 border-red-300"
+              : "bg-white"
           }`}
         >
           {/* Top Row: Status Badge & Notifications */}
@@ -236,7 +238,11 @@ export default function CustomerDashboardClient({
               }`}
             >
               <span className="mr-2 text-lg leading-none mt-[-2px]">•</span>{" "}
-              {isWarrantyExpired ? "Expired Customer" : "Active Customer"}
+              {isDashboardDisabled
+                ? "Dashboard Disabled"
+                : isWarrantyExpired
+                  ? "Warranty Expired"
+                  : "Active Customer"}
             </div>
 
             <div className="flex flex-col items-center gap-1">
@@ -247,7 +253,11 @@ export default function CustomerDashboardClient({
                   isWarrantyExpired ? "text-red-600" : "text-emerald-600",
                 )}
               >
-                {isWarrantyExpired ? "Expired" : "Active"}
+                {isDashboardDisabled
+                  ? "Disabled"
+                  : isWarrantyExpired
+                    ? "Expired"
+                    : "Active"}
               </span>
             </div>
           </div>
@@ -275,7 +285,7 @@ export default function CustomerDashboardClient({
             className={`grid gap-3 mt-2 ${stats?.dueAmount && stats.dueAmount > 0 ? "grid-cols-2" : "grid-cols-1"}`}
           >
             {/* Phone */}
-            <div className="flex items-center gap-3 py-3 rounded-md border-y border-gray-100 bg-white min-w-0">
+            <div className="flex items-center gap-3 py-3 px-2 rounded-md border-y border-gray-100 bg-white min-w-0">
               <div className="p-3 rounded-md bg-white border border-gray-200 shrink-0 shadow-sm">
                 <PhoneCall size={20} className="text-gray-600" />
               </div>
@@ -375,7 +385,7 @@ export default function CustomerDashboardClient({
 
           <div className="grid grid-cols-4 md:grid-cols-8 gap-6 sm:gap-10">
             {Actions.map((action, i) => {
-              if (isWarrantyCanceled) {
+              if (isDashboardDisabled) {
                 return (
                   <button
                     key={i}
@@ -448,15 +458,9 @@ export default function CustomerDashboardClient({
               ওয়ারেন্টি বাতিল
             </h3>
             <p className="text-gray-600 text-sm leading-relaxed mb-6 font-semibold">
-              আপনাকে বিভিন্ন বার কল ও এসএমএস দিয়েও আপনার সাড়া পাওয়া যায়নি এবং
-              টাকাও পরিশোধ করেননি, তাই সেলার কোম্পানির কাছে অভিযোগ দিয়ে আপনার
-              ওয়ারেন্টি বাতিল করেছে। পুনরায় ওয়ারেন্টি বহাল রাখতে সেলারের সাথে
-              যোগাযোগ করুন অথবা কোম্পানিতে সরাসরি টাকা পরিশোধ করে ওয়ারেন্টি চালু
-              করুন।
-              <br />
-              <br />
-              কাস্টমার কেয়ার:{" "}
-              <span className="font-bold text-red-600">০৯৬৪৯৩৫৫৫৫৫</span>
+              প্রিয় গ্রাহক আপনার পন্যের বকেয়া টাকা পরিশোধ না করায় আপনার পন্যটির
+              ওয়ারেন্টি বাতিল করা হয়েছে । পুনারায় ওয়ারেন্টি বহাল রাখতে সেইলার এর
+              সাথে যোগাযোগ করুন।
             </p>
             <button
               onClick={() => setShowPopup(false)}

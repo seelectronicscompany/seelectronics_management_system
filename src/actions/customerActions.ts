@@ -322,3 +322,20 @@ export async function customerLogin(prevState: any, formData: FormData) {
     
     redirect("/customer/profile");
 }
+
+export async function getCustomerDashboardStatus() {
+    try {
+        const session = await verifySession(false, 'customer');
+        if (!session || !session.isAuth) return { success: false };
+
+        const customer = await db.query.customers.findFirst({
+            where: eq(customers.customerId, session.userId as string)
+        });
+
+        if (!customer) return { success: false };
+
+        return { success: true, isWarrantyStopped: customer.isWarrantyStopped };
+    } catch (error) {
+        return { success: false };
+    }
+}

@@ -1,6 +1,6 @@
 "use client";
 
-import { deleteCustomer, sendInvoiceDownloadLink, updateCustomerVipStatus } from "@/actions";
+import { deleteCustomer, sendInvoiceDownloadLink, updateCustomerVipStatus, toggleCustomerDashboard } from "@/actions";
 import { getProducts } from "@/actions/productActions";
 import { ProductSelectionModal } from "@/components";
 import { CustomerData, Product } from "@/types";
@@ -212,6 +212,31 @@ export default function CustomerActionButtons({
           <path strokeLinecap="round" strokeLinejoin="round" d="M12 21a2 2 0 01-1.414-.586l-4.828-4.828A2 2 0 015.172 14.172L12 7.343l6.828 6.829a2 2 0 01.586 1.414l-4.828 4.828A2 2 0 0112 21z" />
           <path strokeLinecap="round" strokeLinejoin="round" d="M12 7.343l4.243-4.243a2 2 0 012.828 0l2.122 2.122a2 2 0 010 2.828l-4.243 4.243M12 7.343L7.757 3.1a2 2 0 00-2.828 0L2.807 5.222a2 2 0 000 2.828l4.243 4.243" />
         </svg>
+      </button>
+      <button
+        title={customerData.isWarrantyStopped ? "Enable Dashboard" : "Disable Dashboard"}
+        onClick={async () => {
+          if (confirm(`Are you sure you want to ${customerData.isWarrantyStopped ? 'enable' : 'disable'} dashboard for ${customerData.name}?`)) {
+            toastId.current = toast("Updating...", { autoClose: false });
+            const res = await toggleCustomerDashboard(customerData.customerId);
+            toast.update(toastId.current, {
+              type: res.success ? "success" : "error",
+              render: res.message,
+              autoClose: 1500,
+            });
+          }
+        }}
+        className={clsx(customerData.isWarrantyStopped ? "text-red-500 hover:text-red-700" : "text-green-500 hover:text-green-700")}
+      >
+        {customerData.isWarrantyStopped ? (
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6">
+            <path strokeLinecap="round" strokeLinejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z" />
+          </svg>
+        ) : (
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6">
+            <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 10.5V6.75a4.5 4.5 0 119 0v3.75M3.75 21.75h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H3.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z" />
+          </svg>
+        )}
       </button>
 
       <button

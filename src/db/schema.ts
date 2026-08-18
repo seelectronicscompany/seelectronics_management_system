@@ -160,6 +160,8 @@ export const customers = pgTable(
       scale: 2,
       mode: "number",
     }).default(0),
+    isWarrantyStopped: boolean().default(false).notNull(),
+    warrantyStoppedAt: timestamp({ withTimezone: true }),
     createdAt: timestamp({ withTimezone: true }).defaultNow().notNull(),
     updatedAt: timestamp({ withTimezone: true })
       .defaultNow()

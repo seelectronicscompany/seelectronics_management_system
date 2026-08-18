@@ -49,6 +49,8 @@ export type CustomerData = {
   vipStatus?: Statuses | null;
   referredByVipCard?: string | null;
   referralBalance?: number | null;
+  isWarrantyStopped: boolean;
+  warrantyStoppedAt?: Date | null;
   createdAt: Date;
   updatedAt: Date;
   invoice: InvoicesType;

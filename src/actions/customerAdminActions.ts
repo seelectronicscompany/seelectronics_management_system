@@ -447,3 +447,69 @@ export const deleteCustomer = async (id: string) => {
     return { success: false, message: "Failed to delete customer" };
   }
 };
+
+/**
+ * Toggles a customer's dashboard (disables/enables).
+ * When disabling: sets isWarrantyStopped = true, warrantyStoppedAt = now()
+ * When enabling: adds the disabled duration to all products' warrantyEndDate, resets fields.
+ */
+export const toggleCustomerDashboard = async (customerId: string) => {
+  try {
+    const session = await verifySession(false, "admin");
+    if (!session) return { success: false, message: "Unauthorized" };
+
+    const customer = await db.query.customers.findFirst({
+      where: eq(customers.customerId, customerId),
+      with: {
+        invoice: {
+          with: {
+            products: true,
+          }
+        }
+      }
+    });
+
+    if (!customer) return { success: false, message: "Customer not found" };
+
+    if (customer.isWarrantyStopped) {
+      // ENABLING DASHBOARD
+      const stoppedAt = customer.warrantyStoppedAt ? new Date(customer.warrantyStoppedAt) : new Date();
+      const now = new Date();
+      const durationMs = now.getTime() - stoppedAt.getTime();
+
+      // Update all products to extend warrantyEndDate
+      if (customer.invoice && customer.invoice.products && customer.invoice.products.length > 0) {
+        for (const prod of customer.invoice.products) {
+          const currentEndDate = prod.warrantyEndDate ? new Date(prod.warrantyEndDate) : new Date();
+          const newEndDate = new Date(currentEndDate.getTime() + durationMs);
+          await db.update(products)
+            .set({ warrantyEndDate: newEndDate })
+            .where(eq(products.id, prod.id));
+        }
+      }
+
+      await db.update(customers)
+        .set({
+          isWarrantyStopped: false,
+          warrantyStoppedAt: null,
+        })
+        .where(eq(customers.customerId, customerId));
+
+    } else {
+      // DISABLING DASHBOARD
+      await db.update(customers)
+        .set({
+          isWarrantyStopped: true,
+          warrantyStoppedAt: new Date(),
+        })
+        .where(eq(customers.customerId, customerId));
+    }
+
+    revalidatePath("/customers");
+    revalidatePath(`/staff/customers/${customerId}`);
+    return { success: true, message: `Dashboard ${customer.isWarrantyStopped ? 'enabled' : 'disabled'} successfully` };
+  } catch (error) {
+    console.error("Error toggling customer dashboard:", error);
+    return { success: false, message: "Failed to toggle customer dashboard" };
+  }
+};
