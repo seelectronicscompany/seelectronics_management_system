@@ -431,11 +431,12 @@ const PrayerTimes = () => {
           {/* Left Column (Countdown) */}
           <div className="w-[40%] bg-[#f5f5f5] rounded-xl p-3 flex flex-col items-center justify-center text-center">
             <div className="text-brand mb-3 flex items-center justify-center relative">
-               <Coffee size={24} />
-               <Moon size={14} className="absolute -top-1 -right-2 bg-[#f5f5f5] rounded-full" />
+               <Sun size={36} />
+               <Moon size={18} className="absolute" />
             </div>
-            <p className="text-gray-800 text-[14px] font-medium mb-3">সাহরির শেষ সময়</p>
-            <div className="bg-white text-brand px-2 py-1 rounded-full text-[13px] font-semibold w-full whitespace-nowrap overflow-hidden text-ellipsis border border-gray-100">
+            <p className="text-gray-800 text-[16px] font-medium mb-1">এখন : {prayerBangla[currentPrayer as PrayerName]}</p>
+            <p className="text-gray-600 text-[13px] mb-2 font-medium">ওয়াক্ত বাকি</p>
+            <div className="bg-white text-brand px-2 py-[6px] rounded-full text-[14px] font-semibold w-full whitespace-nowrap overflow-hidden text-ellipsis border border-gray-100">
               {timeLeft} মিনিট
             </div>
           </div>

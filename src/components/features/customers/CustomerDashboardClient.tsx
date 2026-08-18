@@ -31,6 +31,7 @@ import PrayerTimes from "../shared/PrayerTimes";
 import CustomerNotificationBell from "./CustomerNotificationBell";
 import Marquee from "react-fast-marquee";
 import clsx from "clsx";
+import { custom } from "zod";
 
 interface CustomerDashboardClientProps {
   customer: {
@@ -176,6 +177,11 @@ export default function CustomerDashboardClient({
   return (
     <CustomerLayout>
       {/* Dashboard Welcome Header */}
+      <div className="bg-[#0A1A3A] text-white rounded-b-3xl sm:rounded-b-[2.5rem]  w-full py-5 flex items-center justify-center z-10 relative mb-2">
+        <h1 className="font-bold text-[13px] sm:text-base md:text-lg tracking-[0.2em] uppercase text-center w-full">
+          Welcome to SE Electronics
+        </h1>
+      </div>
 
       <div className="flex flex-col gap-4 px-2 text-gray-800 pb-24">
         {/* Warranty Marquee */}
@@ -189,9 +195,7 @@ export default function CustomerDashboardClient({
               {isDashboardDisabled ? (
                 <div className="flex items-center gap-2 text-red-600 font-semibold text-sm px-6 py-2">
                   <AlertTriangle size={18} />
-                  প্রিয় গ্রাহক আপনার পন্যের বকেয়া টাকা পরিশোধ না করায় আপনার
-                  পন্যটির ওয়ারেন্টি বাতিল করা হয়েছে । পুনারায় ওয়ারেন্টি বহাল
-                  রাখতে সেইলার এর সাথে যোগাযোগ করুন ।
+                  {`প্রিয়  গ্রাহক ${customer?.name} (${customer.customerId}) আপনার পন্যের বকেয়া টাকা পরিশোধের জন্য বিভিন্ন সময় কল ও এসএমএস, ভয়েস এস এম এস দিয়েও আপনার সারা পাওয়া যায়নি দীর্ঘ সময় টাকা ও পরিশোধ করেননি তাই সেইলার কোম্পানির কাছে কাস্টমার আই ডি তে অভিযোগ জমা করায় আপনার ওয়ারেন্টি বাতিল  করেছে পুনরায় ওয়ারেন্টি বহাল রাখতে সেইলারের সাথে যোগাযোগ করুন অথবা কোম্পানিতে সরাসরি টাকা পরিশোধ করে ওয়ারেন্টি চালু করুন কাস্টমার কেয়ার ০৯৬৪৯৩৫৫৫৫৫ অথবা ০৯৬৩৯৬৭৩৬০০`}
                 </div>
               ) : (
                 <div className="flex items-center gap-2 text-red-600 font-semibold text-sm px-6 py-2">
@@ -205,15 +209,13 @@ export default function CustomerDashboardClient({
               {isDashboardDisabled ? (
                 <div className="flex items-center gap-2 text-red-600 font-semibold text-sm px-6 py-2">
                   <AlertTriangle size={18} />
-                  প্রিয় গ্রাহক আপনার পন্যের বকেয়া টাকা পরিশোধ না করায় আপনার
-                  পন্যটির ওয়ারেন্টি বাতিল করা হয়েছে । পুনারায় ওয়ারেন্টি বহাল
-                  রাখতে সেইলার এর সাথে যোগাযোগ করুন ।
+                  {`প্রিয়  গ্রাহক ${customer?.name} (${customer.customerId}) আপনার পন্যের বকেয়া টাকা পরিশোধের জন্য বিভিন্ন সময় কল ও এসএমএস, ভয়েস এস এম এস দিয়েও আপনার সারা পাওয়া যায়নি দীর্ঘ সময় টাকা ও পরিশোধ করেননি তাই সেইলার কোম্পানির কাছে কাস্টমার আই ডি তে অভিযোগ জমা করায় আপনার ওয়ারেন্টি বাতিল  করেছে পুনরায় ওয়ারেন্টি বহাল রাখতে সেইলারের সাথে যোগাযোগ করুন অথবা কোম্পানিতে সরাসরি টাকা পরিশোধ করে ওয়ারেন্টি চালু করুন কাস্টমার কেয়ার ০৯৬৪৯৩৫৫৫৫৫ অথবা ০৯৬৩৯৬৭৩৬০০`}
                 </div>
               ) : (
                 <div className="flex items-center gap-2 text-red-600 font-semibold text-sm px-6 py-2">
                   <ShieldCheck size={18} />
                   প্রিয় গ্রাহক আপনার পন্যের কোম্পানির দেওয়া ওয়ারেন্টি শেষ
-                  হয়ে গেছে ।
+                  হয়ে গেছে।
                 </div>
               )}
             </Marquee>
@@ -234,12 +236,12 @@ export default function CustomerDashboardClient({
               className={`inline-flex items-center text-[10px] sm:text-xs px-3 py-1.5 rounded font-extrabold uppercase tracking-wider border ${
                 isWarrantyExpired
                   ? "bg-red-50 text-red-600 border-red-300"
-                  : "bg-emerald-50 text-emerald-600 border-emerald-300"
+                  : "bg-red-50 text-red-600 border-red-300"
               }`}
             >
               <span className="mr-2 text-lg leading-none mt-[-2px]">•</span>{" "}
               {isDashboardDisabled
-                ? "Dashboard Disabled"
+                ? "Warranty Cancled"
                 : isWarrantyExpired
                   ? "Warranty Expired"
                   : "Active Customer"}
@@ -250,11 +252,11 @@ export default function CustomerDashboardClient({
               <span
                 className={clsx(
                   "text-[11px] font-semibold",
-                  isWarrantyExpired ? "text-red-600" : "text-emerald-600",
+                  isWarrantyExpired ? "text-red-600" : "text-red-600",
                 )}
               >
                 {isDashboardDisabled
-                  ? "Disabled"
+                  ? "Cancled"
                   : isWarrantyExpired
                     ? "Expired"
                     : "Active"}
