@@ -278,9 +278,9 @@ export default function CustomerDashboardClient({
             className={`grid gap-3 mt-2 ${stats?.dueAmount && stats.dueAmount > 0 ? "grid-cols-2" : "grid-cols-1"}`}
           >
             {/* Phone */}
-            <div className="flex items-center gap-3 px-3 py-2 rounded-md border border-gray-100 bg-gray-50 min-w-0">
-              <div className="p-2 rounded-md bg-white border border-gray-200 shrink-0 shadow-sm">
-                <PhoneCall size={16} className="text-gray-600" />
+            <div className="flex items-center gap-3 py-3 rounded-md border-y border-gray-100 bg-white min-w-0">
+              <div className="p-3 rounded-md bg-white border border-gray-200 shrink-0 shadow-sm">
+                <PhoneCall size={20} className="text-gray-600" />
               </div>
               <div className="flex flex-col min-w-0">
                 <span className="text-[10px] uppercase text-gray-400 font-bold tracking-widest">
@@ -312,16 +312,16 @@ export default function CustomerDashboardClient({
 
           {/* Fourth Row: VIP */}
           {customer.vipStatus === "approved" && (
-            <div className="mt-2 flex items-center justify-between p-7 rounded-md bg-yellow-50 border border-yellow-200 shadow-sm">
+            <div className="mt-2 flex items-center justify-between p-4 rounded-md bg-yellow-50 border border-yellow-200 shadow-sm">
               <div className="flex items-center gap-3 min-w-0">
                 <div className="p-2 rounded-md bg-white border border-yellow-200 shrink-0 shadow-sm">
                   <Crown size={18} className="text-yellow-600" />
                 </div>
                 <div className="flex flex-col min-w-0">
-                  <span className="text-xl font-black text-yellow-700 uppercase tracking-widest">
+                  <span className="text-base font-black text-yellow-700 uppercase tracking-widest">
                     VIP Member
                   </span>
-                  <span className="text-lg font-bold text-gray-800 truncate">
+                  <span className="text-sm font-bold text-gray-800 ">
                     Premium Access Enabled
                   </span>
                 </div>
