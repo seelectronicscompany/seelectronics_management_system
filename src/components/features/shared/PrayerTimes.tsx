@@ -431,8 +431,11 @@ const PrayerTimes = () => {
           {/* Left Column (Countdown) */}
           <div className="w-[40%] bg-[#f5f5f5] rounded-xl p-3 flex flex-col items-center justify-center text-center">
             <div className="text-brand mb-3 flex items-center justify-center relative">
-               <Sun size={36} />
-               <Moon size={18} className="absolute" />
+               {["Maghrib", "Isha", "Fajr"].includes(currentPrayer) ? (
+                 <Moon size={36} />
+               ) : (
+                 <Sun size={36} />
+               )}
             </div>
             <p className="text-gray-800 text-[16px] font-medium mb-1">এখন : {prayerBangla[currentPrayer as PrayerName]}</p>
             <p className="text-gray-600 text-[13px] mb-2 font-medium">ওয়াক্ত বাকি</p>

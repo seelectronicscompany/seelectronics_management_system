@@ -83,7 +83,7 @@ export default async function CustomerFeedbackPage() {
                       {service.type}
                     </span>
                   </div>
-                  <div className="font-semibold text-gray-900 truncate">
+                  <div className="font-semibold text-gray-900 ">
                     {service.productModel}
                   </div>
                   <div className="text-sm text-gray-500 mt-1">
@@ -102,7 +102,7 @@ export default async function CustomerFeedbackPage() {
                     />
                   </div>
                 </div>
-                <div className="flex flex-col items-end gap-2">
+                <div className="flex items-end gap-2">
                   {service.feedback?.serviceId ? (
                     <div className="inline-flex items-center gap-2 bg-emerald-50 text-emerald-700 border border-emerald-100 px-4 py-2 rounded-lg text-sm font-bold shadow-sm">
                       <CheckCircle2 className="size-4 text-emerald-600" />

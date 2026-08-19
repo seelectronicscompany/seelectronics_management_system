@@ -303,7 +303,7 @@ export default function CustomerDashboardClient({
 
             {/* Due Amount */}
             {!!(stats?.dueAmount && stats.dueAmount > 0) && (
-              <div className="bg-rose-50 px-3 py-2 rounded-md border border-rose-100 flex items-center gap-3 min-w-0">
+              <div className="bg-rose-50 px-3 py-2 rounded-md border border-red-200 flex items-center gap-3 min-w-0 animate-pulse shadow-[0_0_15px_rgba(220,38,38,0.4)]">
                 <div className="p-2 rounded-md bg-white border border-rose-200 shrink-0 shadow-sm">
                   <Banknote className="text-red-600" size={16} />
                 </div>
@@ -460,9 +460,7 @@ export default function CustomerDashboardClient({
               ওয়ারেন্টি বাতিল
             </h3>
             <p className="text-gray-600 text-sm leading-relaxed mb-6 font-semibold">
-              প্রিয় গ্রাহক আপনার পন্যের বকেয়া টাকা পরিশোধ না করায় আপনার পন্যটির
-              ওয়ারেন্টি বাতিল করা হয়েছে । পুনারায় ওয়ারেন্টি বহাল রাখতে সেইলার এর
-              সাথে যোগাযোগ করুন।
+              {`প্রিয়  গ্রাহক ${customer?.name} (${customer.customerId}) আপনার পন্যের বকেয়া টাকা পরিশোধের জন্য বিভিন্ন সময় কল ও এসএমএস, ভয়েস এস এম এস দিয়েও আপনার সারা পাওয়া যায়নি দীর্ঘ সময় টাকা ও পরিশোধ করেননি তাই সেইলার কোম্পানির কাছে কাস্টমার আই ডি তে অভিযোগ জমা করায় আপনার ওয়ারেন্টি বাতিল  করেছে পুনরায় ওয়ারেন্টি বহাল রাখতে সেইলারের সাথে যোগাযোগ করুন অথবা কোম্পানিতে সরাসরি টাকা পরিশোধ করে ওয়ারেন্টি চালু করুন কাস্টমার কেয়ার ০৯৬৪৯৩৫৫৫৫৫ অথবা ০৯৬৩৯৬৭৩৬০০`}
             </p>
             <button
               onClick={() => setShowPopup(false)}
