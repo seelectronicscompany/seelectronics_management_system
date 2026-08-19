@@ -303,9 +303,9 @@ export default function CustomerDashboardClient({
 
             {/* Due Amount */}
             {!!(stats?.dueAmount && stats.dueAmount > 0) && (
-              <div className="bg-rose-50 px-3 py-2 rounded-md border border-red-200 flex items-center gap-3 min-w-0 animate-pulse shadow-[0_0_15px_rgba(220,38,38,0.4)]">
-                <div className="p-2 rounded-md bg-white border border-rose-200 shrink-0 shadow-sm">
-                  <Banknote className="text-red-600" size={16} />
+              <div className="bg-rose-50 px-3 py-2 rounded-md border border-red-200 flex items-center gap-3 min-w-0 shadow-sm">
+                <div className="p-2 rounded-md bg-white border border-rose-200 shrink-0 shadow-sm flex items-center justify-center">
+                  <Banknote className="animate-pulse text-red-600 drop-shadow-[0_0_8px_rgba(220,38,38,0.8)]" size={16} />
                 </div>
                 <div className="flex flex-col min-w-0">
                   <span className="text-sm font-black text-red-600  leading-tight">
