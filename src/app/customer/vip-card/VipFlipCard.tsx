@@ -10,11 +10,19 @@ interface VipFlipCardProps {
   baseUrl?: string;
 }
 
-export function VipFlipCard({ customer, vipCardNumber, vipBgSrc, baseUrl = "" }: VipFlipCardProps) {
+export function VipFlipCard({
+  customer,
+  vipCardNumber,
+  vipBgSrc,
+  baseUrl = "",
+}: VipFlipCardProps) {
   const [isFlipped, setIsFlipped] = useState(false);
 
   return (
-    <div className="flex justify-center w-full px-2 group" style={{ perspective: "1000px" }}>
+    <div
+      className="flex justify-center w-full px-2 group"
+      style={{ perspective: "1000px" }}
+    >
       <div
         className="relative w-full max-w-[420px] aspect-[1.586/1] cursor-pointer transition-transform duration-700 ease-in-out"
         style={{
@@ -59,7 +67,7 @@ export function VipFlipCard({ customer, vipCardNumber, vipBgSrc, baseUrl = "" }:
             </div>
 
             {/* Card Number */}
-            <div className="w-full flex justify-center mt-3 sm:mt-6">
+            <div className="w-full flex justify-start mt-3 sm:mt-6">
               <div className="text-base min-[360px]:text-xl sm:text-[27px] tracking-[0.15em] sm:tracking-[0.2em] font-medium drop-shadow-md">
                 {vipCardNumber
                   ? vipCardNumber.match(/.{1,4}/g)?.join(" ")
