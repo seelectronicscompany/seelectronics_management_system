@@ -1,3 +1,5 @@
+import { VipFlipCard } from "./VipFlipCard";
+import vipBg from "@/assets/images/vipbg.jpeg";
 import {
   applyForVipCard,
   verifyCustomerSession,
@@ -42,9 +44,10 @@ export default async function VipCardPage() {
   const benefits = [
     "Priority Customer Support - Skip the queue!",
     "Exclusive Discounts on all regular maintenance plans",
-    "Free minor repairs on selected services",
-    "Extended warranty features for featured products",
-    "Special home-delivery rates",
+    "Special Access to promotional offers and sales",
+    "Free Home Delivery in Sylhet City for major purchases",
+    "Free safe wiring/fitting by experienced mechanics",
+    "Priority Battery Service inside Sylhet",
   ];
 
   async function handleApply(formData: FormData) {
@@ -56,7 +59,7 @@ export default async function VipCardPage() {
   return (
     <CustomerLayout>
       <div className="max-w-2xl mx-auto pb-20">
-        <div className="flex items-center gap-4 mb-6">
+        <div className="flex items-center gap-4 mb-6 pt-5 px-2">
           <Link
             href="/customer/profile"
             className="p-1 bg-white rounded-xl shadow-sm border border-gray-100 hover:bg-gray-50 hover:shadow-md transition-all active:scale-95"
@@ -71,81 +74,13 @@ export default async function VipCardPage() {
           </h1>
         </div>
         {vipStatus === "approved" ? (
-          /* Approved VIP CARD - matching the provided template */
-          <div className="flex justify-center w-full px-2">
-            <div
-              className="relative w-full max-w-[400px] aspect-[1.586/1] rounded-md shadow-2xl shadow-blue-900/40 overflow-hidden group border border-blue-400/20"
-              style={{
-                backgroundImage: "url('/vip-card.jpeg')",
-                backgroundSize: "cover",
-                backgroundPosition: "center",
-              }}
-            >
-              {/* Subtle glass overlay for text readability */}
-              <div className="absolute inset-0 bg-gradient-to-tr from-[#001540]/40 via-transparent to-[#001540]/20 opacity-30"></div>
-
-              <div className="relative z-10 h-full w-full p-5 sm:p-7 flex flex-col justify-between text-white drop-shadow-lg">
-                {/* Top Section */}
-                <div className="flex justify-between items-baseline font-black">
-                  <div className="text-white text-lg sm:text-lg tracking-tight leading-none drop-shadow-md">
-                    SE ELECTRONICS
-                  </div>
-                  <div className="flex items-center gap-3 bg-white/5 pl-4 py-1.5 pr-2 rounded-lg border border-white/10 backdrop-blur-sm">
-                    <div className="flex flex-col items-end -space-y-0.5">
-                      <div className="text-white text-lg font-black tracking-tight leading-none drop-shadow-md uppercase">
-                        VIP CARD
-                      </div>
-                      <div className="text-blue-100/80 text-[8px] uppercase font-black tracking-[0.2em] drop-shadow-sm">
-                        Membership
-                      </div>
-                    </div>
-                    <div className="h-8 w-px bg-white/20" />
-                    <Crown size={28} className="text-white drop-shadow-md" />
-                  </div>
-                </div>
-
-                {/* Middle Section - Card Number */}
-                <div className=" mt-2">
-                  <p className="text-lg sm:text-2xl font-bold tracking-[0.2em] text-white drop-shadow-xl font-mono">
-                    {vipCardNumber
-                      ? vipCardNumber.match(/.{1,4}/g)?.join("  ")
-                      : "####  ####  ####  ####"}
-                  </p>
-                </div>
-                {/* Expiry (Bottom Middle/Right) */}
-                <div className="flex items-center gap-1.5 sm:gap-3 translate-y-1">
-                  <div className="flex flex-col text-[10px] text-white font-black leading-none uppercase text-right">
-                    <span>EXPIRES IN</span>
-                  </div>
-                  <span className="text-[10px] font-bold text-white tracking-widest drop-shadow-md">
-                    {(customer as any).vipExpiryDate
-                      ? new Intl.DateTimeFormat("en-US", {
-                          month: "2-digit",
-                          year: "2-digit",
-                        }).format(new Date((customer as any).vipExpiryDate))
-                      : "MM/YY"}
-                  </span>
-                </div>
-
-                {/* Bottom Section */}
-                <div className="flex justify-between items-end pb-1 font-mono">
-                  {/* Name (Bottom Left) */}
-                  <div className="max-w-[50%]">
-                    <p className="text-lg text-blue-100/60 uppercase tracking-[0.1em] font-bold mb-0.5">
-                      CARD HOLDER
-                    </p>
-                    <p className="text-xs sm:text-lg font-bold uppercase tracking-wider text-white drop-shadow-lg truncate">
-                      {customer.name}
-                    </p>
-                  </div>
-
-                  {/* Logo space preserved bottom-right */}
-                  <div className="w-16 sm:w-24 h-6 sm:h-10 pointer-events-none opacity-0">
-                    LOGO
-                  </div>
-                </div>
-              </div>
-            </div>
+          <div className="relative my-8">
+            <VipFlipCard 
+              customer={customer} 
+              vipCardNumber={vipCardNumber} 
+              vipBgSrc={vipBg.src} 
+              baseUrl={process.env.NEXT_PUBLIC_BASE_URL}
+            />
           </div>
         ) : (
           /* Normal/Pending State */
@@ -215,15 +150,15 @@ export default async function VipCardPage() {
 
         <div className="mt-12 bg-white rounded-md p-3 sm:p-12 shadow-sm border border-gray-100">
           <div className="text-center mb-12">
-          {vipStatus !== "approved" ? (
-  <div className="inline-block mb-4 px-4 py-2 rounded-md bg-emerald-100 text-emerald-700 font-bold text-sm shadow-sm">
-    VIP Card আবেদন ফি: ১৫০০ টাকা
-  </div>
-) : (
-  <div className="inline-block mb-4 px-4 py-2 rounded-md bg-emerald-500 text-white font-bold text-sm shadow-md">
-     স্বাগতম! আপনি এখন আমাদের VIP সদস্য। বিশেষ সুবিধা উপভোগ করুন।
-  </div>
-)}
+            {vipStatus !== "approved" ? (
+              <div className="inline-block mb-4 px-4 py-2 rounded-md bg-emerald-100 text-emerald-700 font-bold text-sm shadow-sm">
+                VIP Card আবেদন ফি: ১৫০০ টাকা
+              </div>
+            ) : (
+              <div className="inline-block mb-4 px-4 py-2 rounded-md bg-emerald-500 text-white font-bold text-sm shadow-md">
+                স্বাগতম! আপনি এখন আমাদের VIP সদস্য। বিশেষ সুবিধা উপভোগ করুন।
+              </div>
+            )}
             <span className="text-3xl mb-4 block">🌟</span>
             <h2 className="text-2xl font-black text-gray-900 mb-4">
               এস ই ইলেকট্রনিক্স – ভিআইপি মেম্বারশিপ বেনিফিট
@@ -258,16 +193,20 @@ export default async function VipCardPage() {
                     দ্বারা দ্রুত ও মানসম্মত সেবার নিশ্চয়তা দিচ্ছি।
                   </p>
                 </div>
-<div className="p-6 bg-purple-50/50 rounded-2xl border border-purple-100 hover:shadow-md transition-shadow">
-  <h4 className="font-bold text-purple-900 mb-2 flex items-center gap-2">
-    <CheckCircle2 size={18} className="text-purple-600" />
-    ২. নতুন ক্রয়ে বিশেষ ছাড় ও রেফারেল বোনাস
-  </h4>
-  <p className="text-sm text-gray-600 leading-relaxed font-medium">
-    এই ভিআইপি কার্ড নাম্বার ব্যবহার করে আপনি নিজে অথবা আপনার রেফারেন্সে অন্য কেউ যদি নতুন আইপিএস, ব্যাটারি বা স্ট্যাবিলাইজার ক্রয় করেন, তাহলে মোট মূল্যের ওপর ৪% বিশেষ ছাড় প্রদান করা হবে ক্রেতাকে। পাশাপাশি, যাঁর ভিআইপি কার্ড ব্যবহার করা হবে, তিনি অতিরিক্ত ২% রেফারেল বোনাস উপভোগ করবেন। 
-    এটি আপনার এবং আপনার পরিচিতদের জন্য একটি লাভজনক ও সাশ্রয়ী সুবিধা।
-  </p>
-</div>
+                <div className="p-6 bg-purple-50/50 rounded-2xl border border-purple-100 hover:shadow-md transition-shadow">
+                  <h4 className="font-bold text-purple-900 mb-2 flex items-center gap-2">
+                    <CheckCircle2 size={18} className="text-purple-600" />
+                    ২. নতুন ক্রয়ে বিশেষ ছাড় ও রেফারেল বোনাস
+                  </h4>
+                  <p className="text-sm text-gray-600 leading-relaxed font-medium">
+                    এই ভিআইপি কার্ড নাম্বার ব্যবহার করে আপনি নিজে অথবা আপনার
+                    রেফারেন্সে অন্য কেউ যদি নতুন আইপিএস, ব্যাটারি বা
+                    স্ট্যাবিলাইজার ক্রয় করেন, তাহলে মোট মূল্যের ওপর ৪% বিশেষ ছাড়
+                    প্রদান করা হবে ক্রেতাকে। পাশাপাশি, যাঁর ভিআইপি কার্ড ব্যবহার
+                    করা হবে, তিনি অতিরিক্ত ২% রেফারেল বোনাস উপভোগ করবেন। এটি
+                    আপনার এবং আপনার পরিচিতদের জন্য একটি লাভজনক ও সাশ্রয়ী সুবিধা।
+                  </p>
+                </div>
               </div>
             </section>
 
