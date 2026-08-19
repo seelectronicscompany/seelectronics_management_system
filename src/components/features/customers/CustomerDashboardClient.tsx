@@ -283,41 +283,67 @@ export default function CustomerDashboardClient({
           </div>
 
           {/* Third Row: Phone & Due */}
-          <div
-            className={`grid gap-3 mt-2 ${stats?.dueAmount && stats.dueAmount > 0 ? "grid-cols-2" : "grid-cols-1"}`}
-          >
-            {/* Phone */}
-            <div className="flex items-center gap-3 py-3 px-2  border-y border-gray-100 bg-white min-w-0">
-              <div className="p-3 rounded-md bg-white border border-gray-200 shrink-0 shadow-sm">
-                <PhoneCall size={20} className="text-gray-600" />
-              </div>
-              <div className="flex flex-col min-w-0">
-                <span className="text-[10px] uppercase text-gray-400 font-bold tracking-widest">
-                  Phone
-                </span>
-                <span className="text-gray-800 text-sm font-black leading-tight">
-                  {customer.phone}
-                </span>
-              </div>
-            </div>
-
-            {/* Due Amount */}
-            {!!(stats?.dueAmount && stats.dueAmount > 0) && (
-              <div className="bg-rose-50 px-3 py-2 rounded-md border border-red-200 flex items-center gap-3 min-w-0 shadow-sm">
-                <div className="p-2 rounded-md bg-white border border-rose-200 shrink-0 shadow-sm flex items-center justify-center">
-                  <Banknote className="animate-pulse text-red-600 drop-shadow-[0_0_8px_rgba(220,38,38,0.8)]" size={16} />
+          {!!(stats?.dueAmount && stats.dueAmount > 0) ? (
+            <div className={`grid gap-2 sm:gap-3 mt-2 grid-cols-7`}>
+              {/* Phone */}
+              <div className="flex col-span-4 items-center gap-2 sm:gap-3 py-3 px-2  border-y border-gray-100 bg-white min-w-0">
+                <div className="p-2 sm:p-3 rounded-md bg-white border border-gray-200 shrink-0 shadow-sm">
+                  <PhoneCall
+                    size={18}
+                    className="text-gray-600 sm:w-5 sm:h-5"
+                  />
                 </div>
                 <div className="flex flex-col min-w-0">
-                  <span className="text-sm font-black text-red-600  leading-tight">
+                  <span className="text-[10px] uppercase text-gray-400 font-bold tracking-widest">
+                    Phone
+                  </span>
+                  <span className="text-gray-800 text-xs sm:text-sm font-black leading-tight truncate">
+                    {customer.phone}
+                  </span>
+                </div>
+              </div>
+
+              {/* Due Amount */}
+              <div className="relative px-3 py-2 col-span-3 rounded-md flex items-center gap-3 min-w-0 mt-1">
+                {/* Glowing background for the whole box */}
+                <div className="absolute inset-0 bg-red-50 rounded-md shadow-[0_0_15px_rgba(239,68,68,0.5)]  border border-red-300"></div>
+
+                <Banknote
+                  className="relative text-red-600 drop-shadow-[0_0_8px_rgba(239,68,68,0.9)] animate-pulse"
+                  size={26}
+                />
+
+                <div className="relative flex flex-col min-w-0">
+                  <span className="text-sm font-black text-red-600 leading-tight drop-shadow-[0_0_2px_rgba(239,68,68,0.4)]">
                     ৳{stats.dueAmount.toLocaleString()}
                   </span>
-                  <span className="text-[10px] uppercase font-bold text-red-400 tracking-widest">
+                  <span className="text-[10px] uppercase font-bold text-red-500 tracking-widest">
                     Due
                   </span>
                 </div>
               </div>
-            )}
-          </div>
+            </div>
+          ) : (
+            <div className={`grid gap-2 sm:gap-3 mt-2 grid-cols-1`}>
+              {/* Phone */}
+              <div className="flex items-center gap-2 sm:gap-3 py-3 px-2  border-y border-gray-100 bg-white min-w-0">
+                <div className="p-2 sm:p-3 rounded-md bg-white border border-gray-200 shrink-0 shadow-sm">
+                  <PhoneCall
+                    size={18}
+                    className="text-gray-600 sm:w-5 sm:h-5"
+                  />
+                </div>
+                <div className="flex flex-col min-w-0">
+                  <span className="text-[10px] uppercase text-gray-400 font-bold tracking-widest">
+                    Phone
+                  </span>
+                  <span className="text-gray-800 text-xs sm:text-sm font-black leading-tight truncate">
+                    {customer.phone}
+                  </span>
+                </div>
+              </div>
+            </div>
+          )}
 
           {/* Fourth Row: VIP */}
           {customer.vipStatus === "approved" && (
