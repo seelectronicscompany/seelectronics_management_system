@@ -175,7 +175,7 @@ export function VipFlipCard({
             </div>
 
             {/* ── Middle: QR + Customer ID / Barcode ───────────────── */}
-            <div className="flex-1 flex items-stretch  px-[5%] py-5 gap-[4%]">
+            <div className="flex-1 flex items-stretch  px-[5%] py-6 gap-[4%]">
               {/* QR Code */}
               <div className="flex flex-col items-center flex-shrink-0 w-[26%] max-w-[90px]">
                 <p className="text-white text-[clamp(4px,1.2vw,8px)] font-semibold text-center leading-[1.15] mb-0.5 sm:mb-1">
