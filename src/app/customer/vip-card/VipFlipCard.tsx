@@ -168,8 +168,8 @@ export function VipFlipCard({
             <div className="h-[9.5%] sm:h-[10%]" />
 
             {/* ── Title strip ──────────────────────────────────────── */}
-            <div className=" w-full py-1 sm:py-2 px-3 flex justify-center items-center shadow-sm">
-              <span className="font-black text-[#0A1128] text-lg tracking-tight uppercase text-center leading-tight">
+            <div className=" w-full py-1 sm:py-1 px-2 flex justify-center items-center shadow-sm">
+              <span className="font-black text-[#0A1128] text-base tracking-tight uppercase text-center leading-tight">
                 SE Electronics VIP Membership Card
               </span>
             </div>
