@@ -14,6 +14,8 @@ import {
 import { revalidatePath } from "next/cache";
 import Link from "next/link";
 import { CustomerLayout } from "@/components/layout/CustomerLayout";
+import { VipFlipCard } from "./VipFlipCard";
+import vipBg from "@/assets/images/vipbg.jpeg";
 
 export default async function VipCardPage() {
   const session = await verifyCustomerSession();
@@ -56,7 +58,7 @@ export default async function VipCardPage() {
   return (
     <CustomerLayout>
       <div className="max-w-2xl mx-auto pb-20">
-        <div className="flex items-center gap-4 mb-6">
+        <div className="flex items-center gap-4 mb-6 pt-5 px-2">
           <Link
             href="/customer/profile"
             className="p-1 bg-white rounded-xl shadow-sm border border-gray-100 hover:bg-gray-50 hover:shadow-md transition-all active:scale-95"
@@ -71,81 +73,13 @@ export default async function VipCardPage() {
           </h1>
         </div>
         {vipStatus === "approved" ? (
-          /* Approved VIP CARD - matching the provided template */
-          <div className="flex justify-center w-full px-2">
-            <div
-              className="relative w-full max-w-[400px] aspect-[1.586/1] rounded-md shadow-2xl shadow-blue-900/40 overflow-hidden group border border-blue-400/20"
-              style={{
-                backgroundImage: "url('/vip-card.jpeg')",
-                backgroundSize: "cover",
-                backgroundPosition: "center",
-              }}
-            >
-              {/* Subtle glass overlay for text readability */}
-              <div className="absolute inset-0 bg-gradient-to-tr from-[#001540]/40 via-transparent to-[#001540]/20 opacity-30"></div>
-
-              <div className="relative z-10 h-full w-full p-5 sm:p-7 flex flex-col justify-between text-white drop-shadow-lg">
-                {/* Top Section */}
-                <div className="flex justify-between items-baseline font-black">
-                  <div className="text-white text-lg sm:text-lg tracking-tight leading-none drop-shadow-md">
-                    SE ELECTRONICS
-                  </div>
-                  <div className="flex items-center gap-3 bg-white/5 pl-4 py-1.5 pr-2 rounded-lg border border-white/10 backdrop-blur-sm">
-                    <div className="flex flex-col items-end -space-y-0.5">
-                      <div className="text-white text-lg font-black tracking-tight leading-none drop-shadow-md uppercase">
-                        VIP CARD
-                      </div>
-                      <div className="text-blue-100/80 text-[8px] uppercase font-black tracking-[0.2em] drop-shadow-sm">
-                        Membership
-                      </div>
-                    </div>
-                    <div className="h-8 w-px bg-white/20" />
-                    <Crown size={28} className="text-white drop-shadow-md" />
-                  </div>
-                </div>
-
-                {/* Middle Section - Card Number */}
-                <div className=" mt-2">
-                  <p className="text-lg sm:text-2xl font-bold tracking-[0.2em] text-white drop-shadow-xl font-mono">
-                    {vipCardNumber
-                      ? vipCardNumber.match(/.{1,4}/g)?.join("  ")
-                      : "####  ####  ####  ####"}
-                  </p>
-                </div>
-                {/* Expiry (Bottom Middle/Right) */}
-                <div className="flex items-center gap-1.5 sm:gap-3 translate-y-1">
-                  <div className="flex flex-col text-[10px] text-white font-black leading-none uppercase text-right">
-                    <span>EXPIRES IN</span>
-                  </div>
-                  <span className="text-[10px] font-bold text-white tracking-widest drop-shadow-md">
-                    {(customer as any).vipExpiryDate
-                      ? new Intl.DateTimeFormat("en-US", {
-                          month: "2-digit",
-                          year: "2-digit",
-                        }).format(new Date((customer as any).vipExpiryDate))
-                      : "MM/YY"}
-                  </span>
-                </div>
-
-                {/* Bottom Section */}
-                <div className="flex justify-between items-end pb-1 font-mono">
-                  {/* Name (Bottom Left) */}
-                  <div className="max-w-[50%]">
-                    <p className="text-lg text-blue-100/60 uppercase tracking-[0.1em] font-bold mb-0.5">
-                      CARD HOLDER
-                    </p>
-                    <p className="text-xs sm:text-lg font-bold uppercase tracking-wider text-white drop-shadow-lg truncate">
-                      {customer.name}
-                    </p>
-                  </div>
-
-                  {/* Logo space preserved bottom-right */}
-                  <div className="w-16 sm:w-24 h-6 sm:h-10 pointer-events-none opacity-0">
-                    LOGO
-                  </div>
-                </div>
-              </div>
-            </div>
+          <div className="relative my-8">
+            <VipFlipCard 
+              customer={customer} 
+              vipCardNumber={vipCardNumber} 
+              vipBgSrc={vipBg?.src || '/vipbg.jpeg'} 
+              baseUrl={process.env.NEXT_PUBLIC_BASE_URL}
+            />
           </div>
         ) : (
           /* Normal/Pending State */

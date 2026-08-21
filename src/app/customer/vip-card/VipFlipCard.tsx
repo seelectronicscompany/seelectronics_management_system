@@ -3,13 +3,58 @@
 import { Crown } from "lucide-react";
 import { useState } from "react";
 
+// ─── Types ────────────────────────────────────────────────────────────
 interface VipFlipCardProps {
-  customer: any;
+  customer: {
+    name: string;
+    customerId: string;
+    vipExpiryDate?: Date | string | null;
+    [key: string]: any;
+  };
   vipCardNumber: string;
   vipBgSrc: string;
   baseUrl?: string;
 }
 
+// ─── Helpers ──────────────────────────────────────────────────────────
+
+/** Format a 16-digit card number into spaced groups of 4. */
+function formatCardNumber(num: string): string {
+  return (
+    num.match(/.{1,4}/g)?.join("\u2003") ?? "####\u2003####\u2003####\u2003####"
+  );
+}
+
+/** Format expiry date to MM/YY. */
+function formatExpiry(date?: Date | string | null): string {
+  if (!date) return "MM/YY";
+  const d = new Date(date);
+  return new Intl.DateTimeFormat("en-US", {
+    month: "2-digit",
+    year: "2-digit",
+  }).format(d);
+}
+
+// ─── Component ────────────────────────────────────────────────────────
+
+/**
+ * VipFlipCard
+ *
+ * A credit-card-style flip component. Tap/click toggles between front
+ * (card number, holder, expiry) and back (QR, customer ID, barcode).
+ *
+ * ## Flip animation
+ * 1. The outer wrapper sets `perspective: 1200px` to establish a 3-D
+ *    rendering context.
+ * 2. The inner "card body" uses `transform-style: preserve-3d` so both
+ *    child faces live in the same 3-D space.
+ * 3. On click, the card body transitions `transform: rotateY(0 → 180deg)`.
+ * 4. Each face has `backface-visibility: hidden`; the back face starts at
+ *    `rotateY(180deg)` so it's pre-flipped — only becoming visible when
+ *    the parent rotates it into view.
+ * 5. `transition-duration: 700ms` with an ease-in-out curve gives a smooth,
+ *    satisfying flip.
+ */
 export function VipFlipCard({
   customer,
   vipCardNumber,
@@ -20,177 +65,167 @@ export function VipFlipCard({
 
   return (
     <div
-      className="flex justify-center w-full px-2 group"
-      style={{ perspective: "1000px" }}
+      className="relative flex flex-col items-center w-full px-2"
+      style={{ perspective: "1200px" }}
     >
+      {/* ── Card body (flips on click) ─────────────────────────────── */}
       <div
-        className="relative w-full max-w-[420px] aspect-[1.586/1] cursor-pointer transition-transform duration-700 ease-in-out"
+        className="relative w-full max-w-[420px] cursor-pointer"
         style={{
+          aspectRatio: "1.586 / 1", // standard credit-card ratio
           transformStyle: "preserve-3d",
+          WebkitTransformStyle: "preserve-3d",
           transform: isFlipped ? "rotateY(180deg)" : "rotateY(0deg)",
+          transition: "transform 700ms ease-in-out",
         }}
-        onClick={() => setIsFlipped(!isFlipped)}
+        onClick={() => setIsFlipped((f) => !f)}
       >
-        {/* Front Card */}
+        {/* ════════════════════════════════════════════════════════════
+            FRONT FACE
+           ════════════════════════════════════════════════════════════ */}
         <div
-          className="absolute inset-0 w-full h-full rounded-2xl shadow-2xl overflow-hidden text-white select-none border border-white/10"
+          className="absolute inset-0 rounded-xl shadow-2xl shadow-blue-900/50 overflow-hidden"
           style={{
             backfaceVisibility: "hidden",
+            WebkitBackfaceVisibility: "hidden",
             backgroundImage: "url('/vip-card.jpeg')",
             backgroundSize: "cover",
             backgroundPosition: "center",
           }}
         >
-          <div className="absolute inset-0 bg-black/20 pointer-events-none"></div>
+          {/* Slight gradient overlay to lift text off the busy background */}
+          <div className="absolute inset-0 bg-gradient-to-br from-[#001540]/30 via-transparent to-[#001540]/20 pointer-events-none" />
 
-          <div className="relative z-10 h-full w-full p-4 sm:p-6 flex flex-col justify-between">
-            {/* Header */}
+          <div className="relative z-10 h-full w-full flex flex-col justify-between p-[6%] text-white select-none">
+            {/* ── Top row: Brand + VIP badge ───────────────────────── */}
             <div className="flex justify-between items-start">
-              <div
-                className="text-white font-black text-sm min-[360px]:text-lg sm:text-2xl tracking-wide drop-shadow-xl"
-                style={{ textShadow: "2px 2px 4px rgba(0,0,0,0.8)" }}
-              >
+              <span className="font-black text-[clamp(11px,3.5vw,18px)] tracking-tight leading-none drop-shadow-md">
                 SE ELECTRONICS
-              </div>
-              <div className="flex items-center gap-1.5 sm:gap-3 border border-white/30 rounded-lg px-1.5 sm:px-3 py-1 sm:py-1.5 bg-transparent backdrop-blur-sm">
-                <div className="text-right flex flex-col justify-center">
-                  <div className="font-bold text-[10px] sm:text-base leading-tight tracking-wider">
+              </span>
+
+              <div className="flex items-center gap-1.5 sm:gap-2.5">
+                <div className="flex flex-col items-end -space-y-px">
+                  <span className="font-black text-[clamp(9px,2.8vw,16px)] tracking-tight leading-none drop-shadow-md">
                     VIP CARD
-                  </div>
-                  <div className="text-[6px] sm:text-[9px] font-semibold tracking-widest text-blue-100 uppercase">
-                    MEMBER SHIP
-                  </div>
+                  </span>
+                  <span className="text-blue-100/80 font-bold text-[clamp(4px,1.3vw,7px)] uppercase tracking-[0.18em] drop-shadow-sm">
+                    Membership
+                  </span>
                 </div>
-                <div className="w-px h-5 sm:h-8 bg-white/20"></div>
-                <Crown className="text-white drop-shadow-md w-3 h-3 sm:w-[22px] sm:h-[22px]" />
+                <div className="h-4 sm:h-7 w-px bg-white/25" />
+                <Crown className="w-3.5 h-3.5 sm:w-6 sm:h-6 text-white drop-shadow-md" />
               </div>
             </div>
 
-            {/* Card Number */}
-            <div className="w-full flex justify-start mt-3 sm:mt-6">
-              <div className="text-base min-[360px]:text-xl sm:text-[27px] tracking-[0.15em] sm:tracking-[0.2em] font-medium drop-shadow-md">
-                {vipCardNumber
-                  ? vipCardNumber.match(/.{1,4}/g)?.join(" ")
-                  : "2880 7545 6450 2467"}
-              </div>
+            {/* ── Card number ──────────────────────────────────────── */}
+            <p className="font-mono font-bold text-[clamp(13px,4.2vw,24px)] tracking-[0.12em] sm:tracking-[0.18em] text-white drop-shadow-xl mt-auto mb-auto leading-none">
+              {formatCardNumber(vipCardNumber)}
+            </p>
+
+            {/* ── Expiry ───────────────────────────────────────────── */}
+            <div className="flex items-center gap-1.5 sm:gap-2.5 -mt-1">
+              <span className="font-black text-[clamp(5px,1.5vw,9px)] uppercase text-white/80 leading-none">
+                Expires in
+              </span>
+              <span className="font-bold text-[clamp(6px,1.7vw,10px)] tracking-widest text-white drop-shadow-md">
+                {formatExpiry(customer.vipExpiryDate)}
+              </span>
             </div>
 
-            {/* Expiry */}
-            <div className="w-full flex justify-end pr-2 sm:pr-8 mt-1">
-              <div className="flex items-center gap-1 sm:gap-2">
-                <div className="flex flex-col text-[6px] sm:text-[8px] font-bold text-right leading-none tracking-widest drop-shadow-md">
-                  <span>EXPIRES</span>
-                  <span>END</span>
-                </div>
-                <div className="text-xs sm:text-lg font-medium tracking-wider drop-shadow-md">
-                  {customer?.vipExpiryDate
-                    ? new Intl.DateTimeFormat("en-US", {
-                        month: "2-digit",
-                        year: "2-digit",
-                      }).format(new Date(customer.vipExpiryDate))
-                    : "05/27"}
-                </div>
-              </div>
-            </div>
-
-            {/* Footer */}
+            {/* ── Bottom row: Holder + logo placeholder ────────────── */}
             <div className="flex justify-between items-end">
-              <div className="flex flex-col">
-                <span className="text-[7px] sm:text-[10px] md:text-xs text-blue-300 uppercase tracking-widest font-bold mb-0.5">
-                  CARD HOLDER
-                </span>
-                <span className="text-xs sm:text-sm md:text-base font-bold uppercase tracking-wider drop-shadow-md">
+              <div className="max-w-[65%]">
+                <p className="text-[clamp(7px,1.8vw,11px)] uppercase tracking-[0.08em] font-bold text-blue-100/60 leading-none mb-0.5 sm:mb-1">
+                  Card Holder
+                </p>
+                <p className="font-bold text-[clamp(9px,2.5vw,16px)] uppercase tracking-wider text-white drop-shadow-lg truncate leading-tight">
                   {customer.name}
-                </span>
+                </p>
               </div>
+              {/* The SE IPS BD logo is baked into the background image at bottom-right */}
             </div>
           </div>
         </div>
 
-        {/* Back Card */}
+        {/* ════════════════════════════════════════════════════════════
+            BACK FACE
+           ════════════════════════════════════════════════════════════ */}
         <div
-          className="absolute inset-0 w-full h-full rounded-2xl shadow-2xl overflow-hidden text-white select-none border border-white/10"
+          className="absolute inset-0 rounded-xl shadow-2xl shadow-blue-900/50 overflow-hidden"
           style={{
             backfaceVisibility: "hidden",
+            WebkitBackfaceVisibility: "hidden",
             transform: "rotateY(180deg)",
             backgroundImage: `url(${vipBgSrc})`,
             backgroundSize: "cover",
             backgroundPosition: "center",
           }}
         >
-          <div className="absolute inset-0 bg-black/20 pointer-events-none"></div>
+          <div className="absolute inset-0 bg-black/5 pointer-events-none" />
 
-          <div className="relative z-10 h-full w-full flex flex-col">
-            <div className="h-3 sm:h-6 w-full"></div>
+          <div className="relative z-10 h-full w-full flex flex-col select-none">
+            {/* ── Spacer to clear the BG's built-in white strip ─────── */}
+            <div className="h-[9.5%] sm:h-[10%]" />
 
-            {/* White Strip */}
-            <div className="bg-white text-[#0A1128] w-full py-1.5 sm:py-2 px-4 sm:px-6 shadow-sm flex items-center">
-              <span className="font-extrabold text-[10px] min-[360px]:text-xs sm:text-[17px] tracking-wide uppercase">
-                SE ELECTRONICS VIP MEMBERSHIP CARD
+            {/* ── Title strip ──────────────────────────────────────── */}
+            <div className=" w-full py-1 sm:py-2 px-3 flex justify-center items-center shadow-sm">
+              <span className="font-black text-[#0A1128] text-lg tracking-tight uppercase text-center leading-tight">
+                SE Electronics VIP Membership Card
               </span>
             </div>
 
-            <div className="flex-1 px-4 sm:px-6 py-1.5 sm:py-2 flex flex-col justify-between">
-              <div>
-                <div className="font-semibold text-[9px] sm:text-sm tracking-widest uppercase mb-2 sm:mb-4 drop-shadow-md">
-                  CUSTOMER ID - {customer.customerId}
-                </div>
-
-                <div className="flex items-end gap-2 sm:gap-4">
-                  {/* QR Section */}
-                  <div className="flex flex-col items-center gap-0.5 sm:gap-1">
-                    <div className="text-white text-[7px] sm:text-[10px] leading-tight font-medium text-center">
-                      scan customer
-                      <br />
-                      profile login
-                    </div>
-                    <div className="bg-white p-0.5 sm:p-1 rounded-sm w-12 h-12 sm:w-20 sm:h-20 shadow-md">
-                      <img
-                        src={`https://api.qrserver.com/v1/create-qr-code/?size=100x100&data=${baseUrl}/customer/profile`}
-                        alt="QR Code"
-                        className="w-full h-full opacity-90"
-                      />
-                    </div>
-                  </div>
-
-                  {/* Barcode Section */}
-                  <div className="flex-1 h-8 sm:h-14 bg-white rounded-sm flex items-center justify-center p-1 sm:p-2 shadow-md">
-                    <div
-                      className="w-full h-full opacity-90"
-                      style={{
-                        backgroundImage: `repeating-linear-gradient(to right, 
-                          #000 0, #000 2px, transparent 2px, transparent 4px,
-                          #000 4px, #000 5px, transparent 5px, transparent 8px,
-                          #000 8px, #000 12px, transparent 12px, transparent 13px,
-                          #000 13px, #000 16px, transparent 16px, transparent 20px,
-                          #000 20px, #000 21px, transparent 21px, transparent 23px,
-                          #000 23px, #000 26px, transparent 26px, transparent 27px,
-                          #000 27px, #000 30px, transparent 30px, transparent 32px
-                        )`,
-                        backgroundSize: "32px 100%",
-                      }}
-                    ></div>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            {/* Footer Section */}
-            <div className="bg-[#050A1A]/80 backdrop-blur-md w-full py-2 sm:py-4 px-4 sm:px-6 flex justify-between items-center border-t border-white/10">
-              <div className="text-[7px] sm:text-[11px] leading-tight font-medium text-white/90">
-                <p className="mb-0.5">
-                  Customer care: 09649355555, 01322247774
+            {/* ── Middle: QR + Customer ID / Barcode ───────────────── */}
+            <div className="flex-1 flex items-stretch  px-[5%] py-5 gap-[4%]">
+              {/* QR Code */}
+              <div className="flex flex-col items-center flex-shrink-0 w-[26%] max-w-[90px]">
+                <p className="text-white text-[clamp(4px,1.2vw,8px)] font-semibold text-center leading-[1.15] mb-0.5 sm:mb-1">
+                  scan customer
+                  <br />
+                  profile login
                 </p>
-                <p>Office: Airport road, Badam Bagicha 2 No Road, Sylhet</p>
+                <div className="bg-white p-[3px] sm:p-1 rounded-sm w-full aspect-square shadow-lg border sm:border-2 border-blue-500/70">
+                  <img
+                    src={`https://api.qrserver.com/v1/create-qr-code/?size=120x120&data=${baseUrl}/customer/profile`}
+                    alt="QR Code — scan to login"
+                    className="w-full h-full object-contain"
+                    loading="lazy"
+                  />
+                </div>
               </div>
-              <Crown className="text-white opacity-90 ml-1 sm:ml-2 w-3 h-3 sm:w-[22px] sm:h-[22px]" />
+
+              {/* Customer ID + Barcode */}
+              <div className="flex flex-col flex-1 min-w-0 justify-center gap-1 sm:gap-1.5 text-white">
+                <p className="font-bold text-[clamp(7px,2vw,14px)] tracking-wide uppercase drop-shadow-md truncate leading-none">
+                  Customer ID - {customer.customerId}
+                </p>
+
+                {/* CSS barcode — repeating-linear-gradient of varied-width bars */}
+                <div
+                  className="w-full h-5 sm:h-9 rounded-[1px]"
+                  style={{
+                    backgroundImage: `repeating-linear-gradient(to right,
+                      #000 0px, #000 1.5px, transparent 1.5px, transparent 3px,
+                      #000 3px, #000 4px, transparent 4px, transparent 6px,
+                      #000 6px, #000 9px, transparent 9px, transparent 10px,
+                      #000 10px, #000 12px, transparent 12px, transparent 15px,
+                      #000 15px, #000 16px, transparent 16px, transparent 17px,
+                      #000 17px, #000 20px, transparent 20px, transparent 21px,
+                      #000 21px, #000 23px, transparent 23px, transparent 24px
+                    )`,
+                    backgroundSize: "24px 100%",
+                  }}
+                  aria-hidden="true"
+                />
+              </div>
             </div>
           </div>
         </div>
       </div>
-      <div className="absolute -bottom-8 text-xs text-gray-500 font-medium tracking-wider flex items-center justify-center opacity-70">
+
+      {/* ── Hint label ────────────────────────────────────────────── */}
+      <p className="mt-4 text-xs text-gray-400 font-medium tracking-wider select-none animate-pulse">
         Tap to flip card
-      </div>
+      </p>
     </div>
   );
 }
