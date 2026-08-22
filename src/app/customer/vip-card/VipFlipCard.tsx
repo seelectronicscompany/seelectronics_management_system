@@ -117,49 +117,49 @@ export function VipFlipCard({
           {/* Slight gradient overlay to lift text off the busy background */}
           <div className="absolute inset-0 bg-gradient-to-br from-[#001540]/30 via-transparent to-[#001540]/20 pointer-events-none" />
 
-          <div className="relative z-10 h-full w-full flex flex-col justify-between p-[6%] text-white select-none">
+          <div className="relative z-10 h-full w-full flex flex-col justify-between p-[5%] text-white select-none">
             {/* ── Top row: Brand + VIP badge ───────────────────────── */}
-            <div className="flex justify-between items-start">
-              <span className="font-black text-[clamp(11px,3.5vw,18px)] tracking-tight leading-none drop-shadow-md">
+            <div className="flex justify-between items-center">
+              <span className="font-black text-xl tracking-tight leading-none drop-shadow-md">
                 SE ELECTRONICS
               </span>
 
-              <div className="flex items-center gap-1.5 sm:gap-2.5">
+              <div className="flex items-center justify-center gap-1.5 sm:gap-2.5 p-2 rounded-md border border-white/20 backdrop-blur-md bg-white/10 shadow-lg">
                 <div className="flex flex-col items-end -space-y-px">
-                  <span className="font-black text-[clamp(9px,2.8vw,16px)] tracking-tight leading-none drop-shadow-md">
+                  <span className="font-black text-sm tracking-tight leading-none drop-shadow-md">
                     VIP CARD
                   </span>
-                  <span className="text-blue-100/80 font-bold text-[clamp(4px,1.3vw,7px)] uppercase tracking-[0.18em] drop-shadow-sm">
+                  <span className="text-blue-100/80 font-bold text-[7px] uppercase tracking-[0.18em] drop-shadow-sm">
                     Membership
                   </span>
                 </div>
-                <div className="h-4 sm:h-7 w-px bg-white/25" />
-                <Crown className="w-3.5 h-3.5 sm:w-6 sm:h-6 text-white drop-shadow-md" />
+                <div className="h-8 sm:h-7 w-px bg-white/25" />
+                <Crown className=" text-white drop-shadow-md" size={30} />
               </div>
             </div>
 
             {/* ── Card number ──────────────────────────────────────── */}
-            <p className="font-mono font-bold text-[clamp(13px,4.2vw,24px)] tracking-[0.12em] sm:tracking-[0.18em] text-white drop-shadow-xl mt-auto mb-auto leading-none">
+            <p className="font-mono font-bold text-lg tracking-[0.12em] sm:tracking-[0.18em] text-white drop-shadow-xl  leading-none">
               {formatCardNumber(vipCardNumber)}
             </p>
 
             {/* ── Expiry ───────────────────────────────────────────── */}
             <div className="flex items-center gap-1.5 sm:gap-2.5 -mt-1">
-              <span className="font-black text-[clamp(5px,1.5vw,9px)] uppercase text-white/80 leading-none">
+              <span className="font-black text-[10px] sm:text-sm uppercase text-white/80 leading-none">
                 Expires in
               </span>
-              <span className="font-bold text-[clamp(6px,1.7vw,10px)] tracking-widest text-white drop-shadow-md">
+              <span className="font-bold text-[11px] sm:text-sm tracking-widest text-white drop-shadow-md">
                 {formatExpiry(customer.vipExpiryDate)}
               </span>
             </div>
 
             {/* ── Bottom row: Holder + logo placeholder ────────────── */}
-            <div className="flex justify-between items-end">
+            <div className="flex justify-between items-end ">
               <div className="max-w-[65%]">
-                <p className="text-[clamp(7px,1.8vw,11px)] uppercase tracking-[0.08em] font-bold text-blue-100/60 leading-none mb-0.5 sm:mb-1">
+                <p className="text-xl uppercase tracking-[0.08em] font-bold text-blue-100/60 leading-none mb-4">
                   Card Holder
                 </p>
-                <p className="font-bold text-[clamp(9px,2.5vw,16px)] uppercase tracking-wider text-white drop-shadow-lg truncate leading-tight">
+                <p className="font-bold text-sm uppercase tracking-wider text-white drop-shadow-lg leading-tight">
                   {customer.name}
                 </p>
               </div>
