@@ -1,7 +1,8 @@
 "use client";
 
 import { Crown } from "lucide-react";
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
+import JsBarcode from "jsbarcode";
 
 // ─── Types ────────────────────────────────────────────────────────────
 interface VipFlipCardProps {
@@ -62,6 +63,26 @@ export function VipFlipCard({
   baseUrl = "",
 }: VipFlipCardProps) {
   const [isFlipped, setIsFlipped] = useState(false);
+  const barcodeRef = useRef<SVGSVGElement>(null);
+
+  useEffect(() => {
+    if (barcodeRef.current && customer?.customerId) {
+      try {
+        const barcodeValue = `${baseUrl}/customers?query=${customer.customerId}`;
+        JsBarcode(barcodeRef.current, barcodeValue, {
+          format: "CODE128",
+          lineColor: "#ffffff",
+          background: "transparent",
+          displayValue: false,
+          margin: 0,
+          width: 2,
+          height: 150,
+        });
+      } catch (e) {
+        console.error("Barcode generation failed", e);
+      }
+    }
+  }, [customer?.customerId, baseUrl]);
 
   return (
     <div
@@ -199,23 +220,14 @@ export function VipFlipCard({
                   Customer ID - {customer.customerId}
                 </p>
 
-                {/* CSS barcode — repeating-linear-gradient of varied-width bars */}
-                <div
-                  className="w-full h-5 sm:h-9 rounded-[1px]"
-                  style={{
-                    backgroundImage: `repeating-linear-gradient(to right,
-                      #000 0px, #000 1.5px, transparent 1.5px, transparent 3px,
-                      #000 3px, #000 4px, transparent 4px, transparent 6px,
-                      #000 6px, #000 9px, transparent 9px, transparent 10px,
-                      #000 10px, #000 12px, transparent 12px, transparent 15px,
-                      #000 15px, #000 16px, transparent 16px, transparent 17px,
-                      #000 17px, #000 20px, transparent 20px, transparent 21px,
-                      #000 21px, #000 23px, transparent 23px, transparent 24px
-                    )`,
-                    backgroundSize: "24px 100%",
-                  }}
-                  aria-hidden="true"
-                />
+                {/* Dynamic jsbarcode rendering */}
+                <div className="w-full h-12 sm:h-16 rounded-[1px] flex items-center mt-0.5">
+                  <svg
+                    ref={barcodeRef}
+                    className="w-full h-full object-fill sm:object-contain sm:object-left"
+                    aria-hidden="true"
+                  />
+                </div>
               </div>
             </div>
           </div>
