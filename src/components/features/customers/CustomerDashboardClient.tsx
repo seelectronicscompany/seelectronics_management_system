@@ -224,7 +224,7 @@ export default function CustomerDashboardClient({
 
         {/* Customer Info Card */}
         <div
-          className={`relative rounded-md p-4 sm:p-6 border overflow-hidden transition-all duration-300 shadow-sm flex flex-col gap-2 ${
+          className={`relative rounded-md p-4 sm:p-6 border overflow-hidden transition-all duration-300 shadow-sm flex flex-col  ${
             isWarrantyExpired || isDashboardDisabled
               ? "bg-red-50 border-red-300"
               : "bg-white"
@@ -235,8 +235,8 @@ export default function CustomerDashboardClient({
             <div
               className={`inline-flex items-center text-[10px] sm:text-xs px-3 py-1.5 rounded font-extrabold uppercase tracking-wider border ${
                 isWarrantyExpired
-                  ? "bg-green-50 text-green-600 border-green-300"
-                  : "bg-red-50 text-red-600 border-red-300"
+                  ? "bg-red-50 text-red-600 border-red-300"
+                  : "bg-green-50 text-green-600 border-green-300"
               }`}
             >
               <span className="mr-2 text-lg leading-none mt-[-2px]">•</span>{" "}
@@ -252,7 +252,7 @@ export default function CustomerDashboardClient({
               <span
                 className={clsx(
                   "text-[11px] font-semibold",
-                  isWarrantyExpired ? "text-red-600" : "text-red-600",
+                  isWarrantyExpired ? "text-red-600" : "text-green-600",
                 )}
               >
                 {isDashboardDisabled
@@ -297,28 +297,27 @@ export default function CustomerDashboardClient({
                   <span className="text-[10px] uppercase text-gray-400 font-bold tracking-widest">
                     Phone
                   </span>
-                  <span className="text-gray-800 text-xs sm:text-sm font-black leading-tight truncate">
+                  <span className="text-gray-800 text-sm sm:text-sm font-black leading-tight truncate">
                     {customer.phone}
                   </span>
                 </div>
               </div>
 
               {/* Due Amount */}
-              <div className="relative px-3 py-2 col-span-3 rounded-md flex items-center gap-3 min-w-0 mt-1">
-                {/* Glowing background for the whole box */}
-                <div className="absolute inset-0 bg-red-50 rounded-md shadow-[0_0_15px_rgba(239,68,68,0.5)]  border border-red-300"></div>
+              <div className="flex items-center gap-2.5 px-3 py-2 col-span-3 rounded-sm bg-[#FFEAEA] border border-[#FFD5D5] shadow-[0_0_12px_rgba(239,68,68,0.3)] min-w-0">
+                <div className="flex items-center justify-center p-2 rounded-lg bg-[#FFF5F5] shrink-0 shadow-[0_0_8px_rgba(239,68,68,0.2)]">
+                  <Banknote
+                    className="text-[#D32F2F] drop-shadow-[0_0_4px_rgba(211,47,47,0.4)]"
+                    size={22}
+                  />
+                </div>
 
-                <Banknote
-                  className="relative text-red-600 drop-shadow-[0_0_8px_rgba(239,68,68,0.9)] animate-pulse"
-                  size={26}
-                />
-
-                <div className="relative flex flex-col min-w-0">
-                  <span className="text-sm font-black text-red-600 leading-tight drop-shadow-[0_0_2px_rgba(239,68,68,0.4)]">
+                <div className="flex flex-col min-w-0">
+                  <span className="text-sm font-bold text-[#D32F2F] leading-tight truncate">
                     ৳{stats.dueAmount.toLocaleString()}
                   </span>
-                  <span className="text-[10px] uppercase font-bold text-red-500 tracking-widest">
-                    Due
+                  <span className="text-[10px] uppercase font-bold text-[#E57373] tracking-wider leading-tight">
+                    DUE
                   </span>
                 </div>
               </div>

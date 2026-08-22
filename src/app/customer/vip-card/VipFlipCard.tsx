@@ -235,8 +235,8 @@ export function VipFlipCard({
       </div>
 
       {/* ── Hint label ────────────────────────────────────────────── */}
-      <p className="mt-4 text-xs text-gray-400 font-medium tracking-wider select-none animate-pulse">
-        Tap to flip card
+      <p className="mt-4 text-base text-gray-700 font-medium tracking-wider select-none animate-pulse">
+        কার্ড উল্টাতে ট্যাপ করুন
       </p>
     </div>
   );
