@@ -199,10 +199,10 @@ export function VipFlipCard({
             <div className="flex-1 flex items-stretch  px-[5%] py-6 gap-[4%]">
               {/* QR Code */}
               <div className="flex flex-col items-center flex-shrink-0 w-[26%] max-w-[90px]">
-                <p className="text-white text-[clamp(4px,1.2vw,8px)] font-semibold text-center leading-[1.15] mb-0.5 sm:mb-1">
-                  scan customer
+                <p className="text-white text-[10px] font-semibold text-center leading-[1.15] mb-0.5 sm:mb-1">
+                  Scan customer
                   <br />
-                  profile login
+                  Profile login
                 </p>
                 <div className="bg-white p-[3px] sm:p-1 rounded-sm w-full aspect-square shadow-lg border sm:border-2 border-blue-500/70">
                   <img

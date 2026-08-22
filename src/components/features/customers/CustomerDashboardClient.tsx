@@ -224,7 +224,7 @@ export default function CustomerDashboardClient({
 
         {/* Customer Info Card */}
         <div
-          className={`relative rounded-md p-4 sm:p-6 border overflow-hidden transition-all duration-300 shadow-sm flex flex-col gap-4 ${
+          className={`relative rounded-md p-4 sm:p-6 border overflow-hidden transition-all duration-300 shadow-sm flex flex-col gap-2 ${
             isWarrantyExpired || isDashboardDisabled
               ? "bg-red-50 border-red-300"
               : "bg-white"
@@ -235,7 +235,7 @@ export default function CustomerDashboardClient({
             <div
               className={`inline-flex items-center text-[10px] sm:text-xs px-3 py-1.5 rounded font-extrabold uppercase tracking-wider border ${
                 isWarrantyExpired
-                  ? "bg-red-50 text-red-600 border-red-300"
+                  ? "bg-green-50 text-green-600 border-green-300"
                   : "bg-red-50 text-red-600 border-red-300"
               }`}
             >
