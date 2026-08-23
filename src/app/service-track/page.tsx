@@ -411,6 +411,10 @@ export default async function ServiceTrackPage({
       : session?.role === "staff"
         ? "/staff/profile"
         : null;
+
+  const isWarrantyValid = serviceData?.warrantyExpiryDate
+    ? new Date(serviceData.warrantyExpiryDate) >= new Date()
+    : false;
   return (
     <div className="bg-black h-screen overflow-y-auto">
       <ServiceTrackingPageThemeColor />
@@ -456,14 +460,10 @@ export default async function ServiceTrackPage({
                   <span
                     className={clsx(
                       "font-bold truncate",
-                      serviceData?.customer?.isWarrantyStopped
-                        ? "text-red-400"
-                        : "text-green-400",
+                      isWarrantyValid ? "text-green-400" : "text-red-400",
                     )}
                   >
-                    {serviceData?.customer?.isWarrantyStopped
-                      ? "ওয়ারেন্টি বাতিল"
-                      : "ওয়ারেন্টি চালু আছে"}
+                    {isWarrantyValid ? "ওয়ারেন্টি চালু আছে" : "ওয়ারেন্টি শেষ"}
                   </span>
                 </div>
                 {serviceData?.warrantyExpiryDate && (
