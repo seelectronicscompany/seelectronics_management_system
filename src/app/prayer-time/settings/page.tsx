@@ -3,40 +3,33 @@
 import React, { useState, useEffect } from "react";
 import { ArrowLeft, MapPin } from "lucide-react";
 import { useRouter } from "next/navigation";
+import {
+  bdLocations,
+  getSavedPrayerLocation,
+  savePrayerLocation,
+} from "@/utils/prayerLocation";
 
 export default function PrayerTimeSettingsPage() {
   const router = useRouter();
 
   const [showFeature, setShowFeature] = useState(true);
   const [ramadanMode, setRamadanMode] = useState(true);
-  const [district, setDistrict] = useState("লোড হচ্ছে...");
+  const [division, setDivision] = useState("ঢাকা");
+  const [district, setDistrict] = useState("ঢাকা");
   const [madhab, setMadhab] = useState("hanafi");
   const [method, setMethod] = useState("karachi");
 
   useEffect(() => {
-    if (typeof navigator !== "undefined" && "geolocation" in navigator) {
-      navigator.geolocation.getCurrentPosition(
-        async (position) => {
-          const lat = position.coords.latitude;
-          const lng = position.coords.longitude;
-          try {
-            const res = await fetch(
-              `https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${lat}&longitude=${lng}&localityLanguage=bn`,
-            );
-            const data = await res.json();
-            setDistrict(data.city || data.locality || "আপনার অবস্থান");
-          } catch (e) {
-            setDistrict("বর্তমান অবস্থান");
-          }
-        },
-        (error) => {
-          setDistrict("ঢাকা");
-        },
-      );
-    } else {
-      setDistrict("ঢাকা");
-    }
+    const saved = getSavedPrayerLocation();
+    setDivision(saved.division);
+    setDistrict(saved.district);
   }, []);
+
+  const handleLocationChange = (newDivision: string, newDistrict: string) => {
+    const updated = savePrayerLocation(newDivision, newDistrict);
+    setDivision(updated.division);
+    setDistrict(updated.district);
+  };
 
   return (
     <div className="min-h-screen bg-gray-50 pb-10">
@@ -67,15 +60,44 @@ export default function PrayerTimeSettingsPage() {
         </div>
 
         {/* ── District Selection ── */}
-        <div className="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
-          <div className="px-4 py-2 border-b border-gray-100 bg-gray-50/50">
-            <span className="text-gray-600 text-[13px] font-medium">জেলা</span>
-          </div>
-          <div className="p-4 flex justify-between items-center">
-            <span className="text-gray-800 text-[20px] font-semibold">
-              {district}
-            </span>
+        <div className="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden p-4 flex flex-col gap-3">
+          <div className="flex justify-between items-center border-b border-gray-100 pb-2">
+            <div>
+              <span className="text-gray-600 text-[13px] font-medium block">স্থান নির্বাচন (সংরক্ষিত)</span>
+              <span className="text-gray-900 text-[18px] font-bold">{district}, বাংলাদেশ</span>
+            </div>
             <MapPin size={24} className="text-brand" />
+          </div>
+
+          <div className="flex gap-2 pt-1">
+            <div className="flex-1">
+              <label className="text-[12px] text-gray-500 block mb-1">বিভাগ</label>
+              <select
+                value={division}
+                onChange={(e) => {
+                  const newDiv = e.target.value;
+                  const newDist = bdLocations[newDiv]?.[0]?.name || "";
+                  handleLocationChange(newDiv, newDist);
+                }}
+                className="w-full text-xs border rounded-lg p-2 bg-white text-gray-800 outline-none"
+              >
+                {Object.keys(bdLocations).map((d) => (
+                  <option key={d}>{d}</option>
+                ))}
+              </select>
+            </div>
+            <div className="flex-1">
+              <label className="text-[12px] text-gray-500 block mb-1">জেলা</label>
+              <select
+                value={district}
+                onChange={(e) => handleLocationChange(division, e.target.value)}
+                className="w-full text-xs border rounded-lg p-2 bg-white text-gray-800 outline-none"
+              >
+                {bdLocations[division]?.map((d) => (
+                  <option key={d.name}>{d.name}</option>
+                ))}
+              </select>
+            </div>
           </div>
         </div>
 

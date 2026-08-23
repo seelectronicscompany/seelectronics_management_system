@@ -16,6 +16,7 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { getSavedPrayerLocation } from "@/utils/prayerLocation";
 
 interface PrayerTimings {
   Fajr: string;
@@ -100,34 +101,11 @@ export default function PrayerTimePage() {
 
   const [reminderAll, setReminderAll] = useState(false);
 
-  // Get user location
+  // Get saved location from client storage
   useEffect(() => {
-    if (typeof navigator !== "undefined" && "geolocation" in navigator) {
-      navigator.geolocation.getCurrentPosition(
-        async (position) => {
-          const lat = position.coords.latitude;
-          const lng = position.coords.longitude;
-          setCoords({ lat, lng });
-          try {
-            const res = await fetch(
-              `https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${lat}&longitude=${lng}&localityLanguage=bn`,
-            );
-            const data = await res.json();
-            const locName = data.city || data.locality || "আপনার অবস্থান";
-            setLocation(`${locName}, ${data.countryName || "বাংলাদেশ"}`);
-          } catch (e) {
-            setLocation("বর্তমান অবস্থান");
-          }
-        },
-        (error) => {
-          console.log(
-            "Geolocation error or denied, falling back to default.",
-            error,
-          );
-          setLocation("ঢাকা, বাংলাদেশ");
-        },
-      );
-    }
+    const saved = getSavedPrayerLocation();
+    setCoords({ lat: saved.lat, lng: saved.lng });
+    setLocation(saved.locationName);
   }, []);
 
   // Fetch data on date change
