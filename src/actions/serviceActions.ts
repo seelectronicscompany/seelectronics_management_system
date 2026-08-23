@@ -4,6 +4,7 @@ import { ApplicationMessages, ServiceMessages } from "@/constants/messages";
 import { db } from "@/db/drizzle";
 import {
   applications,
+  invoices,
   products,
   serviceStatusHistory,
   services,
@@ -156,6 +157,7 @@ export const getServiceById = async (serviceId: string) => {
         customer: {
           columns: {
             isWarrantyStopped: true,
+            invoiceNumber: true,
           },
         },
       },
@@ -169,6 +171,33 @@ export const getServiceById = async (serviceId: string) => {
       serviceData.customerId !== session.userId
     ) {
       return { success: false, message: "Unauthorized access to service" };
+    }
+
+    let warrantyExpiryDate: Date | null = null;
+    if (serviceData.customer?.invoiceNumber) {
+      const invoice = await db.query.invoices.findFirst({
+        where: eq(invoices.invoiceNumber, serviceData.customer.invoiceNumber),
+        with: {
+          products: {
+            columns: {
+              warrantyStartDate: true,
+              warrantyDurationMonths: true,
+            },
+          },
+        },
+      });
+
+      if (invoice?.products && invoice.products.length > 0) {
+        for (const p of invoice.products) {
+          if (p.warrantyStartDate && p.warrantyDurationMonths) {
+            const expiry = new Date(p.warrantyStartDate);
+            expiry.setMonth(expiry.getMonth() + p.warrantyDurationMonths);
+            if (warrantyExpiryDate === null || expiry > warrantyExpiryDate) {
+              warrantyExpiryDate = expiry;
+            }
+          }
+        }
+      }
     }
 
     const mediaKeys = [
@@ -189,6 +218,7 @@ export const getServiceById = async (serviceId: string) => {
 
     const data = {
       ...serviceData,
+      warrantyExpiryDate,
       productFrontPhotoUrl: serviceData.productFrontPhotoKey
         ? mediaMap[serviceData.productFrontPhotoKey]
         : null,

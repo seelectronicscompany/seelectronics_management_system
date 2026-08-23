@@ -6,7 +6,7 @@ import {
 } from "@/components";
 import { contactDetails } from "@/constants";
 import { verifySession } from "@/lib";
-import { AppError, renderText } from "@/utils";
+import { AppError, formatDate, renderText } from "@/utils";
 import clsx from "clsx";
 import Link from "next/link";
 import { notFound } from "next/navigation";
@@ -466,6 +466,15 @@ export default async function ServiceTrackPage({
                       : "ওয়ারেন্টি চালু আছে"}
                   </span>
                 </div>
+                {serviceData?.warrantyExpiryDate && (
+                  <div className="flex">
+                    <span className="w-28 flex-shrink-0">মেয়াদ উত্তীর্ণ</span>
+                    <span className="mr-2 flex-shrink-0">:</span>
+                    <span className="font-bold truncate text-gray-200">
+                      {formatDate(serviceData.warrantyExpiryDate)}
+                    </span>
+                  </div>
+                )}
               </div>
             </div>
           </div>
