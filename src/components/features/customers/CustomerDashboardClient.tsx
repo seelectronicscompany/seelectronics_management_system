@@ -15,6 +15,7 @@ import {
   Crown,
   FileText,
   Home,
+  Loader2,
   LocateIcon,
   LogOut,
   MapPin,
@@ -64,6 +65,14 @@ export default function CustomerDashboardClient({
 }: CustomerDashboardClientProps) {
   const [showPopup, setShowPopup] = useState(false);
   const [showSeIpsModal, setShowSeIpsModal] = useState(false);
+  const [loadingTarget, setLoadingTarget] = useState<string | null>(null);
+
+  const handleRedirect = (url: string, targetName: string) => {
+    setLoadingTarget(targetName);
+    setTimeout(() => {
+      window.location.href = url;
+    }, 600);
+  };
   // ✅ Dashboard and Warranty logic
   const isWarrantyExpired = stats?.isWarrantyExpired ?? false;
   const isDashboardDisabled = customer.isWarrantyStopped ?? false;
@@ -542,27 +551,43 @@ export default function CustomerDashboardClient({
             </p>
 
             <div className="flex flex-col gap-3">
-              <a
-                href="https://seipsbd.com/"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="w-full bg-amber-500 hover:bg-amber-600 text-white font-bold py-3 rounded-xl transition-all shadow-md flex items-center justify-center gap-2"
+              <button
+                disabled={!!loadingTarget}
+                onClick={() => handleRedirect("https://seipsbd.com/", "seips")}
+                className="w-full bg-amber-500 hover:bg-amber-600 disabled:opacity-70 text-white font-bold py-3 rounded-xl transition-all shadow-md flex items-center justify-center gap-2"
               >
-                SE IPS
-              </a>
-              <a
-                href="https://semartbd.com/"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 rounded-xl transition-all shadow-md flex items-center justify-center gap-2"
+                {loadingTarget === "seips" ? (
+                  <>
+                    <Loader2 className="size-5 animate-spin" />
+                    <span>Redirecting...</span>
+                  </>
+                ) : (
+                  "SE IPS"
+                )}
+              </button>
+              <button
+                disabled={!!loadingTarget}
+                onClick={() => handleRedirect("https://semartbd.com/", "semart")}
+                className="w-full bg-blue-600 hover:bg-blue-700 disabled:opacity-70 text-white font-bold py-3 rounded-xl transition-all shadow-md flex items-center justify-center gap-2"
               >
-                SE MART
-              </a>
+                {loadingTarget === "semart" ? (
+                  <>
+                    <Loader2 className="size-5 animate-spin" />
+                    <span>Redirecting...</span>
+                  </>
+                ) : (
+                  "SE MART"
+                )}
+              </button>
             </div>
 
             <button
-              onClick={() => setShowSeIpsModal(false)}
-              className="mt-4 w-full bg-gray-100 hover:bg-gray-200 text-gray-700 font-semibold py-2.5 rounded-xl transition-colors text-sm"
+              disabled={!!loadingTarget}
+              onClick={() => {
+                setShowSeIpsModal(false);
+                setLoadingTarget(null);
+              }}
+              className="mt-4 w-full bg-gray-100 hover:bg-gray-200 text-gray-700 font-semibold py-2.5 rounded-xl transition-colors text-sm disabled:opacity-50"
             >
               Close
             </button>

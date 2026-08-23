@@ -8,6 +8,7 @@ import { contactDetails } from "@/constants";
 import { verifySession } from "@/lib";
 import { AppError, formatDate, renderText } from "@/utils";
 import clsx from "clsx";
+import { AlertTriangle } from "lucide-react";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
@@ -454,15 +455,18 @@ export default async function ServiceTrackPage({
                     {contactDetails.headOffice}
                   </span>
                 </div>
-                <div className="flex">
+                <div className="flex items-center">
                   <span className="w-28 flex-shrink-0">পণ্য ওয়ারেন্টি</span>
                   <span className="mr-2 flex-shrink-0">:</span>
                   <span
                     className={clsx(
-                      "font-bold truncate",
+                      "font-bold truncate flex items-center gap-1",
                       isWarrantyValid ? "text-green-400" : "text-red-400",
                     )}
                   >
+                    {!isWarrantyValid && (
+                      <AlertTriangle className="size-4 shrink-0 text-red-500 inline-block" />
+                    )}
                     {isWarrantyValid ? "ওয়ারেন্টি চালু আছে" : "ওয়ারেন্টি শেষ"}
                   </span>
                 </div>
