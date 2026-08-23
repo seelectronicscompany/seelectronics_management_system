@@ -314,7 +314,7 @@ export default function CustomerDashboardClient({
               </div>
 
               {/* Due Amount */}
-              <div className="flex items-center gap-2.5 px-3 py-2 col-span-3 rounded-sm bg-[#FFEAEA] border border-[#FFD5D5] min-w-0">
+              <div className="flex items-center gap-2.5 px-3  col-span-3 rounded-sm bg-[#FFEAEA] border border-[#FFD5D5] min-w-0">
                 <div className="flex items-center animate-pulse justify-center p-2 rounded-lg shrink-0 bg-[#faa1a1]">
                   <Banknote
                     className="text-[#ff0000]   drop-shadow-[0_0_4px_rgba(211,47,47,0.4)]"

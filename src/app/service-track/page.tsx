@@ -450,6 +450,22 @@ export default async function ServiceTrackPage({
                     {contactDetails.headOffice}
                   </span>
                 </div>
+                <div className="flex">
+                  <span className="w-28 flex-shrink-0">পণ্য ওয়ারেন্টি</span>
+                  <span className="mr-2 flex-shrink-0">:</span>
+                  <span
+                    className={clsx(
+                      "font-bold truncate",
+                      serviceData?.customer?.isWarrantyStopped
+                        ? "text-red-400"
+                        : "text-green-400",
+                    )}
+                  >
+                    {serviceData?.customer?.isWarrantyStopped
+                      ? "ওয়ারেন্টি বাতিল"
+                      : "ওয়ারেন্টি চালু আছে"}
+                  </span>
+                </div>
               </div>
             </div>
           </div>

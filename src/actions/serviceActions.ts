@@ -153,6 +153,11 @@ export const getServiceById = async (serviceId: string) => {
             phone: true,
           },
         },
+        customer: {
+          columns: {
+            isWarrantyStopped: true,
+          },
+        },
       },
     });
 
