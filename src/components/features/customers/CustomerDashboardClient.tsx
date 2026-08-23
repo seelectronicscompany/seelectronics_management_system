@@ -8,6 +8,7 @@ import {
   AlertCircle,
   AlertTriangle,
   Banknote,
+  BatteryCharging,
   Boxes,
   CheckCircle,
   Clock,
@@ -22,6 +23,7 @@ import {
   PhoneCall,
   Settings,
   ShieldCheck,
+  ShoppingCart,
   Star,
   User,
   Zap,
@@ -61,6 +63,7 @@ export default function CustomerDashboardClient({
   adminPhone,
 }: CustomerDashboardClientProps) {
   const [showPopup, setShowPopup] = useState(false);
+  const [showSeIpsModal, setShowSeIpsModal] = useState(false);
   // ✅ Dashboard and Warranty logic
   const isWarrantyExpired = stats?.isWarrantyExpired ?? false;
   const isDashboardDisabled = customer.isWarrantyStopped ?? false;
@@ -171,6 +174,13 @@ export default function CustomerDashboardClient({
       href: "/team-members",
       color: "text-blue-500",
       bg: "bg-blue-50",
+    },
+    {
+      label: "Shop",
+      icon: ShoppingCart,
+      isSeIpsModal: true,
+      color: "text-amber-500",
+      bg: "bg-amber-50",
     },
   ];
 
@@ -435,10 +445,33 @@ export default function CustomerDashboardClient({
                 );
               }
 
+              if (action.isSeIpsModal) {
+                return (
+                  <button
+                    key={i}
+                    onClick={() => setShowSeIpsModal(true)}
+                    className="flex flex-col items-center gap-3 group"
+                  >
+                    <div
+                      className={`${action.bg || "bg-gray-50"} ${action.color} size-14 sm:size-20 rounded-2xl sm:rounded-3xl shadow-sm flex items-center justify-center transition-all group-hover:scale-105 group-active:scale-95 animate-in zoom-in-90 duration-300`}
+                      style={{
+                        animationDelay: `${i * 50}ms`,
+                        animationFillMode: "both",
+                      }}
+                    >
+                      <action.icon className="size-6 sm:size-8" />
+                    </div>
+                    <span className="text-[10px] sm:text-xs font-black text-gray-700 uppercase tracking-tighter sm:tracking-normal text-center">
+                      {action.label}
+                    </span>
+                  </button>
+                );
+              }
+
               return (
                 <Link
                   key={i}
-                  href={action.href}
+                  href={action.href || "#"}
                   className="flex flex-col items-center gap-3 group"
                 >
                   <div
@@ -492,6 +525,46 @@ export default function CustomerDashboardClient({
               className="w-full bg-red-500 hover:bg-red-600 text-white font-bold py-3 rounded-lg transition-colors"
             >
               বন্ধ করুন
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* SE IPS Modal */}
+      {showSeIpsModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4">
+          <div className="bg-white rounded-2xl shadow-xl max-w-sm w-full p-6 text-center animate-in zoom-in-95 duration-200 relative">
+            <h3 className="text-xl font-bold text-gray-900 mb-2">
+              Select Service
+            </h3>
+            <p className="text-gray-500 text-sm mb-6 font-medium">
+              Choose where you would like to go
+            </p>
+
+            <div className="flex flex-col gap-3">
+              <a
+                href="https://seipsbd.com/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="w-full bg-amber-500 hover:bg-amber-600 text-white font-bold py-3 rounded-xl transition-all shadow-md flex items-center justify-center gap-2"
+              >
+                SE IPS
+              </a>
+              <a
+                href="https://semartbd.com/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 rounded-xl transition-all shadow-md flex items-center justify-center gap-2"
+              >
+                SE MART
+              </a>
+            </div>
+
+            <button
+              onClick={() => setShowSeIpsModal(false)}
+              className="mt-4 w-full bg-gray-100 hover:bg-gray-200 text-gray-700 font-semibold py-2.5 rounded-xl transition-colors text-sm"
+            >
+              Close
             </button>
           </div>
         </div>
