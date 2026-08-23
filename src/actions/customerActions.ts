@@ -3,7 +3,7 @@
 import { db } from "@/db/drizzle";
 import { customers, services, subscriptions, applications, customerNotifications } from "@/db/schema";
 import { createSession, deleteSession, verifySession } from "@/lib";
-import { eq, and, count, or, ilike } from "drizzle-orm";
+import { eq, and, count, or, ilike, isNull } from "drizzle-orm";
 
 import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
@@ -32,6 +32,33 @@ export const getVipCustomers = async ({ query = '', status = '' }: { query?: str
             orderBy: (customers, { desc }) => [desc(customers.updatedAt)]
         });
 
+        // Auto-fix existing approved VIP customers missing vipExpiryDate or expired
+        for (const customer of data) {
+            if (customer.vipStatus === 'approved') {
+                if (!customer.vipExpiryDate) {
+                    const baseDate = customer.updatedAt || customer.createdAt || new Date();
+                    const expiryDate = new Date(baseDate);
+                    expiryDate.setFullYear(expiryDate.getFullYear() + 1);
+
+                    const finalExpiry = expiryDate < new Date() ? (() => {
+                        const d = new Date();
+                        d.setFullYear(d.getFullYear() + 1);
+                        return d;
+                    })() : expiryDate;
+
+                    await db.update(customers)
+                        .set({ vipExpiryDate: finalExpiry })
+                        .where(eq(customers.customerId, customer.customerId));
+                    customer.vipExpiryDate = finalExpiry;
+                } else if (new Date(customer.vipExpiryDate) < new Date()) {
+                    await db.update(customers)
+                        .set({ vipStatus: 'expired' })
+                        .where(eq(customers.customerId, customer.customerId));
+                    customer.vipStatus = 'expired';
+                }
+            }
+        }
+
         return { success: true, data };
     } catch (error) {
         console.error("Error fetching VIP customers:", error);
@@ -56,6 +83,11 @@ export const updateCustomerVipStatus = async (customerId: string, status: string
                 const { generateVipCardNumber } = await import("@/utils");
                 updates.vipCardNumber = generateVipCardNumber();
             }
+            const expiryDate = new Date();
+            expiryDate.setFullYear(expiryDate.getFullYear() + 1);
+            updates.vipExpiryDate = expiryDate;
+        } else {
+            updates.vipExpiryDate = null;
         }
 
         await db.update(customers)
@@ -136,6 +168,30 @@ export async function verifyCustomerSession(): Promise<{
         return { isAuth: false };
     }
 
+    if (customer.vipStatus === 'approved') {
+        if (!customer.vipExpiryDate) {
+            const baseDate = customer.updatedAt || customer.createdAt || new Date();
+            const expiryDate = new Date(baseDate);
+            expiryDate.setFullYear(expiryDate.getFullYear() + 1);
+
+            const finalExpiry = expiryDate < new Date() ? (() => {
+                const d = new Date();
+                d.setFullYear(d.getFullYear() + 1);
+                return d;
+            })() : expiryDate;
+
+            await db.update(customers)
+                .set({ vipExpiryDate: finalExpiry })
+                .where(eq(customers.customerId, customer.customerId));
+            customer.vipExpiryDate = finalExpiry;
+        } else if (new Date(customer.vipExpiryDate) < new Date()) {
+            await db.update(customers)
+                .set({ vipStatus: 'expired' })
+                .where(eq(customers.customerId, customer.customerId));
+            customer.vipStatus = 'expired';
+        }
+    }
+
     return { 
         isAuth: true, 
         userId: session.userId as string, 
@@ -143,6 +199,48 @@ export async function verifyCustomerSession(): Promise<{
         role: session.role as string,
         customer 
     };
+}
+
+/**
+ * Backfills missing VIP expiry dates for existing approved VIP customers
+ */
+export const backfillExistingVipExpiryDates = async () => {
+    try {
+        const session = await verifySession(false, 'admin');
+        if (!session) return { success: false, message: "Unauthorized" };
+
+        const vipCustomers = await db.query.customers.findMany({
+            where: and(
+                eq(customers.vipStatus, 'approved'),
+                isNull(customers.vipExpiryDate)
+            )
+        });
+
+        let updatedCount = 0;
+        for (const customer of vipCustomers) {
+            const baseDate = customer.updatedAt || customer.createdAt || new Date();
+            const expiryDate = new Date(baseDate);
+            expiryDate.setFullYear(expiryDate.getFullYear() + 1);
+
+            const finalExpiry = expiryDate < new Date() ? (() => {
+                const d = new Date();
+                d.setFullYear(d.getFullYear() + 1);
+                return d;
+            })() : expiryDate;
+
+            await db.update(customers)
+                .set({ vipExpiryDate: finalExpiry })
+                .where(eq(customers.customerId, customer.customerId));
+            updatedCount++;
+        }
+
+        revalidatePath('/vips');
+        revalidatePath('/customers');
+        return { success: true, message: `Successfully updated ${updatedCount} existing VIP customer(s)` };
+    } catch (error) {
+        console.error("Error backfilling VIP expiry dates:", error);
+        return { success: false, message: "Failed to update existing VIP customers" };
+    }
 }
 
 export async function applyForVipCard() {

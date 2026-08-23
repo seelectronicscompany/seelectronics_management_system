@@ -225,16 +225,27 @@ export const updateApplicationStatus = async (applicationId: string, updates: { 
                     break
                 }
                 case 'vip_card_application': {
-                    let vipCardNumber = null;
+                    const customer = await db.query.customers.findFirst({
+                        where: eq(customers.customerId, applicationData[0].applicantId)
+                    });
+
+                    const updates: any = { vipStatus: status };
                     if (status === 'approved') {
-                        vipCardNumber = generateVipCardNumber();
+                        let vipCardNumber = customer?.vipCardNumber;
+                        if (!vipCardNumber) {
+                            vipCardNumber = generateVipCardNumber();
+                        }
+                        const expiryDate = new Date();
+                        expiryDate.setFullYear(expiryDate.getFullYear() + 1);
+
+                        updates.vipCardNumber = vipCardNumber;
+                        updates.vipExpiryDate = expiryDate;
+                    } else {
+                        updates.vipExpiryDate = null;
                     }
 
                     await db.update(customers)
-                        .set({ 
-                            vipStatus: status,
-                            ...(status === 'approved' && { vipCardNumber })
-                        })
+                        .set(updates)
                         .where(eq(customers.customerId, applicationData[0].applicantId));
 
                     if (status === 'approved') {
