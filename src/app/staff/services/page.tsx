@@ -99,7 +99,7 @@ export default async function StaffServicesPage() {
                     </span>
                   </div>
 
-                  <div className="flex flex-wrap items-center justify-between gap-3 pt-4 border-t border-gray-50">
+                  <div className="flex flex-wrap items-center justify-between gap-3  border-t border-gray-50">
                     <div className="flex flex-col">
                       <span className="text-[10px] text-gray-400 font-bold uppercase">
                         Created On

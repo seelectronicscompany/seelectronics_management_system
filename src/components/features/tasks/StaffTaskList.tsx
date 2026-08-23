@@ -145,7 +145,7 @@ export default function StaffTaskList() {
                 setSelectedTask(task);
               }}
               className={clsx(
-                "group w-full flex flex-col gap-3 p-4 bg-white rounded-xl border transition-all text-left shadow-sm hover:shadow-md",
+                "group w-full flex flex-col gap-1 p-4 bg-white rounded-xl border transition-all text-left shadow-sm hover:shadow-md",
                 getVisualStatus(task) === "completed"
                   ? "border-gray-100 opacity-70"
                   : "border-brand/25 hover:border-brand/45",
@@ -185,7 +185,7 @@ export default function StaffTaskList() {
                   </span>
                 </div>
 
-                <h3 className="text-sm sm:text-base font-bold text-gray-900 break-words leading-snug">
+                <h3 className="text-base sm:text-base font-bold text-gray-900 break-words leading-snug">
                   {task.staff?.name ? `${task.staff.name} - ` : ""}
                   {task.title}
                 </h3>
