@@ -134,7 +134,7 @@ export default function StaffNotificationList() {
                 setSelectedItem({ ...item, isRead: true });
               }}
               className={clsx(
-                "group flex items-start sm:items-center gap-3.5 p-3.5 sm:p-4 rounded-xl border transition-all duration-200 cursor-pointer overflow-hidden relative",
+                "group flex items-start sm:items-center gap-3.5 p-3.5 sm:p-4 rounded-lg border transition-all duration-200 cursor-pointer overflow-hidden relative",
                 item.isRead
                   ? "bg-white/60 border-gray-100/80 text-gray-500 opacity-90 hover:opacity-100 hover:bg-white hover:border-gray-200 hover:shadow-sm"
                   : "bg-gradient-to-br from-brand/[0.02] to-brand/[0.05] border-brand/20 shadow-[0_4px_16px_rgba(10,26,58,0.04)] hover:shadow-[0_6px_20px_rgba(10,26,58,0.06)] hover:border-brand/40",
@@ -143,7 +143,7 @@ export default function StaffNotificationList() {
               {/* Icon */}
               <div
                 className={clsx(
-                  "shrink-0 size-9 sm:size-11 rounded-xl flex items-center justify-center text-white shadow-sm transition-transform duration-200 group-hover:scale-105",
+                  "shrink-0 size-9 sm:size-11 rounded-lg flex items-center justify-center text-white shadow-sm transition-transform duration-200 group-hover:scale-105",
                   item.itemType === "action"
                     ? item.type === "balance_added"
                       ? "bg-emerald-500"
