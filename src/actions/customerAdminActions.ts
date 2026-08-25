@@ -119,6 +119,8 @@ export const getCustomerById = async (customerId: string) => {
 /**
  * Creates a new customer record with associated invoice and products
  */
+import { sendVoiceBroadcast } from "@/lib/voice";
+
 export const createCustomer = async (data: any, sendLink = false) => {
   try {
     const session = await verifySession(false, "admin");
@@ -264,9 +266,18 @@ export const createCustomer = async (data: any, sendLink = false) => {
           message: `আপনার রেফারেলে ${data.name} ক্রয় করেছেন। আপনি ৳${Math.floor(info.bonusEarned).toLocaleString()} রেফারেল বোনাস পেয়েছেন!`,
           link: "/customer/referral",
         });
-      } catch (e) {
-        console.error("Failed to notify referrer:", e);
+      } catch (err) {
+        console.error("Failed to notify referrer:", err);
       }
+    }
+
+    // Voice Broadcast for new customer
+    if (result.success && data.phone) {
+      sendVoiceBroadcast({
+        title: "New Customer",
+        broadcast_id: 2796,
+        numbers: [data.phone]
+      }).catch(err => console.error("Voice broadcast failed:", err));
     }
 
     return result;
@@ -511,5 +522,36 @@ export const toggleCustomerDashboard = async (customerId: string) => {
   } catch (error) {
     console.error("Error toggling customer dashboard:", error);
     return { success: false, message: "Failed to toggle customer dashboard" };
+  }
+};
+
+export const sendDueReminderCall = async (customerId: string) => {
+  try {
+    const session = await verifySession(false, "admin");
+    if (!session) return { success: false, message: "Unauthorized" };
+
+    const customerData = await db.query.customers.findFirst({
+      where: eq(customers.customerId, customerId),
+      columns: { phone: true, name: true },
+    });
+
+    if (!customerData || !customerData.phone) {
+      return { success: false, message: "Customer or phone not found" };
+    }
+
+    const res = await sendVoiceBroadcast({
+      title: "Due Reminder - " + customerData.name,
+      broadcast_id: 1525,
+      numbers: [customerData.phone],
+    });
+
+    if (!res.success) {
+      return { success: false, message: res.message || "Failed to send call" };
+    }
+
+    return { success: true, message: "Due reminder call sent successfully" };
+  } catch (error) {
+    console.error("sendDueReminderCall error:", error);
+    return { success: false, message: "Something went wrong" };
   }
 };

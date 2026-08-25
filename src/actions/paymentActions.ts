@@ -246,6 +246,8 @@ export const createPayment = async (
   }
 };
 
+import { sendVoiceBroadcast } from "@/lib/voice";
+
 /**
  * Admin adds virtual money to a staff member's balance.
  * This amount will show as "available balance" in the staff dashboard.
@@ -293,6 +295,12 @@ export async function addVirtualBalance(
       shortMessage: `৳${amount} আপনার ব্যালেন্সে যোগ করা হয়েছে। বিস্তারিত আপনার পোর্টালে দেখুন।`,
       link: "/staff/payment",
     });
+
+    sendVoiceBroadcast({
+      title: "Balance Added",
+      broadcast_id: 2928,
+      numbers: [staffData.phone]
+    }).catch(err => console.error("Voice broadcast failed:", err));
 
     revalidatePath("/payments");
     revalidatePath("/staff/profile");

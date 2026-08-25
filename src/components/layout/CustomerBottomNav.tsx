@@ -2,7 +2,15 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Home, Activity, Crown, FileText, Bell, Users, AlertTriangle } from "lucide-react";
+import {
+  Home,
+  Activity,
+  Crown,
+  FileText,
+  Bell,
+  Users,
+  AlertTriangle,
+} from "lucide-react";
 import clsx from "clsx";
 import { useState, useEffect } from "react";
 import { getCustomerDashboardStatus } from "@/actions";
@@ -54,61 +62,61 @@ export function CustomerBottomNav() {
   return (
     <>
       <nav className="sm:hidden fixed bottom-0 left-0 w-full bg-white px-1 py-1 flex items-center justify-around z-50 shadow-[0_-8px_30px_rgba(0,0,0,0.08)] rounded-tl-3xl rounded-tr-3xl">
-      {navItems.map((item) => {
-        const isActive =
-          pathname === item.href || pathname.startsWith(item.href + "/");
-        
-        if (isDashboardDisabled) {
+        {navItems.map((item) => {
+          const isActive =
+            pathname === item.href || pathname.startsWith(item.href + "/");
+
+          if (isDashboardDisabled) {
+            return (
+              <button
+                key={item.label}
+                onClick={() => setShowPopup(true)}
+                className={clsx(
+                  "flex flex-col items-center gap-0.5 py-1 px-1.5 min-w-[56px] transition-all duration-300 relative opacity-50 cursor-not-allowed",
+                  "text-gray-400",
+                )}
+              >
+                <div className="p-1 rounded-md transition-all duration-300">
+                  <item.icon size={18} strokeWidth={2} />
+                </div>
+                <span className="text-[8px] uppercase tracking-wider font-extrabold text-center opacity-60">
+                  {item.label}
+                </span>
+              </button>
+            );
+          }
+
           return (
-            <button
+            <Link
               key={item.label}
-              onClick={() => setShowPopup(true)}
+              href={item.href}
               className={clsx(
-                "flex flex-col items-center gap-0.5 py-1 px-1.5 min-w-[56px] transition-all duration-300 relative opacity-50 cursor-not-allowed",
-                "text-gray-400"
+                "flex flex-col items-center gap-0.5 py-1 px-1.5 min-w-[56px] transition-all duration-300 relative",
+                isActive ? "text-[#0A1A3A]" : "text-gray-400 hover:text-brand",
               )}
             >
-              <div className="p-1 rounded-md transition-all duration-300">
-                 <item.icon size={18} strokeWidth={2} />
+              {isActive && (
+                <span className="absolute -top-1 left-1/2 -translate-x-1/2 w-6 h-1 bg-[#0A1A3A] rounded-full" />
+              )}
+              <div
+                className={clsx(
+                  "p-1 rounded-md transition-all duration-300",
+                  isActive ? "bg-brand/10" : "",
+                )}
+              >
+                <item.icon size={18} strokeWidth={isActive ? 2.5 : 2} />
               </div>
-              <span className="text-[8px] uppercase tracking-wider font-extrabold text-center opacity-60">
+              <span
+                className={clsx(
+                  "text-[8px] uppercase tracking-wider font-extrabold text-center",
+                  isActive ? "opacity-100 font-black" : "opacity-60",
+                )}
+              >
                 {item.label}
               </span>
-            </button>
+            </Link>
           );
-        }
-
-        return (
-          <Link
-            key={item.label}
-            href={item.href}
-            className={clsx(
-              "flex flex-col items-center gap-0.5 py-1 px-1.5 min-w-[56px] transition-all duration-300 relative",
-              isActive ? "text-[#0A1A3A]" : "text-gray-400 hover:text-brand",
-            )}
-          >
-            {isActive && (
-              <span className="absolute -top-1 left-1/2 -translate-x-1/2 w-6 h-1 bg-[#0A1A3A] rounded-full" />
-            )}
-            <div
-              className={clsx(
-                "p-1 rounded-md transition-all duration-300",
-                isActive ? "bg-brand/10" : "",
-              )}
-            >
-               <item.icon size={18} strokeWidth={isActive ? 2.5 : 2} />
-            </div>
-            <span
-              className={clsx(
-                "text-[8px] uppercase tracking-wider font-extrabold text-center",
-                isActive ? "opacity-100 font-black" : "opacity-60",
-              )}
-            >
-              {item.label}
-            </span>
-          </Link>
-        );
-      })}
+        })}
         {/* Popup for Dashboard Disabled */}
         {showPopup && (
           <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/60 p-4">
@@ -121,8 +129,8 @@ export function CustomerBottomNav() {
               </h3>
               <p className="text-gray-600 text-sm leading-relaxed mb-6 font-semibold whitespace-pre-line">
                 প্রিয় গ্রাহক আপনার পন্যের বকেয়া টাকা পরিশোধ না করায় আপনার
-                পন্যটির ওয়ারেন্টি বাতিল করা হয়েছে । পুনারায় ওয়ারেন্টি বহাল
-                রাখতে সেইলার এর সাথে যোগাযোগ করুন।
+                পন্যটির ওয়ারেন্টি বাতিল করা হয়েছে । পুনারায় ওয়ারেন্টি বহাল রাখতে
+                সেইলার এর সাথে যোগাযোগ করুন।
               </p>
               <button
                 onClick={() => setShowPopup(false)}

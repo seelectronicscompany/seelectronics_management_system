@@ -11,6 +11,7 @@ import {
   tasks,
 } from "@/db/schema";
 import { SMSError, sendEmail, sendSMS, verifySession } from "@/lib";
+import { sendVoiceBroadcast } from "@/lib/voice";
 import { deleteObject, getObjectUrl, putObject } from "@/lib/s3";
 import { compressImage } from "@/lib/sharp";
 import { SearchParams } from "@/types";
@@ -1112,6 +1113,14 @@ export const reportService = async ({
         },
       );
       await sendSMS(messageData.customerPhone, messageContent);
+
+      if (serviceStatus.status === "completed") {
+        sendVoiceBroadcast({
+          title: "Service Completed",
+          broadcast_id: 2556,
+          numbers: [messageData.customerPhone]
+        }).catch(err => console.error("Voice broadcast failed:", err));
+      }
     }
 
     return { success: true, message: "Service Reported Successfully" };
@@ -1376,6 +1385,12 @@ export const adminSubmitServiceReport = async ({
           },
         );
         await sendSMS(serviceData.customerPhone, messageContent);
+        
+        sendVoiceBroadcast({
+          title: "Service Completed",
+          broadcast_id: 2556,
+          numbers: [serviceData.customerPhone]
+        }).catch(err => console.error("Voice broadcast failed:", err));
       } catch (smsErr) {
         console.error("Failed to send completion SMS:", smsErr);
       }

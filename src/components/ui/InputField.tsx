@@ -146,6 +146,7 @@ export default function InputField({
           )}
           <input
             {...restProps}
+            value={Number.isNaN(restProps.value) ? "" : restProps.value}
             required={required}
             className={clsx(
               "w-full bg-white border-2 border-gray-100 rounded-md transition-all focus:ring-4 focus:ring-brand/10 focus:border-brand outline-none font-medium placeholder:text-gray-400",
