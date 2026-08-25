@@ -31,7 +31,8 @@ export async function notifyCustomer({
     const recentNotification = await db.query.customerNotifications.findFirst({
       where: and(
         gt(customerNotifications.createdAt, thirtySecondsAgo),
-        sql`${customerNotifications.type} = ${type}`
+        sql`${customerNotifications.type} = ${type}`,
+        sql`${customerNotifications.customerId} = ${customerId}`
       ),
     });
 
@@ -57,7 +58,7 @@ export async function notifyCustomer({
 
     // 2. Send shortened SMS
     // If no shortMessage provided, use a default one
-    const smsContent = message || `প্রিয় গ্রাহক, আপনার ড্যাশবোর্ডে একটি নতুন বার্তা আছে। বিস্তারিত দেখুন: ${generateUrl("customer-login", {})}`;
+    const smsContent = shortMessage || message || `প্রিয় গ্রাহক, আপনার ড্যাশবোর্ডে একটি নতুন বার্তা আছে। বিস্তারিত দেখুন: ${generateUrl("customer-login", {})}`;
     
     await sendSMS(phoneNumber, smsContent);
 
@@ -93,7 +94,8 @@ export async function notifyStaff({
     const recentNotification = await db.query.staffNotifications.findFirst({
       where: and(
         gt(staffNotifications.createdAt, thirtySecondsAgo),
-        sql`${staffNotifications.type} = ${type}`
+        sql`${staffNotifications.type} = ${type}`,
+        sql`${staffNotifications.staffId} = ${staffId}`
       ),
     });
 
