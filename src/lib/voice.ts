@@ -45,8 +45,17 @@ export const sendVoiceBroadcast = async ({
     const formattedNumbers = numbers
       .map((num) => {
         let cleaned = num.replace(/\D/g, ""); // Remove non-digits
-        if (cleaned.startsWith("01")) {
-          cleaned = "88" + cleaned;
+        if (cleaned.startsWith("880")) {
+          return cleaned;
+        }
+        if (cleaned.startsWith("01") && cleaned.length === 11) {
+          return "88" + cleaned;
+        }
+        if (cleaned.length === 10) {
+          return "880" + cleaned;
+        }
+        if (!cleaned.startsWith("88") && cleaned.length > 8) {
+          return "88" + cleaned;
         }
         return cleaned;
       })
@@ -57,8 +66,13 @@ export const sendVoiceBroadcast = async ({
       return { success: false, message: "No valid numbers" };
     }
 
+    // MRAM API sometimes rejects identical requests as 'duplicate request'.
+    // We append a timestamp to the title to ensure uniqueness.
+    let safeTitle = title.replace(/[^a-zA-Z0-9\s]/g, " ").trim();
+    safeTitle = `${safeTitle} ${Date.now()}`;
+
     const payload = {
-      title,
+      title: safeTitle,
       broadcast_id,
       sender,
       numbers: formattedNumbers,
