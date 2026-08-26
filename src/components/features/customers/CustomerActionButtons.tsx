@@ -1,6 +1,6 @@
 "use client";
 
-import { deleteCustomer, sendInvoiceDownloadLink, updateCustomerVipStatus, toggleCustomerDashboard, sendDueReminderCall } from "@/actions";
+import { deleteCustomer, sendInvoiceDownloadLink, updateCustomerVipStatus, toggleCustomerDashboard, callCustomerForDue } from "@/actions";
 import { getProducts } from "@/actions/productActions";
 import { ProductSelectionModal } from "@/components";
 import { CustomerData, Product } from "@/types";
@@ -137,30 +137,6 @@ export default function CustomerActionButtons({
           />
         </svg>
       </button>
-
-      {/* Send Due Reminder Call */}
-      {customerData.invoice && customerData.invoice.dueAmount > 0 && (
-        <button
-          title="Send Due Reminder Call"
-          onClick={async () => {
-            if (confirm(`Send a voice call reminder for due amount to ${customerData.name}?`)) {
-              toastId.current = toast("Sending call...", { autoClose: false });
-              const res = await sendDueReminderCall(customerData.customerId);
-              toast.update(toastId.current, {
-                type: res.success ? "success" : "error",
-                render: res.message,
-                autoClose: 1500,
-              });
-            }
-          }}
-          className="text-blue-500 hover:text-blue-700"
-        >
-          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6">
-            <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 6.75c0 8.284 6.716 15 15 15h2.25a2.25 2.25 0 002.25-2.25v-1.372c0-.516-.351-.966-.852-1.091l-4.423-1.106c-.44-.11-.902.055-1.173.417l-.97 1.293c-2.896-1.596-5.439-4.139-7.035-7.035l1.293-.97c.363-.271.527-.734.417-1.173L6.963 3.102a1.125 1.125 0 00-1.091-.852H4.5A2.25 2.25 0 002.25 4.5v2.25z" />
-          </svg>
-        </button>
-      )}
-
       <a
         target="_blank"
         href={`/pdf/download?type=invoice&id=${customerData.invoiceNumber}`}
@@ -262,6 +238,29 @@ export default function CustomerActionButtons({
           </svg>
         )}
       </button>
+
+      {/* Call for Due Button */}
+      {Number(customerData.invoice?.dueAmount) > 0 && (
+        <button
+          title="Call for due"
+          onClick={async () => {
+            if (confirm(`Send automated voice call to ${customerData.name} regarding due payment?`)) {
+              toastId.current = toast("Calling...", { autoClose: false });
+              const res = await callCustomerForDue(customerData.customerId);
+              toast.update(toastId.current, {
+                type: res.success ? "success" : "error",
+                render: res.message,
+                autoClose: 1500,
+              });
+            }
+          }}
+          className="text-orange-500 hover:text-orange-700"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6">
+            <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 6.75c0 8.284 6.716 15 15 15h2.25a2.25 2.25 0 002.25-2.25v-1.372c0-.516-.351-.966-.852-1.091l-4.423-1.106c-.44-.11-.902.055-1.173.417l-.97 1.293c-2.896-1.595-5.22-3.92-6.814-6.815l1.292-.97c.36-.271.527-.734.417-1.173L6.963 3.102a1.125 1.125 0 00-1.091-.852H4.5A2.25 2.25 0 002.25 4.5v2.25z" />
+          </svg>
+        </button>
+      )}
 
       <button
         title="Delete"

@@ -9,6 +9,7 @@ import { and, desc, eq, getTableColumns, ilike, or, sql } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 import z from "zod";
 import { verifySession } from "@/lib";
+import { triggerVoiceCall } from "@/lib/voice";
 
 export const getPayments = async ({
   query,
@@ -187,11 +188,16 @@ export const updatePaymentStatus = async (
     };
 
     if (statusMessages[status]) {
+        const shortSMS = status === "completed" 
+            ? `আপনার পেমেন্ট রিকোয়েস্ট 01310673600 ${paymentData.paymentMethod} থেকে ${paymentData.transactionId} (৳${paymentData.amount}) সম্পন্ন হয়েছে। ধন্যাবাদ।`
+            : `আপনার পেমেন্ট রিকোয়েস্ট (৳${paymentData.amount}) এখন ${status} অবস্থায় আছে। বিস্তারিত দেখুন পোর্টালে।`;
+        
         await notifyStaff({
             staffId: paymentData.staffId,
             phoneNumber: paymentData.staff.phone!,
             type: "payment_update",
             message: statusMessages[status],
+            shortMessage: shortSMS,
             link: "/staff/payment",
         });
     }
@@ -241,8 +247,6 @@ export const createPayment = async (
   }
 };
 
-import { sendVoiceBroadcast } from "@/lib/voice";
-
 /**
  * Admin adds virtual money to a staff member's balance.
  * This amount will show as "available balance" in the staff dashboard.
@@ -287,14 +291,13 @@ export async function addVirtualBalance(
       phoneNumber: staffData.phone,
       type: "balance_added",
       message: `Admin added ৳${amount} to your balance${serviceId ? ` for job #${serviceId}` : ""}.`,
+      shortMessage: `৳${amount} আপনার ব্যালেন্সে যোগ করা হয়েছে। বিস্তারিত আপনার পোর্টালে দেখুন।`,
       link: "/staff/payment",
     });
 
-    sendVoiceBroadcast({
-      title: "Balance Added",
-      broadcast_id: 2928,
-      numbers: [staffData.phone]
-    }).catch(err => console.error("Voice broadcast failed:", err));
+    if (staffData.phone) {
+        triggerVoiceCall("admin_add_virtual_balance", staffData.phone, `Virtual balance added: ${amount}`);
+    }
 
     revalidatePath("/payments");
     revalidatePath("/staff/profile");
@@ -402,11 +405,14 @@ export async function completePayoutRequest(
     const methodToNotify = paymentData.paymentMethod;
     const txIdToNotify = data.transactionId || "";
     
+    const shortSMS = `আপনার পেমেন্ট রিকোয়েস্ট 01310673600 ${methodToNotify} থেকে ${txIdToNotify} (৳${amountToNotify}) সম্পন্ন হয়েছে। ধন্যাবাদ।`;
+    
     await notifyStaff({
       staffId: paymentData.staffId,
       phoneNumber: paymentData.staff.phone!,
       type: "payment_update",
       message: `Your payment of ৳${amountToNotify} has been completed!`,
+      shortMessage: shortSMS,
       link: "/staff/payment",
     });
 

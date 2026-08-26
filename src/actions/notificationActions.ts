@@ -15,12 +15,14 @@ export async function notifyCustomer({
   phoneNumber,
   type,
   message,
+  shortMessage,
   link,
 }: {
   customerId: string;
   phoneNumber: string;
   type: string;
   message: string;
+  shortMessage?: string;
   link?: string;
 }) {
   try {
@@ -55,7 +57,7 @@ export async function notifyCustomer({
     });
 
     // 2. Send SMS
-    const smsContent = message || `প্রিয় গ্রাহক, আপনার ড্যাশবোর্ডে একটি নতুন বার্তা আছে। বিস্তারিত দেখুন: ${generateUrl("customer-login", {})}`;
+    const smsContent = shortMessage || message || `প্রিয় গ্রাহক, আপনার ড্যাশবোর্ডে একটি নতুন বার্তা আছে। বিস্তারিত দেখুন: ${generateUrl("customer-login", {})}`;
     
     await sendSMS(phoneNumber, smsContent);
 
@@ -75,12 +77,14 @@ export async function notifyStaff({
   phoneNumber,
   type,
   message,
+  shortMessage,
   link,
 }: {
   staffId: string;
   phoneNumber: string;
   type: string;
   message: string;
+  shortMessage?: string;
   link?: string;
 }) {
   try {
@@ -115,7 +119,7 @@ export async function notifyStaff({
     });
 
     // 2. Send SMS
-    const smsContent = message || `Dear Staff, you have a new notification. Check your portal for details.`;
+    const smsContent = shortMessage || message || `Dear Staff, you have a new notification. Check your portal for details.`;
     
     await sendSMS(phoneNumber, smsContent);
 

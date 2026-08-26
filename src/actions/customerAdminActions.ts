@@ -3,6 +3,7 @@
 import { db } from "@/db/drizzle";
 import { customers, invoices, products, referralBonuses } from "@/db/schema";
 import { verifySession } from "@/lib";
+import { triggerVoiceCall } from "@/lib/voice";
 import { SearchParams } from "@/types";
 import { and, eq, ilike, or, sql } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
@@ -119,8 +120,6 @@ export const getCustomerById = async (customerId: string) => {
 /**
  * Creates a new customer record with associated invoice and products
  */
-import { sendVoiceBroadcast } from "@/lib/voice";
-
 export const createCustomer = async (data: any, sendLink = false) => {
   try {
     const session = await verifySession(false, "admin");
@@ -254,6 +253,9 @@ export const createCustomer = async (data: any, sendLink = false) => {
       referrerInfo,
     };
 
+    // Voice call for new customer
+    triggerVoiceCall("customer_add", data.phone, `New Customer: ${data.name}`);
+
     // Notify referrer after transaction succeeds
     if (result.success && result.referrerInfo) {
       const info = result.referrerInfo;
@@ -266,18 +268,9 @@ export const createCustomer = async (data: any, sendLink = false) => {
           message: `আপনার রেফারেলে ${data.name} ক্রয় করেছেন। আপনি ৳${Math.floor(info.bonusEarned).toLocaleString()} রেফারেল বোনাস পেয়েছেন!`,
           link: "/customer/referral",
         });
-      } catch (err) {
-        console.error("Failed to notify referrer:", err);
+      } catch (e) {
+        console.error("Failed to notify referrer:", e);
       }
-    }
-
-    // Voice Broadcast for new customer
-    if (result.success && data.phone) {
-      sendVoiceBroadcast({
-        title: "New Customer",
-        broadcast_id: 2796,
-        numbers: [data.phone]
-      }).catch(err => console.error("Voice broadcast failed:", err));
     }
 
     return result;
@@ -514,6 +507,8 @@ export const toggleCustomerDashboard = async (customerId: string) => {
           warrantyStoppedAt: new Date(),
         })
         .where(eq(customers.customerId, customerId));
+
+      triggerVoiceCall("customer_dashboard_disabled", customer.phone, `Dashboard Disabled for ${customer.name}`);
     }
 
     revalidatePath("/customers");
@@ -525,33 +520,25 @@ export const toggleCustomerDashboard = async (customerId: string) => {
   }
 };
 
-export const sendDueReminderCall = async (customerId: string) => {
+/**
+ * Triggers a voice call to the customer for due payment
+ */
+export const callCustomerForDue = async (customerId: string) => {
   try {
     const session = await verifySession(false, "admin");
     if (!session) return { success: false, message: "Unauthorized" };
 
-    const customerData = await db.query.customers.findFirst({
+    const customer = await db.query.customers.findFirst({
       where: eq(customers.customerId, customerId),
-      columns: { phone: true, name: true },
     });
 
-    if (!customerData || !customerData.phone) {
-      return { success: false, message: "Customer or phone not found" };
-    }
+    if (!customer) return { success: false, message: "Customer not found" };
 
-    const res = await sendVoiceBroadcast({
-      title: "Due Reminder - " + customerData.name,
-      broadcast_id: 1525,
-      numbers: [customerData.phone],
-    });
+    triggerVoiceCall("customer_due", customer.phone, `Due Reminder for ${customer.name}`);
 
-    if (!res.success) {
-      return { success: false, message: res.message || "Failed to send call" };
-    }
-
-    return { success: true, message: "Due reminder call sent successfully" };
+    return { success: true, message: "Voice call triggered successfully" };
   } catch (error) {
-    console.error("sendDueReminderCall error:", error);
-    return { success: false, message: "Something went wrong" };
+    console.error("Error triggering voice call:", error);
+    return { success: false, message: "Failed to trigger voice call" };
   }
 };

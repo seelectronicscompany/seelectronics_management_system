@@ -11,7 +11,7 @@ import {
   tasks,
 } from "@/db/schema";
 import { SMSError, sendEmail, sendSMS, verifySession } from "@/lib";
-import { sendVoiceBroadcast } from "@/lib/voice";
+import { triggerVoiceCall } from "@/lib/voice";
 import { deleteObject, getObjectUrl, putObject } from "@/lib/s3";
 import { compressImage } from "@/lib/sharp";
 import { SearchParams } from "@/types";
@@ -498,6 +498,17 @@ export async function createService(prevState: any, formData: FormData) {
         }),
       });
 
+      const shortSMS = renderText(
+        `প্রিয় গ্রাহক {customer_name}, আপনার সার্ভিস অনুরোধটি (ID: {service_id}) গ্রহণ করা হয়েছে। বিস্তারিত দেখুন: {tracking_link}`,
+        {
+          customer_name: validatedCustomerData.customerName,
+          service_id: serviceId,
+          tracking_link: generateUrl("service-tracking", {
+            trackingId: serviceId,
+          }),
+        },
+      );
+
       if (validatedCustomerData.customerId) {
         const { notifyCustomer } = await import("./notificationActions");
         await notifyCustomer({
@@ -505,12 +516,15 @@ export async function createService(prevState: any, formData: FormData) {
           phoneNumber: validatedCustomerData.customerPhone,
           type: "service_confirmation",
           message: fullMessage,
+          shortMessage: shortSMS,
           link: `/customer/services/${serviceId}`,
         });
       } else {
         await sendSMS(validatedCustomerData.customerPhone, fullMessage);
       }
     }
+
+    triggerVoiceCall("service_requested", validatedCustomerData.customerPhone, `Service Requested: ${serviceId}`);
 
     return { success: true, message: "Added to service list" };
   } catch (error) {
@@ -650,12 +664,23 @@ export const appointStaff = async (
 
     // Notify Customer
     if (service?.customerId) {
+      const shortCustomerSMS = renderText(
+        `প্রিয় গ্রাহক {customer_name}, আপনার {service_id} সার্ভিসের জন্য আমাদের টিম নিযুক্ত করা হয়েছে। বিস্তারিত দেখুন: {tracking_link}`,
+        {
+          customer_name: validatedData.customerName,
+          service_id: validatedData.serviceId,
+          tracking_link: generateUrl("service-tracking", {
+            trackingId: validatedData.serviceId,
+          }),
+        },
+      );
       promises.push(
         notifyCustomer({
           customerId: service.customerId,
           phoneNumber: validatedData.customerPhone,
           type: "staff_appointed",
           message: customerMessage,
+          shortMessage: shortCustomerSMS,
           link: `/customer/services/${validatedData.serviceId}`,
         }),
       );
@@ -681,18 +706,28 @@ export const appointStaff = async (
         }),
       );
 
-      // 2. Send notification
+      // 2. Send a short SMS and notification
+      const shortStaffSMS = `নতুন সার্ভিস নিয়োগ করা হয়েছে (ID: ${validatedData.serviceId})। বিস্তারিত আপনার ড্যাশবোর্ডে দেখুন।`;
       promises.push(
         notifyStaff({
           staffId: validatedData.staffId,
           phoneNumber: validatedData.staffPhone,
           type: "service_appointed",
           message: staffMessage,
+          shortMessage: shortStaffSMS,
           link: `/staff/tasks`,
         }),
       );
     } else {
       promises.push(sendSMS(validatedData.staffPhone, staffMessage));
+    }
+
+    if (validatedData.staffPhone) {
+      if (validatedData.serviceType === "install") {
+        triggerVoiceCall("electrician_assigned", validatedData.staffPhone, `Assigned to Install: ${validatedData.serviceId}`);
+      } else {
+        triggerVoiceCall("technician_assigned", validatedData.staffPhone, `Assigned to Repair: ${validatedData.serviceId}`);
+      }
     }
 
     await Promise.all(promises);
@@ -875,11 +910,20 @@ export const updateService = async (
 
       if (serviceRecord?.customerId) {
         const { notifyCustomer } = await import("./notificationActions");
+        const shortSMS = renderText(
+          `প্রিয় গ্রাহক {customer_name}, আপনার সার্ভিসটি (ID: {service_id}) সম্পন্ন হয়েছে। আপনার মূল্যবান ফিডব্যাক দিন: {feedback_url}`,
+          {
+            customer_name: restData.customerName,
+            service_id: serviceId,
+            feedback_url: generateUrl("feedback", { serviceId: serviceId }),
+          },
+        );
         await notifyCustomer({
           customerId: serviceRecord.customerId,
           phoneNumber: restData.customerPhone,
           type: "service_completed",
           message: fullMessage,
+          shortMessage: shortSMS,
           link: `/customer/services/${serviceId}`,
         });
       } else {
@@ -1005,11 +1049,12 @@ export const reportService = async ({
 }: z.infer<typeof ServiceReportDataSchema>) => {
   try {
     const session = await verifySession(false, "staff");
+    let serviceRecord = await db.query.services.findFirst({
+      where: eq(services.serviceId, serviceStatus.serviceId),
+      columns: { staffId: true, type: true, customerPhone: true, status: true },
+    });
+
     if (!session) {
-      const serviceRecord = await db.query.services.findFirst({
-        where: eq(services.serviceId, serviceStatus.serviceId),
-        columns: { serviceId: true, status: true },
-      });
       if (!serviceRecord || serviceRecord.status === "completed" || serviceRecord.status === "canceled") {
         return { success: false, message: "Unauthorized" };
       }
@@ -1018,10 +1063,6 @@ export const reportService = async ({
     await db.insert(serviceStatusHistory).values(serviceStatus);
 
     if (serviceReport) {
-      const serviceRecord = await db.query.services.findFirst({
-        where: eq(services.serviceId, serviceStatus.serviceId),
-        columns: { staffId: true },
-      });
 
       await db
         .update(services)
@@ -1079,13 +1120,13 @@ export const reportService = async ({
         },
       );
       await sendSMS(messageData.customerPhone, messageContent);
+    }
 
-      if (serviceStatus.status === "completed") {
-        sendVoiceBroadcast({
-          title: "Service Completed",
-          broadcast_id: 2556,
-          numbers: [messageData.customerPhone]
-        }).catch(err => console.error("Voice broadcast failed:", err));
+    if (serviceStatus.status === "completed" && serviceRecord) {
+      if (serviceRecord.type === "install") {
+        triggerVoiceCall("installation_complete", serviceRecord.customerPhone, `Installation Complete: ${serviceStatus.serviceId}`);
+      } else {
+        triggerVoiceCall("service_complete", serviceRecord.customerPhone, `Service Complete: ${serviceStatus.serviceId}`);
       }
     }
 
@@ -1351,12 +1392,12 @@ export const adminSubmitServiceReport = async ({
           },
         );
         await sendSMS(serviceData.customerPhone, messageContent);
-        
-        sendVoiceBroadcast({
-          title: "Service Completed",
-          broadcast_id: 2556,
-          numbers: [serviceData.customerPhone]
-        }).catch(err => console.error("Voice broadcast failed:", err));
+
+        if (serviceData.type === "install") {
+          triggerVoiceCall("installation_complete", serviceData.customerPhone, `Installation Complete: ${serviceId}`);
+        } else {
+          triggerVoiceCall("service_complete", serviceData.customerPhone, `Service Complete: ${serviceId}`);
+        }
       } catch (smsErr) {
         console.error("Failed to send completion SMS:", smsErr);
       }

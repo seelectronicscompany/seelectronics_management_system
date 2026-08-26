@@ -1,18 +1,36 @@
-import { sendVoiceBroadcast } from "../src/lib/voice";
-import dotenv from "dotenv";
+import { triggerVoiceCall } from "../src/lib/voice";
 
-dotenv.config();
+const testVoice = async () => {
+    console.log("Starting voice call tests...");
 
-async function runTest() {
-  console.log("Testing MRAM Voice Broadcast...");
+    // Testing customer_add
+    triggerVoiceCall("customer_add", "01700000000", "Testing customer_add");
 
-  const res = await sendVoiceBroadcast({
-    title: "Test Broadcast From Script",
-    broadcast_id: 1525, // Using a sample broadcast ID
-    numbers: ["01700000000"], // Example test number
-  });
+    // Testing electrician_assigned
+    triggerVoiceCall("electrician_assigned", "01700000000", "Testing electrician_assigned");
 
-  console.log("Result:", res);
+    // Testing technician_assigned
+    triggerVoiceCall("technician_assigned", "01700000000", "Testing technician_assigned");
+
+    // Testing service_requested
+    triggerVoiceCall("service_requested", "01700000000", "Testing service_requested");
+
+    // Testing installation_complete
+    triggerVoiceCall("installation_complete", "01700000000", "Testing installation_complete");
+    
+    // Testing service_complete
+    triggerVoiceCall("service_complete", "01700000000", "Testing service_complete");
+
+    // Testing customer_due
+    triggerVoiceCall("customer_due", "01700000000", "Testing customer_due");
+
+    // Testing customer_dashboard_disabled
+    triggerVoiceCall("customer_dashboard_disabled", "01700000000", "Testing customer_dashboard_disabled");
+
+    // Testing admin_add_virtual_balance
+    triggerVoiceCall("admin_add_virtual_balance", "01700000000", "Testing admin_add_virtual_balance");
+
+    console.log("Voice call triggers dispatched.");
 }
 
-runTest();
+testVoice().catch(console.error);
