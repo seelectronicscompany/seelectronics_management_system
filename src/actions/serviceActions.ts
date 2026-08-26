@@ -498,17 +498,6 @@ export async function createService(prevState: any, formData: FormData) {
         }),
       });
 
-      const shortSMS = renderText(
-        `প্রিয় গ্রাহক {customer_name}, আপনার সার্ভিস অনুরোধটি (ID: {service_id}) গ্রহণ করা হয়েছে। বিস্তারিত দেখুন: {tracking_link}`,
-        {
-          customer_name: validatedCustomerData.customerName,
-          service_id: serviceId,
-          tracking_link: generateUrl("service-tracking", {
-            trackingId: serviceId,
-          }),
-        },
-      );
-
       if (validatedCustomerData.customerId) {
         const { notifyCustomer } = await import("./notificationActions");
         await notifyCustomer({
@@ -516,7 +505,6 @@ export async function createService(prevState: any, formData: FormData) {
           phoneNumber: validatedCustomerData.customerPhone,
           type: "service_confirmation",
           message: fullMessage,
-          shortMessage: shortSMS,
           link: `/customer/services/${serviceId}`,
         });
       } else {
@@ -662,23 +650,12 @@ export const appointStaff = async (
 
     // Notify Customer
     if (service?.customerId) {
-      const shortCustomerSMS = renderText(
-        `প্রিয় গ্রাহক {customer_name}, আপনার {service_id} সার্ভিসের জন্য আমাদের টিম নিযুক্ত করা হয়েছে। বিস্তারিত দেখুন: {tracking_link}`,
-        {
-          customer_name: validatedData.customerName,
-          service_id: validatedData.serviceId,
-          tracking_link: generateUrl("service-tracking", {
-            trackingId: validatedData.serviceId,
-          }),
-        },
-      );
       promises.push(
         notifyCustomer({
           customerId: service.customerId,
           phoneNumber: validatedData.customerPhone,
           type: "staff_appointed",
           message: customerMessage,
-          shortMessage: shortCustomerSMS,
           link: `/customer/services/${validatedData.serviceId}`,
         }),
       );
@@ -704,15 +681,13 @@ export const appointStaff = async (
         }),
       );
 
-      // 2. Send a short SMS and notification
-      const shortStaffSMS = `নতুন সার্ভিস নিয়োগ করা হয়েছে (ID: ${validatedData.serviceId})। বিস্তারিত আপনার ড্যাশবোর্ডে দেখুন।`;
+      // 2. Send notification
       promises.push(
         notifyStaff({
           staffId: validatedData.staffId,
           phoneNumber: validatedData.staffPhone,
           type: "service_appointed",
           message: staffMessage,
-          shortMessage: shortStaffSMS,
           link: `/staff/tasks`,
         }),
       );
@@ -900,20 +875,11 @@ export const updateService = async (
 
       if (serviceRecord?.customerId) {
         const { notifyCustomer } = await import("./notificationActions");
-        const shortSMS = renderText(
-          `প্রিয় গ্রাহক {customer_name}, আপনার সার্ভিসটি (ID: {service_id}) সম্পন্ন হয়েছে। আপনার মূল্যবান ফিডব্যাক দিন: {feedback_url}`,
-          {
-            customer_name: restData.customerName,
-            service_id: serviceId,
-            feedback_url: generateUrl("feedback", { serviceId: serviceId }),
-          },
-        );
         await notifyCustomer({
           customerId: serviceRecord.customerId,
           phoneNumber: restData.customerPhone,
           type: "service_completed",
           message: fullMessage,
-          shortMessage: shortSMS,
           link: `/customer/services/${serviceId}`,
         });
       } else {

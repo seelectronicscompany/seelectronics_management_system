@@ -340,13 +340,11 @@ export const createSubscriber = async (prevState: any, formData: FormData) => {
       ];
 
       if (customerRecordId) {
-        const shortSMS = `প্রিয় {applicant_name}, আপনার সাবস্ক্রিপশন আবেদনটি (ID: {subscription_id}) জমা হয়েছে। বিস্তারিত দেখুন ড্যাশবোর্ডে।`;
         promises.push(notifyCustomer({
           customerId: customerRecordId as string,
           phoneNumber: restData.phone,
           type: "subscription_submission",
           message: fullMessage,
-          shortMessage: renderText(shortSMS, { applicant_name: restData.name, subscription_id: subscriptionId }),
           link: "/customer/profile",
         }));
       } else {

@@ -187,16 +187,11 @@ export const updatePaymentStatus = async (
     };
 
     if (statusMessages[status]) {
-        const shortSMS = status === "completed" 
-            ? `আপনার পেমেন্ট রিকোয়েস্ট 01310673600 ${paymentData.paymentMethod} থেকে ${paymentData.transactionId} (৳${paymentData.amount}) সম্পন্ন হয়েছে। ধন্যাবাদ।`
-            : `আপনার পেমেন্ট রিকোয়েস্ট (৳${paymentData.amount}) এখন ${status} অবস্থায় আছে। বিস্তারিত দেখুন পোর্টালে।`;
-        
         await notifyStaff({
             staffId: paymentData.staffId,
             phoneNumber: paymentData.staff.phone!,
             type: "payment_update",
             message: statusMessages[status],
-            shortMessage: shortSMS,
             link: "/staff/payment",
         });
     }
@@ -292,7 +287,6 @@ export async function addVirtualBalance(
       phoneNumber: staffData.phone,
       type: "balance_added",
       message: `Admin added ৳${amount} to your balance${serviceId ? ` for job #${serviceId}` : ""}.`,
-      shortMessage: `৳${amount} আপনার ব্যালেন্সে যোগ করা হয়েছে। বিস্তারিত আপনার পোর্টালে দেখুন।`,
       link: "/staff/payment",
     });
 
@@ -408,14 +402,11 @@ export async function completePayoutRequest(
     const methodToNotify = paymentData.paymentMethod;
     const txIdToNotify = data.transactionId || "";
     
-    const shortSMS = `আপনার পেমেন্ট রিকোয়েস্ট 01310673600 ${methodToNotify} থেকে ${txIdToNotify} (৳${amountToNotify}) সম্পন্ন হয়েছে। ধন্যাবাদ।`;
-    
     await notifyStaff({
       staffId: paymentData.staffId,
       phoneNumber: paymentData.staff.phone!,
       type: "payment_update",
       message: `Your payment of ৳${amountToNotify} has been completed!`,
-      shortMessage: shortSMS,
       link: "/staff/payment",
     });
 

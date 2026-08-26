@@ -284,13 +284,11 @@ export const updateApplicationStatus = async (applicationId: string, updates: { 
             const { notifyCustomer, notifyStaff } = await import("./notificationActions");
 
             if (applicationData[0].type === 'staff_application') {
-                const shortSMS = `প্রিয় {applicant_name}, আপনার আবেদনটি {status} হয়েছে। বিস্তারিত দেখুন আপনার ড্যাশবোর্ডে।`;
                 await notifyStaff({
                     staffId: applicationData[0].applicantId,
                     phoneNumber: applicantData[0].phone,
                     type: 'application_update',
                     message: fullMessage,
-                    shortMessage: renderText(shortSMS, { applicant_name: applicantData[0].name, status: status === 'approved' ? 'অনুমোদিত' : 'বাতিল' }),
                     link: '/staff/profile'
                 });
             } else {
@@ -301,13 +299,11 @@ export const updateApplicationStatus = async (applicationId: string, updates: { 
                 });
 
                 if (customerRecord) {
-                    const shortSMS = `প্রিয় {applicant_name}, আপনার আবেদনের সর্বশেষ আপডেট দেখতে ড্যাশবোর্ডে লগইন করুন।`;
                     await notifyCustomer({
                         customerId: customerRecord.customerId,
                         phoneNumber: applicantData[0].phone,
                         type: 'application_update',
                         message: fullMessage,
-                        shortMessage: renderText(shortSMS, { applicant_name: applicantData[0].name }),
                         link: '/customer/profile'
                     });
                 } else {

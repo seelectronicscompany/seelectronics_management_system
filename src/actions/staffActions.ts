@@ -130,10 +130,6 @@ export const sendIdCardDownloadLink = async (staffData: {
       phoneNumber,
       type: "id_card",
       message: message,
-      shortMessage: renderText(
-        `প্রিয় {staff_name}, আপনার আইডি কার্ড ডাউনলোড করার জন্য ড্যাশবোর্ডে লগইন করুন।`,
-        { staff_name: staffName },
-      ),
       link: "/staff/profile", // Or a specific link if available
     });
 
@@ -206,10 +202,6 @@ export const sendCertificateLink = async (formData: FormData) => {
           phoneNumber: phone,
           type: "certificate",
           message: message,
-          shortMessage: renderText(
-            `প্রিয় {ownerName}, আপনার সার্টিফিকেট ডাউনলোড করার জন্য ড্যাশবোর্ডে লগইন করুন অথবা এই লিঙ্কে যান: {download_link}`,
-            { ownerName, download_link: generateUrl("certificate-download", { token }) },
-          ),
           link: `/staff/certificate?token=${token}`,
         });
         notified = true;
@@ -774,7 +766,6 @@ export const toggleStaffStatus = async (staffId: string, status: boolean) => {
         phoneNumber: staff.phone,
         type: "account_status",
         message: blockMessage,
-        shortMessage: `আপনার  এস্টাপ অ্যাকাউন্টটি সাময়িকভাবে বন্ধ করা হয়েছে। বিস্তারিত জানতে এডমিনের সাথে যোগাযোগ করুন। বিস্তারিত জানতে 09649355555`,
         link: "/staff/profile",
       });
     } else {
@@ -784,7 +775,6 @@ export const toggleStaffStatus = async (staffId: string, status: boolean) => {
         phoneNumber: staff.phone,
         type: "account_status",
         message: activeMessage,
-        shortMessage: `আপনার অ্যাকাউন্টটি পুনরায় সক্রিয় করা হয়েছে। আপনি এখন কাজ করতে পারবেন।`,
         link: "/staff/profile",
       });
     }
