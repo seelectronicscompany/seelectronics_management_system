@@ -296,7 +296,7 @@ export async function addVirtualBalance(
     });
 
     if (staffData.phone) {
-        triggerVoiceCall("admin_add_virtual_balance", staffData.phone, `Virtual balance added: ${amount}`);
+        triggerVoiceCall("admin_add_virtual_balance", staffData.phone, `${staffData.name} received virtual balance`);
     }
 
     revalidatePath("/payments");

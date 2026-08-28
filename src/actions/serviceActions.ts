@@ -524,8 +524,6 @@ export async function createService(prevState: any, formData: FormData) {
       }
     }
 
-    triggerVoiceCall("service_requested", validatedCustomerData.customerPhone, `Service Requested: ${serviceId}`);
-
     return { success: true, message: "Added to service list" };
   } catch (error) {
     console.error("createService error caught:", error);
@@ -724,9 +722,9 @@ export const appointStaff = async (
 
     if (validatedData.staffPhone) {
       if (validatedData.serviceType === "install") {
-        triggerVoiceCall("electrician_assigned", validatedData.staffPhone, `Assigned to Install: ${validatedData.serviceId}`);
+        triggerVoiceCall("electrician_assigned", validatedData.staffPhone, `Assigned Electrician ${validatedData.staffName}`);
       } else {
-        triggerVoiceCall("technician_assigned", validatedData.staffPhone, `Assigned to Repair: ${validatedData.serviceId}`);
+        triggerVoiceCall("technician_assigned", validatedData.staffPhone, `Assigned Technician ${validatedData.staffName}`);
       }
     }
 
@@ -1051,7 +1049,7 @@ export const reportService = async ({
     const session = await verifySession(false, "staff");
     let serviceRecord = await db.query.services.findFirst({
       where: eq(services.serviceId, serviceStatus.serviceId),
-      columns: { staffId: true, type: true, customerPhone: true, status: true },
+      columns: { staffId: true, type: true, customerPhone: true, status: true, customerName: true },
     });
 
     if (!session) {
@@ -1124,9 +1122,9 @@ export const reportService = async ({
 
     if (serviceStatus.status === "completed" && serviceRecord) {
       if (serviceRecord.type === "install") {
-        triggerVoiceCall("installation_complete", serviceRecord.customerPhone, `Installation Complete: ${serviceStatus.serviceId}`);
+        triggerVoiceCall("installation_complete", serviceRecord.customerPhone, `Installation Complete for ${serviceRecord.customerName}`);
       } else {
-        triggerVoiceCall("service_complete", serviceRecord.customerPhone, `Service Complete: ${serviceStatus.serviceId}`);
+        triggerVoiceCall("service_complete", serviceRecord.customerPhone, `Service Complete for ${serviceRecord.customerName}`);
       }
     }
 
@@ -1394,9 +1392,9 @@ export const adminSubmitServiceReport = async ({
         await sendSMS(serviceData.customerPhone, messageContent);
 
         if (serviceData.type === "install") {
-          triggerVoiceCall("installation_complete", serviceData.customerPhone, `Installation Complete: ${serviceId}`);
+          triggerVoiceCall("installation_complete", serviceData.customerPhone, `Installation Complete for ${serviceData.customerName}`);
         } else {
-          triggerVoiceCall("service_complete", serviceData.customerPhone, `Service Complete: ${serviceId}`);
+          triggerVoiceCall("service_complete", serviceData.customerPhone, `Service Complete for ${serviceData.customerName}`);
         }
       } catch (smsErr) {
         console.error("Failed to send completion SMS:", smsErr);

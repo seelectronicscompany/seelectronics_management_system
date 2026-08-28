@@ -4,6 +4,7 @@ import { ApplicationMessages } from "@/constants/messages"
 import { db } from "@/db/drizzle"
 import { agreements, applications, customers, services, staffs, subscriptions } from "@/db/schema"
 import { sendSMS, verifySession } from "@/lib"
+import { triggerVoiceCall } from "@/lib/voice"
 import { getObjectUrl } from "@/lib/s3"
 import { ApplicationTypes, SearchParams } from "@/types"
 import { generateRandomId, generateUrl, renderText, generateVipCardNumber } from "@/utils"
@@ -309,6 +310,10 @@ export const updateApplicationStatus = async (applicationId: string, updates: { 
                 } else {
                     await sendSMS(applicantData[0].phone, fullMessage);
                 }
+            }
+
+            if (status === 'approved' && applicationData[0].type === 'service_application') {
+                triggerVoiceCall("service_requested", applicantData[0].phone, `Service Requested by ${applicantData[0].name}`);
             }
         }
 
