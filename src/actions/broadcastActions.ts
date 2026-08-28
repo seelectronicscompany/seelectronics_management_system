@@ -67,9 +67,16 @@ export const sendBulkBatteryReminder = async (type: "sms" | "voice") => {
             for (let i = 0; i < phoneNumbers.length; i += BATCH_SIZE) {
                const batch = phoneNumbers.slice(i, i + BATCH_SIZE);
                const cleanNumbers = batch.map((phone) => {
-                  const p = phone.replace(/\+/g, "");
-                  return p.startsWith("880") ? p : (p.startsWith("0") ? `88${p}` : p);
-               });
+                  let p = phone.replace(/\D/g, "");
+                  if (p.length === 10 && p.startsWith("1")) {
+                    p = `880${p}`;
+                  } else if (p.length === 11 && p.startsWith("01")) {
+                    p = `88${p}`;
+                  }
+                  return p;
+               }).filter((p) => /^8801[0-9]{9}$/.test(p));
+
+               if (cleanNumbers.length === 0) continue;
 
                await sendVoiceBroadcast({
                  title: `Bulk Battery Reminder Batch ${i / BATCH_SIZE + 1}`,
