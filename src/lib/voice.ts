@@ -68,10 +68,14 @@ export function triggerVoiceCall(type: string, phone: string, title?: string) {
         return;
       }
       
-      const numbers = [phone.startsWith('880') ? phone : (phone.startsWith('0') ? `88${phone}` : phone)];
+      const cleanPhone = phone.replace(/\+/g, '');
+      const numbers = [cleanPhone.startsWith('880') ? cleanPhone : (cleanPhone.startsWith('0') ? `88${cleanPhone}` : cleanPhone)];
       
+      const rawTitle = title || `Automated call ${type}`;
+      const safeTitle = rawTitle.replace(/[^a-zA-Z0-9\s\u0980-\u09FF-]/g, ' ').replace(/\s+/g, ' ').trim();
+
       await sendVoiceBroadcast({
-        title: title || `Automated call: ${type}`,
+        title: safeTitle,
         broadcast_id,
         numbers,
       });
