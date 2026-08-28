@@ -42,6 +42,12 @@ const links = [
     sectionTitle: "Customer Management",
   },
   {
+    name: "Battery Reminders",
+    href: "/battery-reminders",
+    icon: Zap, // Or a better icon if you want, Zap is already imported
+    sectionTitle: "Battery Reminders",
+  },
+  {
     name: "Team Members",
     href: "/team-members",
     icon: Users,
