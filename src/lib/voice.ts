@@ -88,7 +88,8 @@ export function triggerVoiceCall(type: string, phone: string, title?: string) {
       ];
 
       const rawTitle = title || `Automated call ${type}`;
-      const safeTitle = rawTitle
+      const uniqueSuffix = Math.random().toString(36).substring(2, 8);
+      const safeTitle = `${rawTitle} ${uniqueSuffix}`
         .replace(/[^a-zA-Z0-9\s\u0980-\u09FF-]/g, " ")
         .replace(/\s+/g, " ")
         .trim();
