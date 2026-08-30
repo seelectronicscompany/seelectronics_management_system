@@ -1,5 +1,8 @@
-
-export type MramCampaignStatus = "pending" | "processing" | "complete" | "failed";
+export type MramCampaignStatus =
+  | "pending"
+  | "processing"
+  | "complete"
+  | "failed";
 
 export interface SendVoiceBroadcastParams {
   title: string;
@@ -41,17 +44,24 @@ export interface VoiceCampaignDetails {
   }>;
 }
 
+export const BROADCAST_IDS: Record<string, number> = {
+  customer_add: 2796,
+  electrician_assigned: 2927,
+  technician_assigned: 2926,
+  service_requested: 2795,
+  installation_complete: 2556,
+  customer_due: 1525,
+  customer_dashboard_disabled: 1976,
+  admin_add_virtual_balance: 2928,
+  service_complete: 1523,
+  battery_health_check: 3486,
+};
+
 /**
- * Helper to safely parse MRAM_VOICE_BROADCAST_ID and get the specific broadcast ID.
+ * Helper to get the specific broadcast ID from the hardcoded dictionary.
  */
 export function getBroadcastId(key: string): number {
-  try {
-    const ids = JSON.parse(process.env.MRAM_VOICE_BROADCAST_ID || '{}');
-    return ids[key] || 0;
-  } catch (e) {
-    console.error("Failed to parse MRAM_VOICE_BROADCAST_ID");
-    return 0;
-  }
+  return BROADCAST_IDS[key] || 0;
 }
 
 /**
@@ -67,12 +77,21 @@ export function triggerVoiceCall(type: string, phone: string, title?: string) {
         console.warn(`No broadcast ID found for type: ${type}`);
         return;
       }
-      
-      const cleanPhone = phone.replace(/\+/g, '');
-      const numbers = [cleanPhone.startsWith('880') ? cleanPhone : (cleanPhone.startsWith('0') ? `88${cleanPhone}` : cleanPhone)];
-      
+
+      const cleanPhone = phone.replace(/\+/g, "");
+      const numbers = [
+        cleanPhone.startsWith("880")
+          ? cleanPhone
+          : cleanPhone.startsWith("0")
+            ? `88${cleanPhone}`
+            : cleanPhone,
+      ];
+
       const rawTitle = title || `Automated call ${type}`;
-      const safeTitle = rawTitle.replace(/[^a-zA-Z0-9\s\u0980-\u09FF-]/g, ' ').replace(/\s+/g, ' ').trim();
+      const safeTitle = rawTitle
+        .replace(/[^a-zA-Z0-9\s\u0980-\u09FF-]/g, " ")
+        .replace(/\s+/g, " ")
+        .trim();
 
       await sendVoiceBroadcast({
         title: safeTitle,
@@ -90,21 +109,26 @@ export function triggerVoiceCall(type: string, phone: string, title?: string) {
  * Sends a voice broadcast campaign using the MRAM API.
  */
 export async function sendVoiceBroadcast(
-  params: SendVoiceBroadcastParams
+  params: SendVoiceBroadcastParams,
 ): Promise<SendVoiceBroadcastResponse> {
   const apiKey = process.env.MRAM_VOICE_API_KEY;
-  const baseUrl = process.env.MRAM_VOICE_API_BASE_URL || "https://call.mram.com.bd";
+  const baseUrl =
+    process.env.MRAM_VOICE_API_BASE_URL || "https://call.mram.com.bd";
   const defaultSenderId = process.env.MRAM_VOICE_SENDER_ID;
   const isDev = process.env.NODE_ENV !== "production";
   const sendInDev = process.env.MRAM_VOICE_SEND_IN_DEV === "true";
 
   if (!apiKey) {
-    throw new Error("MRAM_VOICE_API_KEY is not configured in environment variables");
+    throw new Error(
+      "MRAM_VOICE_API_KEY is not configured in environment variables",
+    );
   }
 
   const sender = params.sender || defaultSenderId;
   if (!sender) {
-    throw new Error("Sender ID must be provided or configured in MRAM_VOICE_SENDER_ID");
+    throw new Error(
+      "Sender ID must be provided or configured in MRAM_VOICE_SENDER_ID",
+    );
   }
 
   // Prevent sending real voice calls in dev if not explicitly enabled
@@ -143,8 +167,18 @@ export async function sendVoiceBroadcast(
   const data = await response.json().catch(() => null);
 
   if (!response.ok) {
+    if (response.status === 422 && data?.detail === "duplicate request") {
+      console.warn(`[MRAM API] Ignored duplicate request for: ${params.title}`);
+      return {
+        campaign_id: data?.campaign_id || 0,
+        status: "duplicate_ignored",
+        total_calls: params.numbers.length,
+      };
+    }
     const errorDetails = data ? JSON.stringify(data) : response.statusText;
-    throw new Error(`Failed to send voice broadcast (Status: ${response.status}): ${errorDetails}`);
+    throw new Error(
+      `Failed to send voice broadcast (Status: ${response.status}): ${errorDetails}`,
+    );
   }
 
   return data as SendVoiceBroadcastResponse;
@@ -154,13 +188,16 @@ export async function sendVoiceBroadcast(
  * Gets detailed information about a specific voice campaign.
  */
 export async function getVoiceCampaignDetails(
-  campaignId: number
+  campaignId: number,
 ): Promise<VoiceCampaignDetails> {
   const apiKey = process.env.MRAM_VOICE_API_KEY;
-  const baseUrl = process.env.MRAM_VOICE_API_BASE_URL || "https://call.mram.com.bd";
+  const baseUrl =
+    process.env.MRAM_VOICE_API_BASE_URL || "https://call.mram.com.bd";
 
   if (!apiKey) {
-    throw new Error("MRAM_VOICE_API_KEY is not configured in environment variables");
+    throw new Error(
+      "MRAM_VOICE_API_KEY is not configured in environment variables",
+    );
   }
 
   const url = `${baseUrl}/api/campaign/${campaignId}`;
@@ -177,7 +214,9 @@ export async function getVoiceCampaignDetails(
 
   if (!response.ok) {
     const errorDetails = data ? JSON.stringify(data) : response.statusText;
-    throw new Error(`Failed to get campaign details (Status: ${response.status}): ${errorDetails}`);
+    throw new Error(
+      `Failed to get campaign details (Status: ${response.status}): ${errorDetails}`,
+    );
   }
 
   return data as VoiceCampaignDetails;
