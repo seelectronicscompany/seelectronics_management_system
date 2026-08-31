@@ -10,7 +10,7 @@ export class MRAMError extends Error {
 export const sendVoiceCall = async (
   phoneNumbers: string | string[],
   broadcastId: number,
-  title: string = "Automated Voice Broadcast"
+  title: string = "Automated Voice Broadcast",
 ) => {
   try {
     const shouldSendRealCall =
@@ -31,7 +31,9 @@ export const sendVoiceCall = async (
       return cleanPhone;
     };
 
-    const rawNumbers = Array.isArray(phoneNumbers) ? phoneNumbers : [phoneNumbers];
+    const rawNumbers = Array.isArray(phoneNumbers)
+      ? phoneNumbers
+      : [phoneNumbers];
     const numbers = Array.from(new Set(rawNumbers.map(formatPhoneNumber)));
 
     if (
@@ -41,7 +43,7 @@ export const sendVoiceCall = async (
       process.env.MRAM_VOICE_SENDER_ID
     ) {
       const payload = {
-        title: `${title} ${Date.now()}`.replace(/[^a-zA-Z0-9\s]/g, ''),
+        title: `${title} ${Date.now()}`.replace(/[^a-zA-Z0-9\s]/g, ""),
         broadcast_id: broadcastId,
         sender: process.env.MRAM_VOICE_SENDER_ID,
         numbers: numbers,
@@ -56,11 +58,11 @@ export const sendVoiceCall = async (
             Authorization: `Bearer ${process.env.MRAM_VOICE_API_KEY}`,
           },
           body: JSON.stringify(payload),
-        }
+        },
       );
-      
+
       const jsonRes = await res.json();
-      
+
       if (!res.ok) {
         const errMsg = jsonRes.message || JSON.stringify(jsonRes);
         console.error("MRAM API Error:", errMsg);
@@ -93,12 +95,12 @@ export const getMramBroadcastIds = () => {
   try {
     let rawIds = process.env.MRAM_VOICE_BROADCAST_ID;
     if (!rawIds) return null;
-    
+
     // Strip surrounding single quotes if present (e.g. from Vercel env configs)
     if (rawIds.startsWith("'") && rawIds.endsWith("'")) {
       rawIds = rawIds.slice(1, -1);
     }
-    
+
     return JSON.parse(rawIds) as Record<string, number>;
   } catch (error) {
     console.error("Failed to parse MRAM_VOICE_BROADCAST_ID", error);

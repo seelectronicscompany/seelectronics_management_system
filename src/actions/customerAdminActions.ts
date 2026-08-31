@@ -274,7 +274,7 @@ export const createCustomer = async (data: any, sendLink = false) => {
       const broadcastIds = getMramBroadcastIds();
       if (broadcastIds && broadcastIds.customer_add) {
         // Do not block the request
-        sendVoiceCall(data.phone, broadcastIds.customer_add, `New Customer Welcome ${customerId} (${data.name})`).catch(e => console.error(e));
+        sendVoiceCall(data.phone, broadcastIds.customer_add, `New Customer Welcome ${customerId}`).catch(e => console.error(e));
       }
     } catch (e) {
       console.error("Failed to send MRAM voice call:", e);
@@ -519,7 +519,7 @@ export const toggleCustomerDashboard = async (customerId: string) => {
         const { sendVoiceCall, getMramBroadcastIds } = await import("@/lib/mram");
         const broadcastIds = getMramBroadcastIds();
         if (broadcastIds && broadcastIds.customer_dashboard_disabled) {
-           sendVoiceCall(customer.phone, broadcastIds.customer_dashboard_disabled, `Dashboard Disabled ${customerId} (${customer.name})`).catch(e => console.error(e));
+           sendVoiceCall(customer.phone, broadcastIds.customer_dashboard_disabled, `Dashboard Disabled ${customerId}`).catch(e => console.error(e));
         }
       } catch (e) {
         console.error("Failed to send MRAM voice call:", e);

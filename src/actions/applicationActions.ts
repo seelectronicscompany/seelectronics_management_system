@@ -316,7 +316,7 @@ export const updateApplicationStatus = async (applicationId: string, updates: { 
                     const { sendVoiceCall, getMramBroadcastIds } = await import("@/lib/mram");
                     const broadcastIds = getMramBroadcastIds();
                     if (broadcastIds && broadcastIds.service_requested) {
-                        sendVoiceCall(applicantData[0].phone, broadcastIds.service_requested, `Service Requested ${serviceId} (${applicantData[0].name})`).catch(e => console.error(e));
+                        sendVoiceCall(applicantData[0].phone, broadcastIds.service_requested, `Service Requested ${serviceId}`).catch(e => console.error(e));
                     }
                 } catch (e) {
                     console.error("Failed to send MRAM voice call:", e);

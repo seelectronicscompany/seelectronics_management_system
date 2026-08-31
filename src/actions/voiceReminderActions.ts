@@ -24,7 +24,7 @@ export const sendDueVoiceCall = async (customerId: string) => {
       return { success: false, message: "Broadcast ID for customer due not configured" };
     }
 
-    const res = await sendVoiceCall(customerData.phone, broadcastIds.customer_due, `Customer Due Reminder (${customerData.name})`);
+    const res = await sendVoiceCall(customerData.phone, broadcastIds.customer_due, "Customer Due Reminder");
 
     if (res.success) {
       return { success: true, message: "Voice call triggered successfully" };
