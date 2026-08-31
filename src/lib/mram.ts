@@ -91,8 +91,14 @@ Title: ${title}
 
 export const getMramBroadcastIds = () => {
   try {
-    const rawIds = process.env.MRAM_VOICE_BROADCAST_ID;
+    let rawIds = process.env.MRAM_VOICE_BROADCAST_ID;
     if (!rawIds) return null;
+    
+    // Strip surrounding single quotes if present (e.g. from Vercel env configs)
+    if (rawIds.startsWith("'") && rawIds.endsWith("'")) {
+      rawIds = rawIds.slice(1, -1);
+    }
+    
     return JSON.parse(rawIds) as Record<string, number>;
   } catch (error) {
     console.error("Failed to parse MRAM_VOICE_BROADCAST_ID", error);

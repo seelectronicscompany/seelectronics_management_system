@@ -727,9 +727,9 @@ export const appointStaff = async (
               columns: { role: true },
            });
            if (staff?.role === 'electrician' && broadcastIds.electrician_assigned) {
-              sendVoiceCall(validatedData.staffPhone, broadcastIds.electrician_assigned, `Electrician Assigned ${validatedData.serviceId}`).catch(e => console.error(e));
+              sendVoiceCall(validatedData.staffPhone, broadcastIds.electrician_assigned, `Electrician Assigned ${validatedData.serviceId} (${validatedData.staffName})`).catch(e => console.error(e));
            } else if (staff?.role === 'technician' && broadcastIds.technician_assigned) {
-              sendVoiceCall(validatedData.staffPhone, broadcastIds.technician_assigned, `Technician Assigned ${validatedData.serviceId}`).catch(e => console.error(e));
+              sendVoiceCall(validatedData.staffPhone, broadcastIds.technician_assigned, `Technician Assigned ${validatedData.serviceId} (${validatedData.staffName})`).catch(e => console.error(e));
            }
         }
       } catch (e) {
@@ -950,7 +950,7 @@ export const updateService = async (
            const bId = serviceData[0].type === "install" ? broadcastIds.installation_complete : broadcastIds.service_complete;
            const phoneToCall = restData.customerPhone || existingService?.customerPhone;
            if (phoneToCall && bId) {
-             sendVoiceCall(phoneToCall, bId, `Service Completed ${serviceId}`).catch(e => console.error(e));
+             sendVoiceCall(phoneToCall, bId, `Service Completed ${serviceId} (${restData.customerName || ''})`).catch(e => console.error(e));
            }
         }
       } catch (e) {
@@ -1159,13 +1159,14 @@ export const reportService = async ({
         if (broadcastIds) {
            const svcRecord = await db.query.services.findFirst({
              where: eq(services.serviceId, serviceStatus.serviceId),
-             columns: { customerPhone: true, type: true },
+             columns: { customerPhone: true, type: true, customerName: true },
            });
            const phoneToCall = messageData?.customerPhone || svcRecord?.customerPhone;
+           const customerName = messageData?.customerName || svcRecord?.customerName;
            const bId = svcRecord?.type === "install" ? broadcastIds.installation_complete : broadcastIds.service_complete;
            
            if (phoneToCall && bId) {
-             sendVoiceCall(phoneToCall, bId, `Service Completed ${serviceStatus.serviceId}`).catch(e => console.error(e));
+             sendVoiceCall(phoneToCall, bId, `Service Completed ${serviceStatus.serviceId} (${customerName || ''})`).catch(e => console.error(e));
            }
         }
       } catch (e) {
@@ -1445,7 +1446,7 @@ export const adminSubmitServiceReport = async ({
         if (broadcastIds) {
            const bId = serviceData.type === "install" ? broadcastIds.installation_complete : broadcastIds.service_complete;
            if (bId) {
-             sendVoiceCall(serviceData.customerPhone, bId, `Service Completed ${serviceId}`).catch(e => console.error(e));
+             sendVoiceCall(serviceData.customerPhone, bId, `Service Completed ${serviceId} (${serviceData.customerName || ''})`).catch(e => console.error(e));
            }
         }
       } catch (e) {

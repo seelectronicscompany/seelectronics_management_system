@@ -300,7 +300,7 @@ export async function addVirtualBalance(
       // MRAM API generally uses pre-recorded broadcasts without dynamic variable support in the base endpoint,
       // but we will pass the exact broadcast ID 2933 as requested.
       const broadcastId = 2933; 
-      sendVoiceCall(staffData.phone, broadcastId, `Virtual Balance Update ${paymentId}`).catch(e => console.error(e));
+      sendVoiceCall(staffData.phone, broadcastId, `Virtual Balance Update ${paymentId} (${staffData.name})`).catch(e => console.error(e));
     } catch (e) {
       console.error("Failed to send MRAM voice call:", e);
     }
