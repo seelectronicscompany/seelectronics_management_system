@@ -1,6 +1,7 @@
 import "dotenv/config";
 import { drizzle } from "drizzle-orm/neon-http";
-import { neon } from "@neondatabase/serverless";
+import { neon, neonConfig } from "@neondatabase/serverless";
+neonConfig.fetchConnectionCache = true;
 import * as schema from "@/db/schema";
 import { eq } from "drizzle-orm";
 
@@ -44,6 +45,36 @@ async function main() {
     }
 
     console.log("✅ Terms of Service agreement seeded safely!");
+
+    console.log("⏳ Checking for admin user...");
+    const adminUsername = process.env.ADMIN_DASHBOARD_USERNAME;
+    const adminPassword = process.env.ADMIN_DASHBOARD_PASSWORD;
+
+    if (adminUsername && adminPassword) {
+      const bcrypt = await import("bcrypt");
+      const existingAdmin = await db.query.admins.findFirst({
+        where: eq(schema.admins.username, adminUsername),
+      });
+
+      const hashedPassword = await bcrypt.hash(adminPassword.trim(), 10);
+
+      if (existingAdmin) {
+        console.log("⏳ Updating existing admin user...");
+        await db.update(schema.admins).set({
+          password: hashedPassword,
+        }).where(eq(schema.admins.id, existingAdmin.id));
+      } else {
+        console.log("⏳ Inserting new admin user...");
+        await db.insert(schema.admins).values({
+          username: adminUsername,
+          password: hashedPassword,
+        });
+      }
+      console.log("✅ Admin user seeded safely!");
+    } else {
+      console.log("⚠️ Admin credentials not fully set in .env. Skipping admin seed.");
+    }
+
     process.exit(0);
   } catch (error) {
     console.error("❌ Seeding failed:", error);

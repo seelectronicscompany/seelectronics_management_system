@@ -9,7 +9,6 @@ import { and, desc, eq, getTableColumns, ilike, or, sql } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 import z from "zod";
 import { verifySession } from "@/lib";
-import { triggerVoiceCall } from "@/lib/voice";
 
 export const getPayments = async ({
   query,
@@ -295,8 +294,15 @@ export async function addVirtualBalance(
       link: "/staff/payment",
     });
 
-    if (staffData.phone) {
-        triggerVoiceCall("admin_add_virtual_balance", staffData.phone, `${staffData.name} received virtual balance`);
+    try {
+      const { sendVoiceCall } = await import("@/lib/mram");
+      // Note: Requirement says "2 represents the number of balance, it will be dynamic (Broadcast ID - 2933)".
+      // MRAM API generally uses pre-recorded broadcasts without dynamic variable support in the base endpoint,
+      // but we will pass the exact broadcast ID 2933 as requested.
+      const broadcastId = 2933; 
+      sendVoiceCall(staffData.phone, broadcastId, `Virtual Balance Update ${paymentId}`).catch(e => console.error(e));
+    } catch (e) {
+      console.error("Failed to send MRAM voice call:", e);
     }
 
     revalidatePath("/payments");

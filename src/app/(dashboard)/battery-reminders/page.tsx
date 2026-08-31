@@ -1,87 +1,30 @@
 import { getCustomers, getCustomersMetadata } from "@/actions";
-import { CustomerList, DelayedLoading, Toolbar } from "@/components";
+import { Toolbar } from "@/components";
 import { SearchParams } from "@/types";
-import { Suspense } from "react";
-import BulkActions from "./BulkActions";
+import BatteryRemindersClient from "./BatteryRemindersClient";
 
-export default async function BatteryReminders({
+export default async function BatteryRemindersPage({
   searchParams,
 }: {
   searchParams?: Promise<SearchParams>;
 }) {
   const params = await searchParams;
-  const paginationPromise = getCustomersMetadata({ ...params });
-  const customersPromise = getCustomers({ ...params });
 
-  const pagination = await paginationPromise;
+  // We can fetch a larger limit for this page to make bulk selection easier
+  const customParams = { ...params, limit: params?.limit || "50" };
+
+  const paginationPromise = getCustomersMetadata(customParams);
+  const customersPromise = getCustomers(customParams);
+
+  const [pagination, customersRes] = await Promise.all([
+    paginationPromise,
+    customersPromise,
+  ]);
 
   return (
     <div className="flex-1 overflow-hidden flex flex-col gap-4">
-      <Toolbar
-        title="Battery Health Reminders"
-        actions={<BulkActions />}
-        pagination={pagination!}
-      />
-      <div className="bg-orange-50 text-orange-800 p-4 rounded-md border border-orange-200">
-        <h3 className="font-semibold mb-1">Bulk Broadcasts</h3>
-        <p className="text-sm">
-          Clicking "Send Bulk SMS" or "Send Bulk Voice Call" will broadcast the
-          battery health reminder to ALL active customers in the database.
-          Please use with caution.
-        </p>
-      </div>
-      <div className="overflow-x-auto overflow-y-auto flex-1 bg-white rounded-md border border-gray-100 shadow-sm custom-scrollbar">
-        <table className="w-full text-sm text-left">
-          <thead className="sticky top-0 z-20">
-            <tr className="bg-gray-50">
-              <th className="py-4 px-4 font-bold text-gray-700 whitespace-nowrap">
-                Customer ID
-              </th>
-              <th className="py-4 px-4 font-bold text-gray-700 whitespace-nowrap">
-                Invoice Number
-              </th>
-              <th className="py-4 px-4 font-bold text-gray-700 whitespace-nowrap">
-                Name
-              </th>
-              <th className="py-4 px-4 font-bold text-gray-700 whitespace-nowrap">
-                Phone Number
-              </th>
-              <th className="py-4 px-4 font-bold text-gray-700 whitespace-nowrap">
-                Address
-              </th>
-              <th className="py-4 px-4 font-bold text-gray-700 whitespace-nowrap text-right">
-                Total Amount
-              </th>
-              <th className="py-4 px-4 font-bold text-gray-700 whitespace-nowrap">
-                Date
-              </th>
-              <th className="py-4 px-4 font-bold text-gray-700 whitespace-nowrap sticky right-0 bg-gray-50 shadow-[-4px_0_10px_-4px_rgba(0,0,0,0.1)]">
-                Actions
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            <Suspense
-              key={params?.query}
-              fallback={
-                <tr className="border-b">
-                  <td
-                    colSpan={8}
-                    className="text-center py-12 text-gray-400 font-medium"
-                  >
-                    <div className="flex flex-col items-center gap-3">
-                      <DelayedLoading />
-                      <span>Loading customers...</span>
-                    </div>
-                  </td>
-                </tr>
-              }
-            >
-              <CustomerList {...params} customersPromise={customersPromise} />
-            </Suspense>
-          </tbody>
-        </table>
-      </div>
+      <Toolbar title="Maintenance Reminders" pagination={pagination!} />
+      <BatteryRemindersClient customers={customersRes.data || []} />
     </div>
   );
 }

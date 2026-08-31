@@ -3,7 +3,6 @@
 import { db } from "@/db/drizzle";
 import { customers, invoices, products, referralBonuses } from "@/db/schema";
 import { verifySession } from "@/lib";
-import { triggerVoiceCall } from "@/lib/voice";
 import { SearchParams } from "@/types";
 import { and, eq, ilike, or, sql } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
@@ -253,9 +252,6 @@ export const createCustomer = async (data: any, sendLink = false) => {
       referrerInfo,
     };
 
-    // Voice call for new customer
-    triggerVoiceCall("customer_add", data.phone, `New Customer: ${data.name}`);
-
     // Notify referrer after transaction succeeds
     if (result.success && result.referrerInfo) {
       const info = result.referrerInfo;
@@ -271,6 +267,17 @@ export const createCustomer = async (data: any, sendLink = false) => {
       } catch (e) {
         console.error("Failed to notify referrer:", e);
       }
+    }
+
+    try {
+      const { sendVoiceCall, getMramBroadcastIds } = await import("@/lib/mram");
+      const broadcastIds = getMramBroadcastIds();
+      if (broadcastIds && broadcastIds.customer_add) {
+        // Do not block the request
+        sendVoiceCall(data.phone, broadcastIds.customer_add, `New Customer Welcome ${customerId}`).catch(e => console.error(e));
+      }
+    } catch (e) {
+      console.error("Failed to send MRAM voice call:", e);
     }
 
     return result;
@@ -508,7 +515,15 @@ export const toggleCustomerDashboard = async (customerId: string) => {
         })
         .where(eq(customers.customerId, customerId));
 
-      triggerVoiceCall("customer_dashboard_disabled", customer.phone, `Dashboard Disabled for ${customer.name}`);
+      try {
+        const { sendVoiceCall, getMramBroadcastIds } = await import("@/lib/mram");
+        const broadcastIds = getMramBroadcastIds();
+        if (broadcastIds && broadcastIds.customer_dashboard_disabled) {
+           sendVoiceCall(customer.phone, broadcastIds.customer_dashboard_disabled, `Dashboard Disabled ${customerId}`).catch(e => console.error(e));
+        }
+      } catch (e) {
+        console.error("Failed to send MRAM voice call:", e);
+      }
     }
 
     revalidatePath("/customers");
@@ -517,28 +532,5 @@ export const toggleCustomerDashboard = async (customerId: string) => {
   } catch (error) {
     console.error("Error toggling customer dashboard:", error);
     return { success: false, message: "Failed to toggle customer dashboard" };
-  }
-};
-
-/**
- * Triggers a voice call to the customer for due payment
- */
-export const callCustomerForDue = async (customerId: string) => {
-  try {
-    const session = await verifySession(false, "admin");
-    if (!session) return { success: false, message: "Unauthorized" };
-
-    const customer = await db.query.customers.findFirst({
-      where: eq(customers.customerId, customerId),
-    });
-
-    if (!customer) return { success: false, message: "Customer not found" };
-
-    triggerVoiceCall("customer_due", customer.phone, `Due Reminder for ${customer.name}`);
-
-    return { success: true, message: "Voice call triggered successfully" };
-  } catch (error) {
-    console.error("Error triggering voice call:", error);
-    return { success: false, message: "Failed to trigger voice call" };
   }
 };

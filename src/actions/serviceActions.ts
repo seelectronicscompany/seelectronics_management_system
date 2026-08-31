@@ -9,9 +9,9 @@ import {
   serviceStatusHistory,
   services,
   tasks,
+  staffs,
 } from "@/db/schema";
 import { SMSError, sendEmail, sendSMS, verifySession } from "@/lib";
-import { triggerVoiceCall } from "@/lib/voice";
 import { deleteObject, getObjectUrl, putObject } from "@/lib/s3";
 import { compressImage } from "@/lib/sharp";
 import { SearchParams } from "@/types";
@@ -522,6 +522,7 @@ export async function createService(prevState: any, formData: FormData) {
       } else {
         await sendSMS(validatedCustomerData.customerPhone, fullMessage);
       }
+
     }
 
     return { success: true, message: "Added to service list" };
@@ -716,16 +717,27 @@ export const appointStaff = async (
           link: `/staff/tasks`,
         }),
       );
+
+      try {
+        const { sendVoiceCall, getMramBroadcastIds } = await import("@/lib/mram");
+        const broadcastIds = getMramBroadcastIds();
+        if (broadcastIds) {
+           const staff = await db.query.staffs.findFirst({
+              where: eq(staffs.staffId, validatedData.staffId),
+              columns: { role: true },
+           });
+           if (staff?.role === 'electrician' && broadcastIds.electrician_assigned) {
+              sendVoiceCall(validatedData.staffPhone, broadcastIds.electrician_assigned, `Electrician Assigned ${validatedData.serviceId}`).catch(e => console.error(e));
+           } else if (staff?.role === 'technician' && broadcastIds.technician_assigned) {
+              sendVoiceCall(validatedData.staffPhone, broadcastIds.technician_assigned, `Technician Assigned ${validatedData.serviceId}`).catch(e => console.error(e));
+           }
+        }
+      } catch (e) {
+        console.error("Failed to send MRAM voice call:", e);
+      }
+
     } else {
       promises.push(sendSMS(validatedData.staffPhone, staffMessage));
-    }
-
-    if (validatedData.staffPhone) {
-      if (validatedData.serviceType === "install") {
-        triggerVoiceCall("electrician_assigned", validatedData.staffPhone, `Assigned Electrician ${validatedData.staffName}`);
-      } else {
-        triggerVoiceCall("technician_assigned", validatedData.staffPhone, `Assigned Technician ${validatedData.staffName}`);
-      }
     }
 
     await Promise.all(promises);
@@ -774,6 +786,7 @@ export const updateService = async (
       columns: {
         staffId: true,
         staffReport: true,
+        customerPhone: true,
       },
     });
     const {
@@ -929,6 +942,22 @@ export const updateService = async (
       }
     }
 
+    if (serviceStatus === "completed") {
+      try {
+        const { sendVoiceCall, getMramBroadcastIds } = await import("@/lib/mram");
+        const broadcastIds = getMramBroadcastIds();
+        if (broadcastIds) {
+           const bId = serviceData[0].type === "install" ? broadcastIds.installation_complete : broadcastIds.service_complete;
+           const phoneToCall = restData.customerPhone || existingService?.customerPhone;
+           if (phoneToCall && bId) {
+             sendVoiceCall(phoneToCall, bId, `Service Completed ${serviceId}`).catch(e => console.error(e));
+           }
+        }
+      } catch (e) {
+        console.error("Failed to send MRAM voice call:", e);
+      }
+    }
+
     // Updating images if there is any
     const promisesArray = [];
     const mimeTypes = ["image/jpeg", "image/png", "image/webp"];
@@ -1047,12 +1076,11 @@ export const reportService = async ({
 }: z.infer<typeof ServiceReportDataSchema>) => {
   try {
     const session = await verifySession(false, "staff");
-    let serviceRecord = await db.query.services.findFirst({
-      where: eq(services.serviceId, serviceStatus.serviceId),
-      columns: { staffId: true, type: true, customerPhone: true, status: true, customerName: true },
-    });
-
     if (!session) {
+      const serviceRecord = await db.query.services.findFirst({
+        where: eq(services.serviceId, serviceStatus.serviceId),
+        columns: { serviceId: true, status: true },
+      });
       if (!serviceRecord || serviceRecord.status === "completed" || serviceRecord.status === "canceled") {
         return { success: false, message: "Unauthorized" };
       }
@@ -1061,6 +1089,10 @@ export const reportService = async ({
     await db.insert(serviceStatusHistory).values(serviceStatus);
 
     if (serviceReport) {
+      const serviceRecord = await db.query.services.findFirst({
+        where: eq(services.serviceId, serviceStatus.serviceId),
+        columns: { staffId: true },
+      });
 
       await db
         .update(services)
@@ -1120,11 +1152,24 @@ export const reportService = async ({
       await sendSMS(messageData.customerPhone, messageContent);
     }
 
-    if (serviceStatus.status === "completed" && serviceRecord) {
-      if (serviceRecord.type === "install") {
-        triggerVoiceCall("installation_complete", serviceRecord.customerPhone, `Installation Complete for ${serviceRecord.customerName}`);
-      } else {
-        triggerVoiceCall("service_complete", serviceRecord.customerPhone, `Service Complete for ${serviceRecord.customerName}`);
+    if (serviceStatus.status === "completed") {
+      try {
+        const { sendVoiceCall, getMramBroadcastIds } = await import("@/lib/mram");
+        const broadcastIds = getMramBroadcastIds();
+        if (broadcastIds) {
+           const svcRecord = await db.query.services.findFirst({
+             where: eq(services.serviceId, serviceStatus.serviceId),
+             columns: { customerPhone: true, type: true },
+           });
+           const phoneToCall = messageData?.customerPhone || svcRecord?.customerPhone;
+           const bId = svcRecord?.type === "install" ? broadcastIds.installation_complete : broadcastIds.service_complete;
+           
+           if (phoneToCall && bId) {
+             sendVoiceCall(phoneToCall, bId, `Service Completed ${serviceStatus.serviceId}`).catch(e => console.error(e));
+           }
+        }
+      } catch (e) {
+        console.error("Failed to send MRAM voice call:", e);
       }
     }
 
@@ -1390,14 +1435,21 @@ export const adminSubmitServiceReport = async ({
           },
         );
         await sendSMS(serviceData.customerPhone, messageContent);
-
-        if (serviceData.type === "install") {
-          triggerVoiceCall("installation_complete", serviceData.customerPhone, `Installation Complete for ${serviceData.customerName}`);
-        } else {
-          triggerVoiceCall("service_complete", serviceData.customerPhone, `Service Complete for ${serviceData.customerName}`);
-        }
       } catch (smsErr) {
         console.error("Failed to send completion SMS:", smsErr);
+      }
+
+      try {
+        const { sendVoiceCall, getMramBroadcastIds } = await import("@/lib/mram");
+        const broadcastIds = getMramBroadcastIds();
+        if (broadcastIds) {
+           const bId = serviceData.type === "install" ? broadcastIds.installation_complete : broadcastIds.service_complete;
+           if (bId) {
+             sendVoiceCall(serviceData.customerPhone, bId, `Service Completed ${serviceId}`).catch(e => console.error(e));
+           }
+        }
+      } catch (e) {
+        console.error("Failed to send MRAM voice call:", e);
       }
     }
 
