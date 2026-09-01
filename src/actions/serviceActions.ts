@@ -523,6 +523,15 @@ export async function createService(prevState: any, formData: FormData) {
         await sendSMS(validatedCustomerData.customerPhone, fullMessage);
       }
 
+      try {
+        const { sendVoiceCall, getMramBroadcastIds } = await import("@/lib/mram");
+        const broadcastIds = getMramBroadcastIds();
+        if (broadcastIds && broadcastIds.service_requested) {
+           sendVoiceCall(validatedCustomerData.customerPhone, broadcastIds.service_requested, `Service Requested ${serviceId}`).catch(e => console.error(e));
+        }
+      } catch (e) {
+        console.error("Failed to send MRAM voice call:", e);
+      }
     }
 
     return { success: true, message: "Added to service list" };
