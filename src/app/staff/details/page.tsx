@@ -130,29 +130,53 @@ export default async function StaffDetailsPage() {
                 )}
               </div>
 
-              {/* Download ID Button */}
-              <a
-                target="_blank"
-                href={`/pdf/download?type=id-card&id=${staffData.staffId}`}
-                className="inline-flex items-center gap-2 mt-4 px-6 py-2.5 bg-white text-[#0a192f] rounded-lg hover:bg-gray-50 transition-all border border-gray-300 text-xs sm:text-sm font-bold tracking-wider uppercase shadow-sm"
-              >
-                <svg
-                  className="size-5 text-[#0a192f]"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2.5"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
+              {/* Download & Export Buttons */}
+              <div className="flex flex-col sm:flex-row gap-2 mt-4">
+                <a
+                  target="_blank"
+                  href={`/pdf/download?type=id-card&id=${staffData.staffId}`}
+                  className="inline-flex items-center justify-center gap-2 px-6 py-2.5 bg-white text-[#0a192f] rounded-lg hover:bg-gray-50 transition-all border border-gray-300 text-xs sm:text-sm font-bold tracking-wider uppercase shadow-sm w-full sm:w-auto"
                 >
-                  <rect width="20" height="14" x="2" y="5" rx="2" />
-                  <path d="M6 14v-1a2 2 0 0 1 2-2h0a2 2 0 0 1 2 2v1" />
-                  <circle cx="8" cy="8" r="1.5" />
-                  <line x1="14" x2="18" y1="9" y2="9" />
-                  <line x1="14" x2="18" y1="13" y2="13" />
-                </svg>
-                Download ID
-              </a>
+                  <svg
+                    className="size-5 text-[#0a192f]"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2.5"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  >
+                    <rect width="20" height="14" x="2" y="5" rx="2" />
+                    <path d="M6 14v-1a2 2 0 0 1 2-2h0a2 2 0 0 1 2 2v1" />
+                    <circle cx="8" cy="8" r="1.5" />
+                    <line x1="14" x2="18" y1="9" y2="9" />
+                    <line x1="14" x2="18" y1="13" y2="13" />
+                  </svg>
+                  Download ID
+                </a>
+
+                <a
+                  href={`/staff/resume`}
+                  className="inline-flex items-center justify-center gap-2 px-6 py-2.5 bg-brand text-white rounded-lg hover:bg-brand/90 transition-all text-xs sm:text-sm font-bold tracking-wider uppercase shadow-sm w-full sm:w-auto"
+                >
+                  <svg
+                    className="size-5"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2.5"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  >
+                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+                    <path d="M14 2v6h6" />
+                    <line x1="16" y1="13" x2="8" y2="13" />
+                    <line x1="16" y1="17" x2="8" y2="17" />
+                    <polyline points="10 9 9 9 8 9" />
+                  </svg>
+                  Export Profile Data
+                </a>
+              </div>
             </div>
           </div>
 
