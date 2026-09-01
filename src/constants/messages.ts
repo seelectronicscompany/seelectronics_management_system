@@ -14,6 +14,7 @@ export const ApplicationMessages = {
     ADMIN_NOTIF: `অনলাই সার্ভিসিং এর জন্য অনুরোধ করেছে তথ্য যাচাই করুন`,
     SUBMISSION: `প্রিয় {applicant_name},\nঅনলাইন সার্ভিসিং আইডি {service_id}, আপনার অনুরোধটি প্রাথমিক পর্যালোচনার পর্যায়ে রয়েছে। আপনার তথ্য ও সমস্যার যাচাই করে দেখছে, ধন্যবাদ।\nসকল তথ্য আপডেট পেতে ট্রেকিং লিংকটি ওপেন করুন। যেকোনো তথ্যের জন্য ${contactDetails.customerCare}\n{tracking_link}`,
     APPROVAL: `প্রিয় গ্রাহক {applicant_name},\nSE ELECTRONICS আপনার সার্ভিসিং এর অনুরোধটি গ্রহণ করা হয়েছে সার্ভিস আই ডি নং {service_id}, যে কোন তথ্যের জন্য ${contactDetails.customerCare} সার্ভিস স্ট্যাটাস ট্র্যাক করতে লিঙ্কটিতে ক্লিক করুন\n{tracking_link}`,
+    INSTALL_APPROVAL: `প্রিয় গ্রাহক {applicant_name},\nSE ELECTRONICS আপনার আই পি এস  হোম ইন্সটল এর অনুরোধটি গ্রহণ করা হয়েছে ইন্সটল আই ডি নং {service_id}, যে কোন তথ্যের জন্য ${contactDetails.customerCare} সার্ভিস স্ট্যাটাস ট্র্যাক করতে লিঙ্কটিতে ক্লিক করুন\n{tracking_link}`,
     REJECTION: `আমরা দুঃখিত যে আপনার সার্ভিসিং অনুরোধটি বাতিল করা হয়েছে। এই মুহূর্তে আমরা আপনার অনুরোধটি এগিয়ে নিতে পারছি না। বাতিলের কারণ বা অন্য কোনো সহায়তার জন্য অনুগ্রহ করে আমাদের কাস্টমার সাপোর্টের সাথেযোগাযোগ করুন। ${contactDetails.customerCare}, ${contactDetails.customerCare2}`,
   },
   subscription: {
@@ -49,12 +50,13 @@ export const MediaDownloadMessages = {
 export const ServiceMessages = {
   CUSTOMER_REPAIR: `প্রিয় গ্রাহক {customer_name}, 
 আপনার {service_id} সার্ভিসটি সমাধানের জন্য সার্ভিস টিম নিয়োগ করা হয়েছে। বিস্তারিত জানতে অনুগ্রহ করে আপনার ড্যাশবোর্ড চেক করুন।`,
-  CUSTOMER_INSTALL: `প্রিয় গ্রাহক {customer_name},\nআপনার {service_id} প্যাকেজ টি হোম ইন্সটলেশন করার জন্য অফিসিয়াল ইন্সটল টিমকে নিযুক্ত করা হয়েছে। দ্রুত সময়ের মধ্যে ইন্সটল টিম আপনার সাথে যোগাযোগ করে সমাধান করবে। যে কোন তথ্যের জন্য ${contactDetails.customerCare}`,
+  CUSTOMER_INSTALL: `প্রিয় গ্রাহক {customer_name},\nআপনার {service_id} প্যাকেজ টি হোম ইন্সটলেশন করার জন্য অফিসিয়াল ইন্সটল টিমকে নিযুক্ত করা হয়েছে। দ্রুত সময়ের মধ্যে ইন্সটল টিম আপনার সাথে যোগাযোগ করে সমাধান করবে। যে কোন তথ্যের জন্য ${contactDetails.customerCare}`,
   TECHNICIAN_APPOINT:
     "জনাব {staff_name},\nআপনাকে এস ই ইলেকট্রনিক্স কোম্পানির পন্য সার্ভিস করার জন্য নিয়োগ করা হয়েছে আপনি সম্মানিত কাস্টমার এর সাথে যোগাযোগ করে পন্যটির সমাধান দিন ধন্যবাদ।\nকাস্টমার নাম : {customer_name}\nকাস্টমার ফোন : {customer_phone}\nকাস্টমার সার্ভিস আই ডি নং : {service_id}\nপ্রোডাক্ট মডেল : {product_model}\nকাস্টমার লোকেশন : {customer_address}\nসার্ভিসিং সম্পর্কে তথ্য প্রদান করতে লিঙ্কটিতে ক্লিক করুন {service_report_url}",
   ELECTRICIAN_APPOINT:
     "জনাব {staff_name},\nআপনাকে এস ই ইলেকট্রনিক্স কোম্পানির পন্য IPS ইন্সটল করার জন্য নিয়োগ করা হয়েছে আপনি সম্মানিত কাস্টমার এর সাথে যোগাযোগ করে পন্যটির সমাধান দিন ধন্যবাদ।\nকাস্টমার নাম : {customer_name}\nকাস্টমার ফোন : {customer_phone}\nকাস্টমার সার্ভিস আই ডি নং : {service_id}\nপ্রোডাক্ট মডেল : {product_model}\nকাস্টমার লোকেশন : {customer_address}\nসার্ভিসিং সম্পর্কে তথ্য প্রদান করতে লিঙ্কটিতে ক্লিক করুন {service_report_url}",
   CONFIRMATION: `প্রিয় গ্রাহক {customer_name},\nSE ELECTRONICS আপনার সার্ভিসিং এর অনুরোধটি গ্রহণ করা হয়েছে সার্ভিস আই ডি নং {service_id}, যে কোন তথ্যের জন্য ${contactDetails.customerCare} সার্ভিস স্ট্যাটাস ট্র্যাক করতে লিঙ্কটিতে ক্লিক করুন\n{tracking_link}`,
+  INSTALL_CONFIRMATION: `প্রিয় গ্রাহক {customer_name},\nSE ELECTRONICS আপনার আই পি এস  হোম ইন্সটল এর অনুরোধটি গ্রহণ করা হয়েছে ইন্সটল আই ডি নং {service_id}, যে কোন তথ্যের জন্য ${contactDetails.customerCare} সার্ভিস স্ট্যাটাস ট্র্যাক করতে লিঙ্কটিতে ক্লিক করুন\n{tracking_link}`,
   COMPLETION_INSTALL: `প্রিয় গ্রাহক {customer_name},\nআপনার IPS প্যাকেজ ইন্সটল সার্ভিস {service_id}, হাউস ওয়ারিং কাজ শেষ হয়েছে৷ অনুগ্রহ করে আপনার ফিডব্যাক এর জন্য ক্লিক করুন:\n{feedback_url}`,
   COMPLETION_REPAIR: `প্রিয় গ্রাহক {customer_name},\nআপনার সার্ভিস {service_id} সার্ভিসটি সমাধান করা হয়েছে। অনুগ্রহ করে আপনার ফিডব্যাক এর জন্য ক্লিক করুন:\n{feedback_url}`,
 };

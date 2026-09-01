@@ -184,6 +184,7 @@ export const updateApplicationStatus = async (applicationId: string, updates: { 
         const { status } = updates
         let messageContent = ''
         let serviceId = ''
+        let serviceType = ''
 
         if (status && (status === 'approved' || status === 'rejected')) {
             switch (applicationData[0].type) {
@@ -200,13 +201,17 @@ export const updateApplicationStatus = async (applicationId: string, updates: { 
                     break
                 }
                 case 'service_application': {
-                    serviceId = (await db.update(services)
+                    const serviceResult = (await db.update(services)
                         .set({ isActive: status === 'approved' })
                         .where(eq(services.serviceId, applicationData[0].applicantId))
-                        .returning({ serviceId: services.serviceId }))[0].serviceId
+                        .returning({ serviceId: services.serviceId, type: services.type }))[0]
+                    serviceId = serviceResult.serviceId
+                    serviceType = serviceResult.type || ''
 
                     if (status === 'approved') {
-                        messageContent = ApplicationMessages.service.APPROVAL
+                        messageContent = serviceResult.type === 'install'
+                            ? ApplicationMessages.service.INSTALL_APPROVAL
+                            : ApplicationMessages.service.APPROVAL
                     } else {
                         messageContent = ApplicationMessages.service.REJECTION
                     }
@@ -315,8 +320,12 @@ export const updateApplicationStatus = async (applicationId: string, updates: { 
                 try {
                     const { sendVoiceCall, getMramBroadcastIds } = await import("@/lib/mram");
                     const broadcastIds = getMramBroadcastIds();
-                    if (broadcastIds && broadcastIds.service_requested) {
-                        sendVoiceCall(applicantData[0].phone, broadcastIds.service_requested, `Service Requested ${serviceId}`).catch(e => console.error(e));
+                    if (broadcastIds) {
+                        if (serviceType === 'install' && broadcastIds.installation_requested) {
+                            sendVoiceCall(applicantData[0].phone, broadcastIds.installation_requested, `Installation Requested ${serviceId}`).catch(e => console.error(e));
+                        } else if (broadcastIds.service_requested) {
+                            sendVoiceCall(applicantData[0].phone, broadcastIds.service_requested, `Service Requested ${serviceId}`).catch(e => console.error(e));
+                        }
                     }
                 } catch (e) {
                     console.error("Failed to send MRAM voice call:", e);

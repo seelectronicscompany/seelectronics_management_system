@@ -489,8 +489,11 @@ export async function createService(prevState: any, formData: FormData) {
         ),
       ]);
     } else if (originSource === "dashboard") {
-      // Else this form is created from the dashboard so send a SMS to the customer with service status tracking link
-      const fullMessage = renderText(ServiceMessages.CONFIRMATION, {
+      const messageTemplate = validatedCustomerData.type === 'install' 
+        ? ServiceMessages.INSTALL_CONFIRMATION 
+        : ServiceMessages.CONFIRMATION;
+
+      const fullMessage = renderText(messageTemplate, {
         customer_name: validatedCustomerData.customerName,
         service_id: serviceId,
         tracking_link: generateUrl("service-tracking", {
@@ -498,8 +501,12 @@ export async function createService(prevState: any, formData: FormData) {
         }),
       });
 
+      const shortSMSTemplate = validatedCustomerData.type === 'install'
+        ? `প্রিয় গ্রাহক {customer_name}, আপনার আই পি এস হোম ইন্সটল এর অনুরোধটি গ্রহণ করা হয়েছে (ID: {service_id})। বিস্তারিত দেখুন: {tracking_link}`
+        : `প্রিয় গ্রাহক {customer_name}, আপনার সার্ভিস অনুরোধটি (ID: {service_id}) গ্রহণ করা হয়েছে। বিস্তারিত দেখুন: {tracking_link}`;
+
       const shortSMS = renderText(
-        `প্রিয় গ্রাহক {customer_name}, আপনার সার্ভিস অনুরোধটি (ID: {service_id}) গ্রহণ করা হয়েছে। বিস্তারিত দেখুন: {tracking_link}`,
+        shortSMSTemplate,
         {
           customer_name: validatedCustomerData.customerName,
           service_id: serviceId,
@@ -526,8 +533,12 @@ export async function createService(prevState: any, formData: FormData) {
       try {
         const { sendVoiceCall, getMramBroadcastIds } = await import("@/lib/mram");
         const broadcastIds = getMramBroadcastIds();
-        if (broadcastIds && broadcastIds.service_requested) {
-           sendVoiceCall(validatedCustomerData.customerPhone, broadcastIds.service_requested, `Service Requested ${serviceId}`).catch(e => console.error(e));
+        if (broadcastIds) {
+          if (validatedCustomerData.type === 'install' && broadcastIds.installation_requested) {
+            sendVoiceCall(validatedCustomerData.customerPhone, broadcastIds.installation_requested, `Installation Requested ${serviceId}`).catch(e => console.error(e));
+          } else if (broadcastIds.service_requested) {
+            sendVoiceCall(validatedCustomerData.customerPhone, broadcastIds.service_requested, `Service Requested ${serviceId}`).catch(e => console.error(e));
+          }
         }
       } catch (e) {
         console.error("Failed to send MRAM voice call:", e);
@@ -715,7 +726,7 @@ export const appointStaff = async (
       );
 
       // 2. Send a short SMS and notification
-      const shortStaffSMS = `নতুন সার্ভিস নিয়োগ করা হয়েছে (ID: ${validatedData.serviceId})। বিস্তারিত আপনার ড্যাশবোর্ডে দেখুন।`;
+      const shortStaffSMS = `টেকনিশিয়ান/ ইলেকট্রিশিয়ান ${validatedData.staffName} নতুন সার্ভিস নিয়োগ করা হয়েছে (ID: ${validatedData.serviceId})। বিস্তারিত আপনার ড্যাশবোর্ডে দেখুন।`;
       promises.push(
         notifyStaff({
           staffId: validatedData.staffId,
