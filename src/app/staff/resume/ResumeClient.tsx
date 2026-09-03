@@ -93,7 +93,7 @@ export default function ResumeClient({ staffData }: ResumeClientProps) {
               </p>
             </div>
 
-            <div className="w-[120px] h-[140px] border-[3px] border-black flex items-center justify-center relative overflow-hidden bg-gray-50 rounded-full object-cover">
+            <div className="w-[120px] h-[140px] border-[3px] border-black flex items-center justify-center relative overflow-hidden bg-gray-50 ">
               {staffData.photoUrl ? (
                 // eslint-disable-next-line @next/next/no-img-element
                 <img
@@ -112,7 +112,14 @@ export default function ResumeClient({ staffData }: ResumeClientProps) {
 
           <div className="flex justify-between mb-3 font-bold text-sm">
             <div>
-              তারিখ : <DottedLine width="150px" />
+              তারিখ :{" "}
+              {staffData.createdAt ? (
+                <span className="inline-block border-b-2 border-dotted border-gray-600 px-2 min-w-[150px] text-center font-mono">
+                  {new Date(staffData.createdAt).toLocaleDateString("en-GB")}
+                </span>
+              ) : (
+                <DottedLine width="150px" />
+              )}
             </div>
             <div>
               ফর্ম নাম্বার :{" "}
@@ -226,166 +233,39 @@ export default function ResumeClient({ staffData }: ResumeClientProps) {
 
           {/* Address Table */}
           <div className="mb-4">
-            <table className="w-full border-collapse border border-black text-[13px] text-center table-fixed">
+            <table className="w-full border-collapse border border-black text-[14px] text-left table-fixed">
               <thead>
                 <tr>
-                  <th className="border border-black py-2 w-1/2 font-bold text-[15px]">
+                  <th className="border border-black py-2 w-1/2 font-bold text-[15px] text-center">
                     বর্তমান ঠিকানা
                   </th>
-                  <th className="border border-black py-2 w-1/2 font-bold text-[15px]">
+                  <th className="border border-black py-2 w-1/2 font-bold text-[15px] text-center">
                     স্থায়ী ঠিকানা
                   </th>
                 </tr>
               </thead>
               <tbody>
                 <tr>
-                  <td className="border border-black p-0 align-top">
-                    <div className="flex border-b border-black min-h-[36px]">
-                      <div className="w-1/3 border-r border-black p-2 text-left font-medium flex items-center">
-                        বাড়ির মালিকের নাম
-                      </div>
-                      <div className="w-2/3 p-2 text-left"></div>
-                    </div>
-                    <div className="flex border-b border-black min-h-[36px]">
-                      <div className="w-1/3 border-r border-black p-2 text-left font-medium flex items-center">
-                        বাসা/ রোড নং
-                      </div>
-                      <div className="w-2/3 p-2 text-left font-medium flex items-center">
-                        {staffData.currentStreetAddress}
-                      </div>
-                    </div>
-                    <div className="flex border-b border-black min-h-[36px]">
-                      <div className="w-1/3 border-r border-black p-2 text-left font-medium flex items-center">
-                        মহল্লা/ পাড়ার নাম
-                      </div>
-                      <div className="w-2/3 p-2 text-left"></div>
-                    </div>
-                    <div className="flex border-b border-black min-h-[36px]">
-                      <div className="w-1/3 border-r border-black p-2 text-left font-medium flex items-center">
-                        থানা
-                      </div>
-                      <div className="w-2/3 p-2 text-left font-medium flex items-center">
-                        {staffData.currentPoliceStation}
-                      </div>
-                    </div>
-                    <div className="flex min-h-[36px]">
-                      <div className="w-1/3 border-r border-black p-2 text-left font-medium flex items-center">
-                        জেলা
-                      </div>
-                      <div className="w-2/3 p-2 text-left font-medium flex items-center">
-                        {staffData.currentDistrict}
-                      </div>
-                    </div>
+                  <td className="border border-black  align-top leading-relaxed">
+                    {[
+                      staffData.currentStreetAddress,
+                      staffData.currentPostOffice,
+                      staffData.currentPoliceStation,
+                      staffData.currentDistrict,
+                    ]
+                      .filter(Boolean)
+                      .join(", ")}
                   </td>
-                  <td className="border border-black p-0 align-top">
-                    <div className="flex border-b border-black min-h-[36px]">
-                      <div className="w-1/3 border-r border-black p-2 text-left font-medium flex items-center">
-                        গ্রামের নাম
-                      </div>
-                      <div className="w-2/3 p-2 text-left"></div>
-                    </div>
-                    <div className="flex border-b border-black min-h-[36px]">
-                      <div className="w-1/3 border-r border-black p-2 text-left font-medium flex items-center">
-                        বাড়ীর নাম
-                      </div>
-                      <div className="w-2/3 p-2 text-left font-medium flex items-center">
-                        {staffData.permanentStreetAddress}
-                      </div>
-                    </div>
-                    <div className="flex border-b border-black min-h-[36px]">
-                      <div className="w-1/3 border-r border-black p-2 text-left font-medium flex items-center">
-                        পোস্টঅফিস
-                      </div>
-                      <div className="w-2/3 p-2 text-left font-medium flex items-center">
-                        {staffData.permanentPostOffice}
-                      </div>
-                    </div>
-                    <div className="flex border-b border-black min-h-[36px]">
-                      <div className="w-1/3 border-r border-black p-2 text-left font-medium flex items-center">
-                        থানা
-                      </div>
-                      <div className="w-2/3 p-2 text-left font-medium flex items-center">
-                        {staffData.permanentPoliceStation}
-                      </div>
-                    </div>
-                    <div className="flex min-h-[36px]">
-                      <div className="w-1/3 border-r border-black p-2 text-left font-medium flex items-center">
-                        জেলা
-                      </div>
-                      <div className="w-2/3 p-2 text-left font-medium flex items-center">
-                        {staffData.permanentDistrict}
-                      </div>
-                    </div>
+                  <td className="border border-black align-top leading-relaxed">
+                    {[
+                      staffData.permanentStreetAddress,
+                      staffData.permanentPostOffice,
+                      staffData.permanentPoliceStation,
+                      staffData.permanentDistrict,
+                    ]
+                      .filter(Boolean)
+                      .join(", ")}
                   </td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-
-          <div className="flex items-center mb-3">
-            <span className="w-10">১০।</span>
-            <span>পূর্ব অভিজ্ঞতা : </span>
-            <div className="flex items-center gap-4 mx-4">
-              <Checkbox
-                label="আছে"
-                checked={
-                  staffData.hasRepairExperience ||
-                  staffData.hasInstallationExperience
-                }
-              />
-              <Checkbox
-                label="নাই"
-                checked={
-                  !staffData.hasRepairExperience &&
-                  !staffData.hasInstallationExperience
-                }
-              />
-            </div>
-            <span>মাস </span>
-            <div className="w-24 border-b-[1.5px] border-dotted border-gray-600 px-2 text-center font-bold">
-              {staffData.repairExperienceYears
-                ? staffData.repairExperienceYears * 12
-                : ""}
-            </div>
-            <span>/ বছরের : </span>
-            <div className="w-24 border-b-[1.5px] border-dotted border-gray-600 px-2 text-center font-bold">
-              {staffData.repairExperienceYears || ""}
-            </div>
-          </div>
-
-          {/* Experience Table */}
-          <div className="mb-4">
-            <table className="w-full border-collapse border border-black text-[13px] text-center">
-              <thead>
-                <tr>
-                  <th className="border border-black py-2 w-12 font-medium">
-                    ক্র :
-                  </th>
-                  <th className="border border-black py-2 w-1/4 font-medium">
-                    কোম্পানীর নাম
-                  </th>
-                  <th className="border border-black py-2 w-1/5 font-medium">
-                    ডিপার্টমেন্ট
-                  </th>
-                  <th className="border border-black py-2 w-1/5 font-medium">
-                    পদবী
-                  </th>
-                  <th className="border border-black py-2 w-1/6 font-medium">
-                    বেতন
-                  </th>
-                  <th className="border border-black py-2 font-medium">
-                    চাকুরি কাল
-                  </th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr className="h-10">
-                  <td className="border border-black text-left pl-2">ক)</td>
-                  <td className="border border-black"></td>
-                  <td className="border border-black"></td>
-                  <td className="border border-black"></td>
-                  <td className="border border-black"></td>
-                  <td className="border border-black"></td>
                 </tr>
               </tbody>
             </table>
@@ -425,63 +305,6 @@ export default function ResumeClient({ staffData }: ResumeClientProps) {
           </div>
 
           {/* Declarations */}
-          <div className="text-[12px] leading-[1.6] mb-6 relative pl-6 space-y-1">
-            <div className="absolute left-0 top-[2px]">
-              <svg
-                width="14"
-                height="14"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2.5"
-              >
-                <circle cx="12" cy="12" r="10" strokeDasharray="3 3"></circle>
-              </svg>
-            </div>
-            <p>
-              আমি এই মর্মে ঘোষণা করিতেছি যে, আমার জানামতে উপরোক্ত তথ্যাবলি
-              নির্ভুল ও সত্য। আমি জ্ঞানত কোন তথ্য গোপন করি নাই।
-            </p>
-
-            <div className="absolute left-0 top-[26px]">
-              <svg
-                width="14"
-                height="14"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2.5"
-              >
-                <circle cx="12" cy="12" r="10" strokeDasharray="3 3"></circle>
-              </svg>
-            </div>
-            <p>
-              যদি আমি ভবিষ্যতে আমার বিরুদ্ধে ভুল তথ্য দাখিল কিংবা প্রধান
-              সম্পর্কিত কোন ধরনের অভিযোগ পাওয়া যায়, তাহলে এস ই বিডি কর্তৃপক্ষ
-              আমার বিরুদ্ধে যথাযথ ব্যবস্থা
-              <br />
-              গ্রহণ করিতে পারিবে এবং এতে আমার কোন আপত্তি থাকবেনা। আমি কোন আপত্তি
-              করিলে সর্বস্তুর আদালতে তাহা অগ্রাহ্য বলিয়া গন্য হইবে।
-            </p>
-
-            <div className="absolute left-0 top-[72px]">
-              <svg
-                width="14"
-                height="14"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2.5"
-              >
-                <circle cx="12" cy="12" r="10" strokeDasharray="3 3"></circle>
-              </svg>
-            </div>
-            <p>
-              আমার বর্তমান ঠিকানা পরিবর্তন হলে পরিবর্তীত নতুন ঠিকানা পরবর্তী ০৩
-              দিনের মধ্যে লিখিতভাবে এস ই বিডির প্রশাসনিক বিভাগে জানাতে বাধ্য
-              থাকব।
-            </p>
-          </div>
 
           <div className="mb-6">
             <span>তারিখ: </span>
@@ -523,6 +346,40 @@ export default function ResumeClient({ staffData }: ResumeClientProps) {
             কপি রঙ্গিন পাসপোর্ট সাইজ ছবি ছ) বর্তমান ঠিকানার এলাকায় কমিশনারের সনদ
             পত্র।
           </div>
+
+          {/* NID Images */}
+          {(staffData.nidFrontPhotoUrl || staffData.nidBackPhotoUrl) && (
+            <div
+              className="mt-12 pt-8 border-t-2 border-dashed border-gray-400 print:border-none print:mt-0 print:pt-4"
+              style={{ pageBreakBefore: "always" }}
+            >
+              <h2 className="text-lg font-bold mb-6 text-center underline">
+                জাতীয় পরিচয় পত্র
+              </h2>
+              <div className="flex  gap-8 justify-center items-center">
+                {staffData.nidFrontPhotoUrl && (
+                  <div className="w-full max-w-md border border-gray-300 p-2 bg-white shadow-sm">
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img
+                      src={staffData.nidFrontPhotoUrl}
+                      alt="NID Front"
+                      className="w-full h-auto object-contain"
+                    />
+                  </div>
+                )}
+                {staffData.nidBackPhotoUrl && (
+                  <div className="w-full max-w-md border border-gray-300 p-2 bg-white shadow-sm">
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img
+                      src={staffData.nidBackPhotoUrl}
+                      alt="NID Back"
+                      className="w-full h-auto object-contain"
+                    />
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
         </div>
       </div>
 
