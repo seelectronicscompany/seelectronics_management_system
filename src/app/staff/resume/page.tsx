@@ -1,16 +1,32 @@
 import { verifyStaffSession } from "@/actions";
 import { getStaffById } from "@/actions/staffActions";
 import { getObjectUrl } from "@/lib/s3";
+import { verifySession } from "@/lib";
 import { redirect } from "next/navigation";
 import ResumeClient from "./ResumeClient";
 
-export default async function ResumePage() {
-  const session = await verifyStaffSession();
-  if (!session.isAuth) {
-    redirect("/staff/login");
+export default async function ResumePage({
+  searchParams,
+}: {
+  searchParams: Promise<{ id?: string }>;
+}) {
+  const { id } = await searchParams;
+  let userId = "";
+
+  if (id) {
+    const adminSession = await verifySession(false, "admin");
+    if (!adminSession?.isAuth) {
+      redirect("/login");
+    }
+    userId = id;
+  } else {
+    const session = await verifyStaffSession();
+    if (!session.isAuth) {
+      redirect("/staff/login");
+    }
+    userId = session.userId as string;
   }
 
-  const userId = session.userId as string;
   const profileRes = await getStaffById(userId);
   const staffData = profileRes.success ? profileRes.data : null;
 
