@@ -22,7 +22,7 @@ const VOICE_SMS_ACTIONS: Record<number, { label: string; sms: string }> = {
   },
   1526: {
     label: "আইপিএস ও ব্যাটারি প্যাকেজের টাকা পরিশোধ করতে",
-    sms: "প্রিয় গ্রাহক {name} আই IPS,Battery টাকা পরিশোধ করতে অনুরোধ করা হল এস ই ইলেকট্রনিক্স কর্তৃপক্ষ বিস্তারিত জানতে 09649355555, 09639673600",
+    sms: "প্রিয় গ্রাহক {name}  IPS,Battery টাকা পরিশোধ করতে অনুরোধ করা হল এস ই ইলেকট্রনিক্স কর্তৃপক্ষ বিস্তারিত জানতে 09649355555, 09639673600",
   },
   3519: {
     label: "দীর্ঘদিন বকেয়া টাকা পরিশোধ না করায় ওয়ারেন্টি বাতিল",
@@ -36,7 +36,7 @@ const VOICE_SMS_ACTIONS: Record<number, { label: string; sms: string }> = {
 
 export const sendCustomerVoiceAndSms = async (
   customerId: string,
-  actionId: number
+  actionId: number,
 ) => {
   try {
     const session = await verifySession(false, "admin");
@@ -55,18 +55,28 @@ export const sendCustomerVoiceAndSms = async (
       return { success: false, message: "Invalid action ID" };
     }
 
-    const smsMessage = actionData.sms.replace("{name}", customerData.name || "Customer");
-    
+    const smsMessage = actionData.sms.replace(
+      "{name}",
+      customerData.name || "Customer",
+    );
+
     // Trigger both concurrently
     const [voiceRes, smsRes] = await Promise.allSettled([
-      sendVoiceCall(customerData.phone, actionId, `Customer Action ${actionId}`),
-      sendSMS(customerData.phone, smsMessage)
+      sendVoiceCall(
+        customerData.phone,
+        actionId,
+        `Customer Action ${actionId}`,
+      ),
+      sendSMS(customerData.phone, smsMessage),
     ]);
 
     let message = "Action completed.";
     let success = true;
 
-    if (voiceRes.status === "rejected" || (voiceRes.status === "fulfilled" && !voiceRes.value.success)) {
+    if (
+      voiceRes.status === "rejected" ||
+      (voiceRes.status === "fulfilled" && !voiceRes.value.success)
+    ) {
       message += " Voice call failed.";
       success = false;
     } else {
@@ -81,13 +91,11 @@ export const sendCustomerVoiceAndSms = async (
     }
 
     return { success, message };
-
   } catch (error) {
     console.error(error);
     return { success: false, message: "Something went wrong" };
   }
 };
-
 
 export const sendDueVoiceCall = async (customerId: string) => {
   try {
@@ -104,15 +112,25 @@ export const sendDueVoiceCall = async (customerId: string) => {
 
     const broadcastIds = getMramBroadcastIds();
     if (!broadcastIds || !broadcastIds.customer_due) {
-      return { success: false, message: "Broadcast ID for customer due not configured" };
+      return {
+        success: false,
+        message: "Broadcast ID for customer due not configured",
+      };
     }
 
-    const res = await sendVoiceCall(customerData.phone, broadcastIds.customer_due, "Customer Due Reminder");
+    const res = await sendVoiceCall(
+      customerData.phone,
+      broadcastIds.customer_due,
+      "Customer Due Reminder",
+    );
 
     if (res.success) {
       return { success: true, message: "Voice call triggered successfully" };
     } else {
-      return { success: false, message: res.error || "Failed to trigger voice call" };
+      return {
+        success: false,
+        message: res.error || "Failed to trigger voice call",
+      };
     }
   } catch (error) {
     console.error(error);
@@ -122,7 +140,7 @@ export const sendDueVoiceCall = async (customerId: string) => {
 
 export const sendBulkVoiceCallToSelected = async (
   customerIds: string[],
-  type: "battery_health_check" | "overall_maintenance"
+  type: "battery_health_check" | "overall_maintenance",
 ) => {
   try {
     const session = await verifySession(false, "admin");
@@ -144,16 +162,32 @@ export const sendBulkVoiceCallToSelected = async (
 
     const broadcastIds = getMramBroadcastIds();
     if (!broadcastIds || !broadcastIds[type]) {
-      return { success: false, message: `Broadcast ID for ${type} not configured` };
+      return {
+        success: false,
+        message: `Broadcast ID for ${type} not configured`,
+      };
     }
 
-    const titleType = type === "battery_health_check" ? "Battery Health Check" : "Overall Maintenance";
-    const res = await sendVoiceCall(phones, broadcastIds[type], `Bulk ${titleType} Reminder`);
+    const titleType =
+      type === "battery_health_check"
+        ? "Battery Health Check"
+        : "Overall Maintenance";
+    const res = await sendVoiceCall(
+      phones,
+      broadcastIds[type],
+      `Bulk ${titleType} Reminder`,
+    );
 
     if (res.success) {
-      return { success: true, message: `Sent voice call to ${phones.length} customers` };
+      return {
+        success: true,
+        message: `Sent voice call to ${phones.length} customers`,
+      };
     } else {
-      return { success: false, message: res.error || "Failed to send bulk voice calls" };
+      return {
+        success: false,
+        message: res.error || "Failed to send bulk voice calls",
+      };
     }
   } catch (error) {
     console.error(error);
@@ -162,7 +196,7 @@ export const sendBulkVoiceCallToSelected = async (
 };
 
 export const sendBulkVoiceCallToAll = async (
-  type: "battery_health_check" | "overall_maintenance"
+  type: "battery_health_check" | "overall_maintenance",
 ) => {
   try {
     const session = await verifySession(false, "admin");
@@ -179,7 +213,10 @@ export const sendBulkVoiceCallToAll = async (
 
     const broadcastIds = getMramBroadcastIds();
     if (!broadcastIds || !broadcastIds[type]) {
-      return { success: false, message: `Broadcast ID for ${type} not configured` };
+      return {
+        success: false,
+        message: `Broadcast ID for ${type} not configured`,
+      };
     }
 
     // Split into chunks if there are too many (e.g. MRAM might have limit like 1000)
@@ -190,9 +227,16 @@ export const sendBulkVoiceCallToAll = async (
     }
 
     let successCount = 0;
-    const titleType = type === "battery_health_check" ? "Battery Health Check" : "Overall Maintenance";
+    const titleType =
+      type === "battery_health_check"
+        ? "Battery Health Check"
+        : "Overall Maintenance";
     for (const chunk of chunks) {
-      const res = await sendVoiceCall(chunk, broadcastIds[type], `Bulk ${titleType} Reminder`);
+      const res = await sendVoiceCall(
+        chunk,
+        broadcastIds[type],
+        `Bulk ${titleType} Reminder`,
+      );
       if (res.success) {
         successCount += chunk.length;
       } else {
@@ -200,7 +244,10 @@ export const sendBulkVoiceCallToAll = async (
       }
     }
 
-    return { success: true, message: `Sent voice call to ${successCount} customers` };
+    return {
+      success: true,
+      message: `Sent voice call to ${successCount} customers`,
+    };
   } catch (error) {
     console.error(error);
     return { success: false, message: "Something went wrong" };
