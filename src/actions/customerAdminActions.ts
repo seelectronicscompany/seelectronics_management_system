@@ -189,6 +189,8 @@ export const createCustomer = async (data: any, sendLink = false) => {
         subtotal: Number(data.invoice.subtotal) || 0,
         total: finalTotal,
         dueAmount: finalDue,
+        dueType: data.invoice.dueType || 'due',
+        notes: data.invoice.notes || '',
       })
       .returning();
 
@@ -394,6 +396,8 @@ export const updateCustomer = async (
         subtotal: Number(data.invoice.subtotal) || 0,
         total: finalTotal,
         dueAmount: finalDue,
+        dueType: data.invoice.dueType || 'due',
+        notes: data.invoice.notes || '',
       })
       .where(eq(invoices.customerId, customerId));
 

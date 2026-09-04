@@ -124,6 +124,7 @@ export default async function generatePDF({
 
         const data: InvoiceTemplateData = {
           ...invoice,
+          dueType: invoice.dueType as "due" | "installment",
           bgImage: backgroundBase64,
         };
 

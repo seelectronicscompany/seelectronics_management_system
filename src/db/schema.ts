@@ -295,6 +295,8 @@ export const invoices = pgTable(
     subtotal: numeric({ precision: 12, scale: 2, mode: "number" }).notNull(),
     total: numeric({ precision: 12, scale: 2, mode: "number" }).notNull(),
     dueAmount: numeric({ precision: 12, scale: 2, mode: "number" }).notNull(),
+    dueType: varchar({ length: 50 }).default("due").notNull(),
+    notes: text(),
     createdAt: timestamp({ withTimezone: true }).defaultNow().notNull(),
     updatedAt: timestamp({ withTimezone: true })
       .defaultNow()

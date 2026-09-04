@@ -321,7 +321,7 @@ export async function getCustomerProfileStats(customerId: string) {
 
         const { invoices, products } = await import("@/db/schema");
         const invoiceDataPromise = customerData.invoiceNumber
-            ? db.select({ id: invoices.id, due: invoices.dueAmount })
+            ? db.select({ id: invoices.id, due: invoices.dueAmount, dueType: invoices.dueType })
                 .from(invoices)
                 .where(eq(invoices.invoiceNumber, customerData.invoiceNumber))
                 .limit(1)
@@ -333,12 +333,14 @@ export async function getCustomerProfileStats(customerId: string) {
         ]);
 
         let dueAmount = 0;
+        let dueType: "due" | "installment" | undefined = undefined;
         let isWarrantyExpired = false;
         let warrantyExpiryDate: Date | null = null;
 
         const invoiceData = invoiceDataResult[0];
         if (invoiceData) {
             if (invoiceData.due) dueAmount = invoiceData.due;
+            if (invoiceData.dueType) dueType = invoiceData.dueType as "due" | "installment";
 
             const dbProducts = await db.select({
                 warrantyStartDate: products.warrantyStartDate,
@@ -373,6 +375,7 @@ export async function getCustomerProfileStats(customerId: string) {
                 totalServices: serviceCount[0].count,
                 activeSubscriptions: subscriptionCount[0].count,
                 dueAmount,
+                dueType,
                 isWarrantyExpired,
                 warrantyExpiryDate
             }

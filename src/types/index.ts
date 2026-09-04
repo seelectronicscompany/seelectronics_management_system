@@ -228,6 +228,8 @@ export type InvoicesType = {
   subtotal: number;
   total: number;
   dueAmount: number;
+  dueType: "due" | "installment";
+  notes?: string | null;
   customerPhone: string;
   products?: Product[];
   serviceId?: string | null;

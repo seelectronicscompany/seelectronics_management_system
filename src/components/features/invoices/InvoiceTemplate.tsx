@@ -113,7 +113,15 @@ export default function InvoiceTemplate({
               ))}
               <tr>
                 <td colSpan={6} className="py-3 px-3 border border-black">
-                  <div className="flex justify-end items-start">
+                  <div className="flex justify-between items-start">
+                    <div className="text-left w-1/2 pr-4">
+                      {data.notes && (
+                        <div className="text-sm">
+                          <span className="font-semibold underline">Notes:</span>
+                          <p className="whitespace-pre-wrap mt-1">{data.notes}</p>
+                        </div>
+                      )}
+                    </div>
                     <div className="text-right space-y-2">
                       {data.subtotal > data.total && (
                         <>
@@ -140,7 +148,7 @@ export default function InvoiceTemplate({
                             {(data.total - data.dueAmount).toLocaleString()} Tk
                           </div>
                           <div className="text-base">
-                            <span className="font-semibold">Due :</span>{" "}
+                            <span className="font-semibold">{data.dueType === "installment" ? "Installment" : "Due"} :</span>{" "}
                             <span className="font-bold">
                               {data.dueAmount.toLocaleString()} Tk
                             </span>

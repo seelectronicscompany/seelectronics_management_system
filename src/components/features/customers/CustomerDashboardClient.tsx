@@ -52,6 +52,7 @@ interface CustomerDashboardClientProps {
     totalServices: number;
     activeSubscriptions: number;
     dueAmount?: number;
+    dueType?: "due" | "installment";
     isWarrantyExpired?: boolean;
     warrantyExpiryDate?: Date | null;
   } | null;
@@ -325,20 +326,48 @@ export default function CustomerDashboardClient({
               </div>
 
               {/* Due Amount */}
-              <div className="flex items-center gap-2.5 px-3  col-span-3 rounded-sm bg-[#FFEAEA] border border-[#FFD5D5] min-w-0">
-                <div className="flex items-center animate-pulse justify-center p-2 rounded-lg shrink-0 bg-[#faa1a1]">
+              <div
+                className={`flex items-center gap-2.5 px-3 col-span-3 rounded-sm min-w-0 border ${
+                  stats.dueType === "installment"
+                    ? "bg-[#FFF9E6] border-[#FFE5B4]"
+                    : "bg-[#FFEAEA] border-[#FFD5D5]"
+                }`}
+              >
+                <div
+                  className={`flex items-center animate-pulse justify-center p-2 rounded-lg shrink-0 ${
+                    stats.dueType === "installment"
+                      ? "bg-[#FFE5B4]"
+                      : "bg-[#faa1a1]"
+                  }`}
+                >
                   <Banknote
-                    className="text-[#ff0000]   drop-shadow-[0_0_4px_rgba(211,47,47,0.4)]"
+                    className={`${
+                      stats.dueType === "installment"
+                        ? "text-[#F59E0B] drop-shadow-[0_0_4px_rgba(245,158,11,0.4)]"
+                        : "text-[#ff0000] drop-shadow-[0_0_4px_rgba(211,47,47,0.4)]"
+                    }`}
                     size={22}
                   />
                 </div>
 
                 <div className="flex flex-col min-w-0">
-                  <span className="text-sm font-bold text-[#D32F2F] leading-tight truncate">
+                  <span
+                    className={`text-sm font-bold leading-tight truncate ${
+                      stats.dueType === "installment"
+                        ? "text-[#B45309]"
+                        : "text-[#D32F2F]"
+                    }`}
+                  >
                     ৳{stats.dueAmount.toLocaleString()}
                   </span>
-                  <span className="text-[10px] uppercase font-bold text-[#E57373] tracking-wider leading-tight">
-                    DUE
+                  <span
+                    className={`text-[10px] uppercase font-bold tracking-wider leading-tight ${
+                      stats.dueType === "installment"
+                        ? "text-[#D97706]"
+                        : "text-[#E57373]"
+                    }`}
+                  >
+                    {stats.dueType === "installment" ? "INSTALLMENT" : "DUE"}
                   </span>
                 </div>
               </div>

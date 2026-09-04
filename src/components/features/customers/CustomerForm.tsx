@@ -24,7 +24,14 @@ export default function CustomerForm({
   > & {
     invoice: Pick<
       CustomerData["invoice"],
-      "id" | "date" | "paymentType" | "subtotal" | "total" | "dueAmount"
+      | "id"
+      | "date"
+      | "paymentType"
+      | "subtotal"
+      | "total"
+      | "dueAmount"
+      | "dueType"
+      | "notes"
     >;
   };
   mode: "create" | "update";
@@ -39,7 +46,21 @@ export default function CustomerForm({
     success: boolean;
     name?: string;
   } | null>(null);
-  const [customerInfo, setCustomerInfo] = useState(
+  const [customerInfo, setCustomerInfo] = useState<{
+    name: string;
+    phone: string;
+    address: string;
+    invoice: {
+      id?: string;
+      date: Date;
+      paymentType: string;
+      subtotal: number;
+      total: number;
+      dueAmount: number;
+      dueType: "due" | "installment";
+      notes?: string | null;
+    };
+  }>(
     customerData || {
       name: "",
       phone: "",
@@ -50,6 +71,8 @@ export default function CustomerForm({
         subtotal: 0,
         total: 0,
         dueAmount: 0,
+        dueType: "due",
+        notes: "",
       },
     },
   );
@@ -80,7 +103,9 @@ export default function CustomerForm({
     (mode === "create" && !!vipValidationResult?.success) ||
     (mode === "update" && !!customerData?.referredByVipCard);
 
-  const actualTotal = hasReferral ? Math.floor(totalAmount * 0.96) : totalAmount;
+  const actualTotal = hasReferral
+    ? Math.floor(totalAmount * 0.96)
+    : totalAmount;
   const advanceAmount = actualTotal - customerInfo.invoice.dueAmount;
 
   const fetchProducts = async () => {
@@ -147,9 +172,7 @@ export default function CustomerForm({
     }
 
     // 4. Due amount validation
-    const maxTotal = hasReferral
-        ? totalAmount * 0.96
-        : totalAmount;
+    const maxTotal = hasReferral ? totalAmount * 0.96 : totalAmount;
     if (customerInfo.invoice.dueAmount > maxTotal) {
       return toast.error(
         `Due amount cannot exceed the total amount (৳${maxTotal.toLocaleString()})`,
@@ -176,6 +199,8 @@ export default function CustomerForm({
         subtotal: totalAmount,
         total: totalAmount,
         dueAmount: customerInfo.invoice.dueAmount ?? 0,
+        dueType: customerInfo.invoice.dueType ?? "due",
+        notes: customerInfo.invoice.notes ?? "",
       },
       products: productItems,
     };
@@ -215,8 +240,11 @@ export default function CustomerForm({
         ...customerInfo,
         invoice: {
           ...customerInfo.invoice,
-          [key]: value,
-        },
+          [key]:
+            key === "subtotal" || key === "total" || key === "dueAmount"
+              ? Number(value)
+              : value,
+        } as any,
       });
     }
   };
@@ -253,7 +281,12 @@ export default function CustomerForm({
     }
   }, [referralVipCard, mode]);
   return (
-    <Modal width="900" isVisible title={mode === "update" ? "Update Customer" : "Create Customer"} onClose={onClose}>
+    <Modal
+      width="900"
+      isVisible
+      title={mode === "update" ? "Update Customer" : "Create Customer"}
+      onClose={onClose}
+    >
       <div className="space-y-6">
         <div className="flex flex-col sm:flex-row gap-4">
           <InputField
@@ -306,6 +339,19 @@ export default function CustomerForm({
                 ))}
               </select>
             </label>
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 gap-4">
+          <div className="flex flex-col">
+            <label className="text-sm">Notes (Shown on Invoice)</label>
+            <textarea
+              className="w-full bg-white border rounded-md outline-none p-2 mt-1 min-h-[80px]"
+              name="notes"
+              value={customerInfo.invoice.notes || ""}
+              onChange={handleCustomerInputChange as any}
+              placeholder="Add any notes here..."
+            />
           </div>
         </div>
 
@@ -587,8 +633,9 @@ export default function CustomerForm({
                 </tbody>
               </table>
             </div>
+
             <hr className="my-4" />
-            <div className="flex flex-col gap-1 mt-6 w-[40%] ml-auto">
+            <div className="flex flex-col gap-1 mt-6 w-[47%] ml-auto">
               <div className="flex justify-between">
                 <p className=" font-medium">Sub Total:</p>
                 <p className=" font-medium">
@@ -615,19 +662,30 @@ export default function CustomerForm({
                   {advanceAmount > 0 ? advanceAmount.toLocaleString() : 0} TK
                 </p>
               </div>
-              <div className="flex justify-between">
-                <p className=" font-medium">Due Amount:</p>
-                <input
-                  className="__input w-48"
-                  name="dueAmount"
-                  min={0}
-                  max={actualTotal}
-                  type="number"
-                  placeholder="Due Amount"
-                  required={false}
-                  value={customerInfo.invoice.dueAmount}
-                  onChange={handleCustomerInputChange}
-                />
+              <div className="flex justify-between items-center">
+                <p className=" font-medium">Due/Installment:</p>
+                <div className="flex gap-2 w-64">
+                  <select
+                    className="w-1/2 bg-white border rounded-md outline-none px-2"
+                    name="dueType"
+                    value={customerInfo.invoice.dueType}
+                    onChange={handleCustomerInputChange as any}
+                  >
+                    <option value="due">Due</option>
+                    <option value="installment">Installment</option>
+                  </select>
+                  <input
+                    className="__input w-1/2"
+                    name="dueAmount"
+                    min={0}
+                    max={actualTotal}
+                    type="number"
+                    placeholder="Amount"
+                    required={false}
+                    value={customerInfo.invoice.dueAmount}
+                    onChange={handleCustomerInputChange}
+                  />
+                </div>
               </div>
             </div>
           </div>
