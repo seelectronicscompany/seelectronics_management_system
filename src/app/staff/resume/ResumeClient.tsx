@@ -27,7 +27,7 @@ export default function ResumeClient({ staffData }: ResumeClientProps) {
     label: string;
   }) => (
     <span className="inline-flex items-center gap-1 mx-2">
-      <span className="inline-block w-4 h-4 border border-black flex-shrink-0 flex items-center justify-center">
+      <span className=" w-4 h-4 border border-black flex-shrink-0 flex items-center justify-center">
         {checked && (
           <span className="text-black text-xs font-bold leading-none">✓</span>
         )}
@@ -131,69 +131,51 @@ export default function ResumeClient({ staffData }: ResumeClientProps) {
           </div>
 
           {/* Form Fields */}
-          <div className="space-y-2 mb-4">
+          <div className="space-y-10 mb-4">
             <div className="flex">
-              <span className="w-10">১।</span>
-              <span className="w-36">নাম ( বাংলায় )</span>
-              <span>: </span>
-              <div className="flex-1 border-b-[1.5px] border-dotted border-gray-600 px-2 font-medium"></div>
-              <span className="ml-4 w-24">মোবাইল নং : </span>
-              <div className="w-48 border-b-[1.5px] border-dotted border-gray-600 px-2 font-bold">
-                {staffData.phone}
-              </div>
-            </div>
-
-            <div className="flex">
-              <span className="w-10">২।</span>
-              <span className="w-36">ইংরেজী বড় অক্ষরে নাম</span>
-              <span>: </span>
+              <span className="w-10 shrink-0">১।</span>
+              <span className="w-44 shrink-0">ইংরেজী বড় অক্ষরে নাম</span>
+              <span className="mr-2">:</span>
               <div className="flex-1 border-b-[1.5px] border-dotted border-gray-600 px-2 font-bold uppercase">
                 {staffData.name}
               </div>
-              <span className="ml-4 w-24">জাতীয়তা : </span>
+              <span className="ml-4 w-24 shrink-0">জাতীয়তা :</span>
               <div className="w-48 border-b-[1.5px] border-dotted border-gray-600 px-2 font-medium">
                 বাংলাদেশী
               </div>
             </div>
 
             <div className="flex">
-              <span className="w-10">৩।</span>
-              <span className="w-36">পিতার নাম</span>
-              <span>: </span>
+              <span className="w-10 shrink-0">২।</span>
+              <span className="w-44 shrink-0">পিতার নাম</span>
+              <span className="mr-2">:</span>
               <div className="flex-1 border-b-[1.5px] border-dotted border-gray-600 px-2 font-medium">
                 {staffData.fatherName}
               </div>
             </div>
 
-            <div className="flex">
-              <span className="w-10">৪।</span>
-              <span className="w-36">মাতার নাম</span>
-              <span>: </span>
-              <div className="flex-1 border-b-[1.5px] border-dotted border-gray-600 px-2"></div>
-            </div>
-
             <div className="flex items-center">
-              <span className="w-10">৫।</span>
-              <span className="w-36">শিক্ষাগত যোগ্যতা</span>
-              <span>: </span>
+              <span className="w-10 shrink-0">৩।</span>
+              <span className="w-44 shrink-0">শিক্ষাগত যোগ্যতা</span>
+              <span className="mr-2">:</span>
               <div className="w-48 border-b-[1.5px] border-dotted border-gray-600 px-2"></div>
-              <span className="ml-4">পাসের সাল : </span>
+              <span className="ml-4 shrink-0">পাসের সাল : </span>
               <div className="w-24 border-b-[1.5px] border-dotted border-gray-600 px-2"></div>
-              <div className="ml-4 flex items-center gap-4">
+              <div className="ml-4 flex items-center gap-4 shrink-0">
                 <Checkbox label="পুরুষ" />
                 <Checkbox label="মহিলা" />
               </div>
             </div>
 
             <div className="flex items-center">
-              <span className="w-10">৬।</span>
-              <span className="w-36">জন্ম তারিখ</span>
-              <span>: </span>
+              <span className="w-10 shrink-0">৪।</span>
+              <span className="w-44 shrink-0">জন্ম তারিখ</span>
+              <span className="mr-2">:</span>
               <div className="w-40 border-b-[1.5px] border-dotted border-gray-600 px-2 text-center">
                 /&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;/
               </div>
-              <span className="ml-2">ইং</span>
-              <div className="ml-4 flex items-center gap-2 text-xs">
+              <span className="ml-2 shrink-0">ইং</span>
+              <div className="ml-4 flex items-center gap-2 text-xs shrink-0">
                 <Checkbox label="জাতীয় পরিচয় পত্র" />
                 <Checkbox label="জন্ম নিবন্ধন পত্র" />
                 <Checkbox label="শিক্ষা সনদ" />
@@ -201,79 +183,75 @@ export default function ResumeClient({ staffData }: ResumeClientProps) {
             </div>
 
             <div className="flex items-center">
-              <span className="w-10">৭।</span>
-              <span className="w-40">চিহ্ন টিকমার্ক দেওয়া নাম্বার</span>
-              <span>: </span>
+              <span className="w-10 shrink-0">৫।</span>
+              <span className="w-44 shrink-0">
+                চিহ্ন টিকমার্ক দেওয়া নাম্বার
+              </span>
+              <span className="mr-2">:</span>
               <div className="flex-1 border-b-[1.5px] border-dotted border-gray-600 px-2"></div>
-              <span className="ml-4">রক্তের গ্রুপ : </span>
+              <span className="ml-4 shrink-0">রক্তের গ্রুপ : </span>
               <div className="w-32 border-b-[1.5px] border-dotted border-gray-600 px-2"></div>
-            </div>
-
-            <div className="flex items-center">
-              <span className="w-10">৮।</span>
-              <span className="w-36">বৈবাহিক অবস্থা</span>
-              <span>: </span>
-              <div className="flex items-center gap-4 mr-4">
-                <Checkbox label="অবিবাহিত" />
-                <Checkbox label="বিবাহিত" />
-              </div>
-              <span>সন্তান সংখ্যা : </span>
-              <div className="w-24 border-b-[1.5px] border-dotted border-gray-600 px-2"></div>
-              <span className="ml-4">ধর্ম : </span>
-              <div className="flex-1 border-b-[1.5px] border-dotted border-gray-600 px-2"></div>
-            </div>
-
-            <div className="flex">
-              <span className="w-10">৯।</span>
-              <span className="w-36">স্বামী/স্ত্রীর নাম</span>
-              <span>: </span>
-              <div className="flex-1 border-b-[1.5px] border-dotted border-gray-600 px-2"></div>
             </div>
           </div>
 
           {/* Address Table */}
-          <div className="mb-4">
-            <table className="w-full border-collapse border border-black text-[14px] text-left table-fixed">
-              <thead>
-                <tr>
-                  <th className="border border-black py-2 w-1/2 font-bold text-[15px] text-center">
-                    বর্তমান ঠিকানা
-                  </th>
-                  <th className="border border-black py-2 w-1/2 font-bold text-[15px] text-center">
-                    স্থায়ী ঠিকানা
-                  </th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td className="border border-black  align-top leading-relaxed">
-                    {[
-                      staffData.currentStreetAddress,
-                      staffData.currentPostOffice,
-                      staffData.currentPoliceStation,
-                      staffData.currentDistrict,
-                    ]
-                      .filter(Boolean)
-                      .join(", ")}
-                  </td>
-                  <td className="border border-black align-top leading-relaxed">
-                    {[
-                      staffData.permanentStreetAddress,
-                      staffData.permanentPostOffice,
-                      staffData.permanentPoliceStation,
-                      staffData.permanentDistrict,
-                    ]
-                      .filter(Boolean)
-                      .join(", ")}
-                  </td>
-                </tr>
-              </tbody>
-            </table>
+          <div className="mb-4 text-[14px] leading-8 font-medium">
+            {/* Present Address */}
+            <div className="flex flex-wrap items-center">
+              <span className="w-10 shrink-0">৬।</span>
+              <span className="w-32 shrink-0">বর্তমান ঠিকানা :</span>
+              <span className="ml-2">গ্রাম/বাসা</span>
+              <div className="flex-1 border-b-[1.5px] border-dotted border-gray-600 px-2 min-w-[100px] text-center">
+                {staffData.currentStreetAddress}
+              </div>
+              <span className="ml-2">ডাকঘর</span>
+              <div className="flex-1 border-b-[1.5px] border-dotted border-gray-600 px-2 min-w-[100px] text-center">
+                {staffData.currentPostOffice}
+              </div>
+            </div>
+            <div className="flex flex-wrap items-center">
+              <span className="w-10 shrink-0"></span>
+              <span className="w-32 shrink-0"></span>
+              <span className="ml-2">থানা</span>
+              <div className="flex-1 border-b-[1.5px] border-dotted border-gray-600 px-2 min-w-[100px] text-center">
+                {staffData.currentPoliceStation}
+              </div>
+              <span className="ml-2">জেলা</span>
+              <div className="flex-1 border-b-[1.5px] border-dotted border-gray-600 px-2 min-w-[100px] text-center">
+                {staffData.currentDistrict}
+              </div>
+            </div>
+
+            {/* Permanent Address */}
+            <div className="flex flex-wrap items-center mt-2">
+              <span className="w-10 shrink-0">৭।</span>
+              <span className="w-32 shrink-0">স্থায়ী ঠিকানা :</span>
+              <span className="ml-2">গ্রাম/বাসা</span>
+              <div className="flex-1 border-b-[1.5px] border-dotted border-gray-600 px-2 min-w-[100px] text-center">
+                {staffData.permanentStreetAddress}
+              </div>
+              <span className="ml-2">ডাকঘর</span>
+              <div className="flex-1 border-b-[1.5px] border-dotted border-gray-600 px-2 min-w-[100px] text-center">
+                {staffData.permanentPostOffice}
+              </div>
+            </div>
+            <div className="flex flex-wrap items-center">
+              <span className="w-10 shrink-0"></span>
+              <span className="w-32 shrink-0"></span>
+              <span className="ml-2">থানা</span>
+              <div className="flex-1 border-b-[1.5px] border-dotted border-gray-600 px-2 min-w-[100px] text-center">
+                {staffData.permanentPoliceStation}
+              </div>
+              <span className="ml-2">জেলা</span>
+              <div className="flex-1 border-b-[1.5px] border-dotted border-gray-600 px-2 min-w-[100px] text-center">
+                {staffData.permanentDistrict}
+              </div>
+            </div>
           </div>
 
-          <div className="space-y-2 mb-4">
+          <div className="space-y-10 mb-4">
             <div className="flex items-center">
-              <span className="w-10">১১।</span>
+              <span className="w-10 shrink-0">৮।</span>
               <span>আপনার নামে কোন থানায় বা আদালতে কোন মামলা আছে কি?</span>
               <div className="flex items-center gap-4 ml-6">
                 <Checkbox label="হ্যাঁ" />
@@ -282,29 +260,54 @@ export default function ResumeClient({ staffData }: ResumeClientProps) {
             </div>
 
             <div className="flex items-center flex-wrap gap-y-2">
-              <span className="w-10">১২।</span>
+              <span className="w-10 shrink-0">৯।</span>
               <span>দুর্ঘটনা/জরুরি প্রয়োজনে যোগাযোগ : নাম </span>
               <div className="flex-1 border-b-[1.5px] border-dotted border-gray-600 px-2 min-w-[150px]"></div>
-              <span className="ml-2">সম্পর্ক </span>
+              <span className="ml-2 shrink-0">সম্পর্ক </span>
               <div className="flex-1 border-b-[1.5px] border-dotted border-gray-600 px-2 min-w-[100px]"></div>
-              <span className="ml-2">ফোন : </span>
+              <span className="ml-2 shrink-0">ফোন : </span>
               <div className="flex-1 border-b-[1.5px] border-dotted border-gray-600 px-2 min-w-[150px]"></div>
             </div>
 
             <div className="flex items-center flex-wrap gap-y-2">
-              <span className="w-10">১৩।</span>
+              <span className="w-10 shrink-0">১০।</span>
               <span>এস ই বিডি এর চাকুরী পদবী : </span>
               <div className="flex-1 border-b-[1.5px] border-dotted border-gray-600 px-2 min-w-[150px] font-bold text-center">
                 {staffData.role}
               </div>
-              <span className="ml-2">কর্মস্থান জেলা : </span>
+              <span className="ml-2 shrink-0">কর্মস্থান জেলা : </span>
               <div className="flex-1 border-b-[1.5px] border-dotted border-gray-600 px-2 min-w-[100px]"></div>
-              <span className="ml-2">থানা : </span>
+              <span className="ml-2 shrink-0">থানা : </span>
               <div className="flex-1 border-b-[1.5px] border-dotted border-gray-600 px-2 min-w-[100px]"></div>
             </div>
           </div>
 
           {/* Declarations */}
+          <div className="text-[12px] leading-[1.6] mb-6 mt-4 relative pl-6 space-y-1">
+            <div className="absolute left-0 top-[2px]">
+              <svg
+                width="14"
+                height="14"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2.5"
+              >
+                <circle cx="12" cy="12" r="10" strokeDasharray="3 3"></circle>
+              </svg>
+            </div>
+            <p className="text-justify font-medium">
+              আমি এই মর্মে ঘোষণা করিতেছি যে, আমি SE ELECTRONICS কোম্পানির সকল
+              নির্দেশনা মানিয়া চলিব এবং আমার উপরোক্ত তথ্যবলি নির্ভুল ও সত্য। আমি
+              জ্ঞানতঃ কোনো তথ্য গোপন করি নাই ৷ যদি আমি ভবিষ্যতে আমার বিরুদ্ধে
+              ভুল তথ্য দাখিল কিংবা প্রধান সম্পর্কিত কোনো ধরনের অভিযোগ পাওয়া যায়,
+              তাহলে এস ই বিডি কতৃকপক্ষ আমার বিরুদ্ধে যথাযথ ব্যবস্হা গ্রহন করিতে
+              পারিবে এবং এতে আমার কোনো অপত্তি থাকবেনা। আমি কোনো অপত্তি করিলে
+              সর্বস্হর আদালতে তাহ্য অগ্যাহ্য বলিয়া গণ্য হইবে। আমার বর্তমান
+              ঠিকানা পরিবর্তন হলে পরিবর্তীত নতুন ঠিকানা পরবর্তী ০৩ দিনের মধ্যে
+              লিখিতভাবে এস ই বিডির প্রশাসনিক বিভাগে জানাতে বাধ্য থাকবো৷
+            </p>
+          </div>
 
           <div className="mb-6">
             <span>তারিখ: </span>
