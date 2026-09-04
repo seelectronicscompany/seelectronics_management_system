@@ -4,7 +4,90 @@ import { db } from "@/db/drizzle";
 import { customers } from "@/db/schema";
 import { verifySession } from "@/lib";
 import { getMramBroadcastIds, sendVoiceCall } from "@/lib/mram";
+import { sendSMS } from "@/lib/sms";
 import { eq, inArray } from "drizzle-orm";
+
+const VOICE_SMS_ACTIONS: Record<number, { label: string; sms: string }> = {
+  3316: {
+    label: "কিস্তির টাকা তারিখ পার হবার আগে জরিমানা এড়াতে",
+    sms: "প্রিয় গ্রাহক {name} জরিমানা এরাতে চলতি মাসের কিস্তির টাকা পরিশোধ করুন । এস ই ইলেকট্রনিক্স কর্তৃপক্ষ বিস্তারিত জানতে 09649355555, 09639673600",
+  },
+  3315: {
+    label: "কিস্তির টাকা বিকাশ/নগদে পরিশোধ করতে",
+    sms: "প্রিয় গ্রাহক {name} আপনার চলতি মাসের কিস্তির টাকা bKash nagad rocket পরিশোধ করতে অনুরোধ করা হল এস ই ইলেকট্রনিক্স কর্তৃপক্ষ বিস্তারিত জানতে 09649355555, 09639673600",
+  },
+  1527: {
+    label: "আইপিএসের বকেয়া টাকা পরিশোধ করতে",
+    sms: "প্রিয় গ্রাহক {name} IPS এর বকেয়া টাকা পরিশোধ করতে অনুরোধ করা হল এস ই ইলেকট্রনিক্স কর্তৃপক্ষ বিস্তারিত জানতে 09649355555, 09639673600",
+  },
+  1526: {
+    label: "আইপিএস ও ব্যাটারি প্যাকেজের টাকা পরিশোধ করতে",
+    sms: "প্রিয় গ্রাহক {name} আই IPS,Battery টাকা পরিশোধ করতে অনুরোধ করা হল এস ই ইলেকট্রনিক্স কর্তৃপক্ষ বিস্তারিত জানতে 09649355555, 09639673600",
+  },
+  3519: {
+    label: "দীর্ঘদিন বকেয়া টাকা পরিশোধ না করায় ওয়ারেন্টি বাতিল",
+    sms: "প্রিয় গ্রাহক {name} দীর্ঘদিন বকেয়া টাকা পরিশোধ না করায় আপনার পন্যের ওয়ারেন্টি বাতিল করেছে, এস ই ইলেকট্রনিক্স কর্তৃপক্ষ বিস্তারিত জানতে 09649355555, 09639673600",
+  },
+  3020: {
+    label: "ওয়ারেন্টি বাতিল ঝামেলা এড়াতে বকেয়া টাকা পরিশোধ করুন",
+    sms: "প্রিয় গ্রাহক {name} ওয়ারেন্টি বাতিল ঝামেলা এরাতে বকেয়া টাকা পরিশোধ করুন, এস ই ইলেকট্রনিক্স কর্তৃপক্ষ বিস্তারিত জানতে 09649355555, 09639673600",
+  },
+};
+
+export const sendCustomerVoiceAndSms = async (
+  customerId: string,
+  actionId: number
+) => {
+  try {
+    const session = await verifySession(false, "admin");
+    if (!session) return { success: false, message: "Unauthorized" };
+
+    const customerData = await db.query.customers.findFirst({
+      where: eq(customers.customerId, customerId),
+    });
+
+    if (!customerData || !customerData.phone) {
+      return { success: false, message: "Customer phone number not found" };
+    }
+
+    const actionData = VOICE_SMS_ACTIONS[actionId];
+    if (!actionData) {
+      return { success: false, message: "Invalid action ID" };
+    }
+
+    const smsMessage = actionData.sms.replace("{name}", customerData.name || "Customer");
+    
+    // Trigger both concurrently
+    const [voiceRes, smsRes] = await Promise.allSettled([
+      sendVoiceCall(customerData.phone, actionId, `Customer Action ${actionId}`),
+      sendSMS(customerData.phone, smsMessage)
+    ]);
+
+    let message = "Action completed.";
+    let success = true;
+
+    if (voiceRes.status === "rejected" || (voiceRes.status === "fulfilled" && !voiceRes.value.success)) {
+      message += " Voice call failed.";
+      success = false;
+    } else {
+      message += " Voice call sent.";
+    }
+
+    if (smsRes.status === "rejected") {
+      message += " SMS failed.";
+      success = false;
+    } else {
+      message += " SMS sent.";
+    }
+
+    return { success, message };
+
+  } catch (error) {
+    console.error(error);
+    return { success: false, message: "Something went wrong" };
+  }
+};
+
 
 export const sendDueVoiceCall = async (customerId: string) => {
   try {

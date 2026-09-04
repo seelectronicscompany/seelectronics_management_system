@@ -10,6 +10,7 @@ import { Id, toast } from "react-toastify";
 import clsx from "clsx";
 import CustomerForm from "./CustomerForm";
 import CustomerViewModal from "./CustomerViewModal";
+import VoiceSmsModal from "./VoiceSmsModal";
 
 export default function CustomerActionButtons({
   customerData,
@@ -19,6 +20,7 @@ export default function CustomerActionButtons({
   const [showInfoModal, setShowInfoModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
   const [showProducts, setShowProducts] = useState(false);
+  const [showVoiceSmsModal, setShowVoiceSmsModal] = useState(false);
   const [products, setProducts] = useState<Product[]>([]);
   const [isProductsLoading, setIsProductsLoading] = useState(true);
   const toastId = useRef<Id | null>(null);
@@ -113,6 +115,13 @@ export default function CustomerActionButtons({
           })()}
         </div>
       )}
+      {showVoiceSmsModal && (
+        <VoiceSmsModal
+          customerId={customerData.customerId}
+          customerName={customerData.name || "Customer"}
+          onClose={() => setShowVoiceSmsModal(false)}
+        />
+      )}
       <button
         title="View customers info"
         className="disabled:opacity-40"
@@ -141,18 +150,8 @@ export default function CustomerActionButtons({
 
       {customerData.invoice && customerData.invoice.dueAmount > 0 && (
         <button
-          title="Send Due Voice Call"
-          onClick={async () => {
-            if (confirm(`Send due reminder voice call to ${customerData.name}?`)) {
-              toastId.current = toast("Sending Voice Call...", { autoClose: false });
-              const res = await sendDueVoiceCall(customerData.customerId);
-              toast.update(toastId.current, {
-                type: res.success ? "success" : "error",
-                render: res.message,
-                autoClose: 1500,
-              });
-            }
-          }}
+          title="Send Voice Call & SMS"
+          onClick={() => setShowVoiceSmsModal(true)}
           className="text-blue-500 hover:text-blue-600"
         >
           <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6">
