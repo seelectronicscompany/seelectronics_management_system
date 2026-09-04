@@ -69,7 +69,7 @@ export default function ResumeClient({ staffData }: ResumeClientProps) {
               <div className="flex flex-col items-center">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
-                  src="/logo.jpg"
+                  src="/form_logo.jpeg"
                   alt="SE IPS BD Logo"
                   className="w-16 h-16 object-contain mb-1"
                 />

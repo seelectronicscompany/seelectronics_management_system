@@ -148,28 +148,24 @@ export default function GetServiceForm({
             ধন্যবাদ। আপনার সমস্যার দ্রুত ও কার্যকর সমাধানের জন্য নিম্নলিখিত
             শর্তাবলী ও নির্দেশিকাগুলি অত্যন্ত মনোযোগ সহকারে পড়ুন এবং মেনে চলুন।
           </p>
-          <div className="space-y-6 mt-4">
+          <div className="space-y-4 mt-6">
             {requirementsList.map((item, index) => (
               <div
                 key={index}
-                className="text-sm sm:text-base  rounded-md relative"
+                className="flex items-start gap-4 p-4 sm:p-5 bg-gray-50 rounded-xl"
               >
-                {/* vertical dotted line */}
-                {index !== requirementsList.length - 1 && (
-                  <div className="absolute left-[11px] top-4 md:left-10 md:top-10 h-full border-l-[3px] border-dashed border-brand/40 mt-2"></div>
-                )}
-
-                <div className="flex items-start gap-3 mb-2">
-                  <span className="bg-brand/85 text-white rounded-full flex items-center justify-center min-w-6 min-h-6 w-6 h-6 shrink-0 text-sm sm:text-sm font-bold z-10 ">
-                    {index + 1}
-                  </span>
-
-                  <span className="font-bold text-gray-900">{item.title}</span>
+                <div className="bg-[#10b981] text-white rounded-md flex items-center justify-center min-w-[24px] w-6 h-6 shrink-0 mt-0.5">
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4">
+                    <path fillRule="evenodd" d="M16.704 4.153a.75.75 0 01.143 1.052l-8 10.5a.75.75 0 01-1.127.075l-4.5-4.5a.75.75 0 011.06-1.06l3.894 3.893 7.48-9.817a.75.75 0 011.05-.143z" clipRule="evenodd" />
+                  </svg>
                 </div>
 
-                <p className="text-gray-600 leading-relaxed pl-9">
-                  {item.description}
-                </p>
+                <div>
+                  <div className="font-bold text-gray-800 text-base sm:text-lg mb-1">{item.title}</div>
+                  <div className="text-gray-600 text-sm sm:text-base leading-relaxed">
+                    {item.description}
+                  </div>
+                </div>
               </div>
             ))}
           </div>
