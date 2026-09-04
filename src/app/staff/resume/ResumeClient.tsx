@@ -196,57 +196,78 @@ export default function ResumeClient({ staffData }: ResumeClientProps) {
 
           {/* Address Table */}
           <div className="mb-4 text-[14px] leading-8 font-medium">
-            {/* Present Address */}
-            <div className="flex flex-wrap items-center">
-              <span className="w-10 shrink-0">৬।</span>
-              <span className="w-32 shrink-0">বর্তমান ঠিকানা :</span>
-              <span className="ml-2">গ্রাম/বাসা</span>
-              <div className="flex-1 border-b-[1.5px] border-dotted border-gray-600 px-2 min-w-[100px] text-center">
-                {staffData.currentStreetAddress}
-              </div>
-              <span className="ml-2">ডাকঘর</span>
-              <div className="flex-1 border-b-[1.5px] border-dotted border-gray-600 px-2 min-w-[100px] text-center">
-                {staffData.currentPostOffice}
-              </div>
-            </div>
-            <div className="flex flex-wrap items-center">
-              <span className="w-10 shrink-0"></span>
-              <span className="w-32 shrink-0"></span>
-              <span className="ml-2">থানা</span>
-              <div className="flex-1 border-b-[1.5px] border-dotted border-gray-600 px-2 min-w-[100px] text-center">
-                {staffData.currentPoliceStation}
-              </div>
-              <span className="ml-2">জেলা</span>
-              <div className="flex-1 border-b-[1.5px] border-dotted border-gray-600 px-2 min-w-[100px] text-center">
-                {staffData.currentDistrict}
-              </div>
-            </div>
-
-            {/* Permanent Address */}
-            <div className="flex flex-wrap items-center mt-2">
-              <span className="w-10 shrink-0">৭।</span>
-              <span className="w-32 shrink-0">স্থায়ী ঠিকানা :</span>
-              <span className="ml-2">গ্রাম/বাসা</span>
-              <div className="flex-1 border-b-[1.5px] border-dotted border-gray-600 px-2 min-w-[100px] text-center">
-                {staffData.permanentStreetAddress}
-              </div>
-              <span className="ml-2">ডাকঘর</span>
-              <div className="flex-1 border-b-[1.5px] border-dotted border-gray-600 px-2 min-w-[100px] text-center">
-                {staffData.permanentPostOffice}
-              </div>
-            </div>
-            <div className="flex flex-wrap items-center">
-              <span className="w-10 shrink-0"></span>
-              <span className="w-32 shrink-0"></span>
-              <span className="ml-2">থানা</span>
-              <div className="flex-1 border-b-[1.5px] border-dotted border-gray-600 px-2 min-w-[100px] text-center">
-                {staffData.permanentPoliceStation}
-              </div>
-              <span className="ml-2">জেলা</span>
-              <div className="flex-1 border-b-[1.5px] border-dotted border-gray-600 px-2 min-w-[100px] text-center">
-                {staffData.permanentDistrict}
-              </div>
-            </div>
+            <table className="w-full border-collapse border border-black text-left table-fixed">
+              <thead>
+                <tr>
+                  <th className="border border-black py-2 w-1/2 font-bold text-[15px] text-center">
+                    ৬। বর্তমান ঠিকানা
+                  </th>
+                  <th className="border border-black py-2 w-1/2 font-bold text-[15px] text-center">
+                    ৭। স্থায়ী ঠিকানা
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td className="border border-black align-top p-2">
+                    <div className="flex flex-col gap-2">
+                      <div className="flex items-center">
+                        <span className="w-20 shrink-0">গ্রাম/বাসা :</span>
+                        <div className="flex-1 border-b-[1.5px] border-dotted border-gray-600 px-2 text-center h-6 overflow-hidden">
+                          {staffData.currentStreetAddress}
+                        </div>
+                      </div>
+                      <div className="flex items-center">
+                        <span className="w-20 shrink-0">ডাকঘর :</span>
+                        <div className="flex-1 border-b-[1.5px] border-dotted border-gray-600 px-2 text-center h-6 overflow-hidden">
+                          {staffData.currentPostOffice}
+                        </div>
+                      </div>
+                      <div className="flex items-center">
+                        <span className="w-20 shrink-0">থানা :</span>
+                        <div className="flex-1 border-b-[1.5px] border-dotted border-gray-600 px-2 text-center h-6 overflow-hidden">
+                          {staffData.currentPoliceStation}
+                        </div>
+                      </div>
+                      <div className="flex items-center">
+                        <span className="w-20 shrink-0">জেলা :</span>
+                        <div className="flex-1 border-b-[1.5px] border-dotted border-gray-600 px-2 text-center h-6 overflow-hidden">
+                          {staffData.currentDistrict}
+                        </div>
+                      </div>
+                    </div>
+                  </td>
+                  <td className="border border-black align-top p-2">
+                    <div className="flex flex-col gap-2">
+                      <div className="flex items-center">
+                        <span className="w-20 shrink-0">গ্রাম/বাসা :</span>
+                        <div className="flex-1 border-b-[1.5px] border-dotted border-gray-600 px-2 text-center h-6 overflow-hidden">
+                          {staffData.permanentStreetAddress}
+                        </div>
+                      </div>
+                      <div className="flex items-center">
+                        <span className="w-20 shrink-0">ডাকঘর :</span>
+                        <div className="flex-1 border-b-[1.5px] border-dotted border-gray-600 px-2 text-center h-6 overflow-hidden">
+                          {staffData.permanentPostOffice}
+                        </div>
+                      </div>
+                      <div className="flex items-center">
+                        <span className="w-20 shrink-0">থানা :</span>
+                        <div className="flex-1 border-b-[1.5px] border-dotted border-gray-600 px-2 text-center h-6 overflow-hidden">
+                          {staffData.permanentPoliceStation}
+                        </div>
+                      </div>
+                      <div className="flex items-center">
+                        <span className="w-20 shrink-0">জেলা :</span>
+                        <div className="flex-1 border-b-[1.5px] border-dotted border-gray-600 px-2 text-center h-6 overflow-hidden">
+                          {staffData.permanentDistrict}
+                        </div>
+                      </div>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
           </div>
 
           <div className="space-y-10 mb-4">

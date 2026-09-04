@@ -18,7 +18,11 @@ const Banner = ({ slides: propSlides }: BannerProps) => {
     { img: img3 },
   ];
 
-  const slides = propSlides && propSlides.length > 0 ? propSlides : defaultSlides;
+  const slides = propSlides !== undefined ? propSlides : defaultSlides;
+
+  if (slides.length === 0) {
+    return null;
+  }
 
   return (
     <section className="relative rounded-sm overflow-hidden">
@@ -44,6 +48,7 @@ const Banner = ({ slides: propSlides }: BannerProps) => {
               priority={index === 0}
               sizes="100vw"
               className="object-fill rounded-md"
+              unoptimized={typeof slide.img === 'string'}
             />
           </div>
         ))}

@@ -93,9 +93,9 @@ export async function toggleBannerStatus(id: string, type: "customer" | "staff",
       .where(eq(banners.id, id));
 
     revalidatePath("/banners");
-    revalidatePath("/customer");
-    revalidatePath("/staff");
-    revalidatePath("/");
+    revalidatePath("/customer", "layout");
+    revalidatePath("/staff", "layout");
+    revalidatePath("/", "layout");
     
     return { success: true };
   } catch (error: any) {
@@ -110,9 +110,9 @@ export async function deleteBanner(id: string, imageKey: string) {
     await db.delete(banners).where(eq(banners.id, id));
 
     revalidatePath("/banners");
-    revalidatePath("/customer");
-    revalidatePath("/staff");
-    revalidatePath("/");
+    revalidatePath("/customer", "layout");
+    revalidatePath("/staff", "layout");
+    revalidatePath("/", "layout");
     
     return { success: true };
   } catch (error: any) {

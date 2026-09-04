@@ -98,6 +98,7 @@ export default function ManageBannersClient({ initialBanners }: { initialBanners
                 alt="Banner" 
                 fill 
                 className="object-cover"
+                unoptimized
               />
             </div>
             <div className="p-4 space-y-4">
