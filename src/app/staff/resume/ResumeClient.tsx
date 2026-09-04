@@ -131,7 +131,7 @@ export default function ResumeClient({ staffData }: ResumeClientProps) {
           </div>
 
           {/* Form Fields */}
-          <div className="space-y-10 mb-4">
+          <div className="space-y-5 mb-4">
             <div className="flex">
               <span className="w-10 shrink-0">১।</span>
               <span className="w-44 shrink-0">ইংরেজী বড় অক্ষরে নাম</span>
@@ -213,25 +213,25 @@ export default function ResumeClient({ staffData }: ResumeClientProps) {
                     <div className="flex flex-col gap-2">
                       <div className="flex items-center">
                         <span className="w-20 shrink-0">গ্রাম/বাসা :</span>
-                        <div className="flex-1 border-b-[1.5px] border-dotted border-gray-600 px-2 text-center h-6 overflow-hidden">
+                        <div className="flex-1 border-b-[1.5px] px-2 text-right h-6 overflow-hidden">
                           {staffData.currentStreetAddress}
                         </div>
                       </div>
                       <div className="flex items-center">
                         <span className="w-20 shrink-0">ডাকঘর :</span>
-                        <div className="flex-1 border-b-[1.5px] border-dotted border-gray-600 px-2 text-center h-6 overflow-hidden">
+                        <div className="flex-1 border-b-[1.5px] px-2 text-right h-6 overflow-hidden">
                           {staffData.currentPostOffice}
                         </div>
                       </div>
                       <div className="flex items-center">
                         <span className="w-20 shrink-0">থানা :</span>
-                        <div className="flex-1 border-b-[1.5px] border-dotted border-gray-600 px-2 text-center h-6 overflow-hidden">
+                        <div className="flex-1 border-b-[1.5px] px-2 text-right h-6 overflow-hidden">
                           {staffData.currentPoliceStation}
                         </div>
                       </div>
                       <div className="flex items-center">
                         <span className="w-20 shrink-0">জেলা :</span>
-                        <div className="flex-1 border-b-[1.5px] border-dotted border-gray-600 px-2 text-center h-6 overflow-hidden">
+                        <div className="flex-1 border-b-[1.5px] px-2 text-right h-6 overflow-hidden">
                           {staffData.currentDistrict}
                         </div>
                       </div>
@@ -241,25 +241,25 @@ export default function ResumeClient({ staffData }: ResumeClientProps) {
                     <div className="flex flex-col gap-2">
                       <div className="flex items-center">
                         <span className="w-20 shrink-0">গ্রাম/বাসা :</span>
-                        <div className="flex-1 border-b-[1.5px] border-dotted border-gray-600 px-2 text-center h-6 overflow-hidden">
+                        <div className="flex-1 border-b-[1.5px] px-2 text-right h-6 overflow-hidden">
                           {staffData.permanentStreetAddress}
                         </div>
                       </div>
                       <div className="flex items-center">
                         <span className="w-20 shrink-0">ডাকঘর :</span>
-                        <div className="flex-1 border-b-[1.5px] border-dotted border-gray-600 px-2 text-center h-6 overflow-hidden">
+                        <div className="flex-1 border-b-[1.5px] px-2 text-right h-6 overflow-hidden">
                           {staffData.permanentPostOffice}
                         </div>
                       </div>
                       <div className="flex items-center">
                         <span className="w-20 shrink-0">থানা :</span>
-                        <div className="flex-1 border-b-[1.5px] border-dotted border-gray-600 px-2 text-center h-6 overflow-hidden">
+                        <div className="flex-1 border-b-[1.5px] px-2 text-right h-6 overflow-hidden">
                           {staffData.permanentPoliceStation}
                         </div>
                       </div>
                       <div className="flex items-center">
                         <span className="w-20 shrink-0">জেলা :</span>
-                        <div className="flex-1 border-b-[1.5px] border-dotted border-gray-600 px-2 text-center h-6 overflow-hidden">
+                        <div className="flex-1 border-b-[1.5px] px-2 text-right h-6 overflow-hidden">
                           {staffData.permanentDistrict}
                         </div>
                       </div>
@@ -270,7 +270,7 @@ export default function ResumeClient({ staffData }: ResumeClientProps) {
             </table>
           </div>
 
-          <div className="space-y-10 mb-4">
+          <div className="space-y-5 mb-4">
             <div className="flex items-center">
               <span className="w-10 shrink-0">৮।</span>
               <span>আপনার নামে কোন থানায় বা আদালতে কোন মামলা আছে কি?</span>
