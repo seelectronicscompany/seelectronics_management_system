@@ -22,6 +22,7 @@ import {
   Users,
   Wrench,
   Zap,
+  Image as ImageIcon,
 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
@@ -82,6 +83,12 @@ const links = [
     href: "/applications",
     icon: ClipboardList,
     sectionTitle: "Service Applications",
+  },
+  {
+    name: "Manage Banners",
+    href: "/banners",
+    icon: ImageIcon,
+    sectionTitle: "Manage Banners",
   },
   {
     name: "Technicians",

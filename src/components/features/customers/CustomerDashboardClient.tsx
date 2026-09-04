@@ -46,7 +46,7 @@ interface CustomerDashboardClientProps {
     vipStatus?: string | null;
     vipCardNumber?: string | null;
     isWarrantyStopped?: boolean;
-    warrantyExpiryDate?: string | null; // ✅ added (required for logic)
+    warrantyExpiryDate?: string | null;
   };
   stats: {
     totalServices: number;
@@ -56,12 +56,14 @@ interface CustomerDashboardClientProps {
     warrantyExpiryDate?: Date | null;
   } | null;
   adminPhone: string;
+  banners?: { img: string | any }[];
 }
 
 export default function CustomerDashboardClient({
   customer,
   stats,
   adminPhone,
+  banners,
 }: CustomerDashboardClientProps) {
   const [showPopup, setShowPopup] = useState(false);
   const [showSeIpsModal, setShowSeIpsModal] = useState(false);
@@ -205,7 +207,7 @@ export default function CustomerDashboardClient({
       <div className="flex flex-col gap-4 px-2 text-gray-800 pb-24">
         {/* Warranty Marquee */}
         <div className="mt-1 w-full overflow-hidden shadow-md">
-          <Banner />
+          <Banner slides={banners} />
         </div>
         {/* Warranty Notice Marquee */}
         {(isWarrantyExpired || isDashboardDisabled) && (

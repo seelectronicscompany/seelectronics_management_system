@@ -1,5 +1,6 @@
 import { verifyCustomerSession, customerLogout } from "@/actions/customerActions";
 import { getCustomerProfileStats } from "@/actions/customerActions";
+import { getActiveBanners } from "@/actions/bannerActions";
 import CustomerDashboardClient from "@/components/features/customers/CustomerDashboardClient";
 import Link from "next/link";
 
@@ -47,6 +48,9 @@ export default async function CustomerProfilePage() {
   const statsRes = await getCustomerProfileStats(userId);
   const stats = statsRes.success ? statsRes.data : null;
   const adminPhone = process.env.ADMIN_PHONE_NUMBER || "017XXXXXXXX";
+  
+  const bannersRes = await getActiveBanners("customer");
+  const activeBanners = bannersRes.banners?.map((b: any) => ({ img: b.url })) || [];
 
   if (!session.customer) {
     return (
@@ -61,6 +65,7 @@ export default async function CustomerProfilePage() {
       customer={session.customer as any}
       stats={stats as any}
       adminPhone="09649355555"
+      banners={activeBanners}
     />
   );
 }

@@ -7,12 +7,18 @@ import img1 from "../../assets/images/banner1.jpg";
 import img2 from "../../assets/images/banner2.jpg";
 import img3 from "../../assets/images/banner3.jpg";
 
-const Banner = () => {
-  const slides = [
+interface BannerProps {
+  slides?: { img: string | any; url?: string }[];
+}
+
+const Banner = ({ slides: propSlides }: BannerProps) => {
+  const defaultSlides = [
     { img: img1 },
     { img: img2 },
     { img: img3 },
   ];
+
+  const slides = propSlides && propSlides.length > 0 ? propSlides : defaultSlides;
 
   return (
     <section className="relative rounded-sm overflow-hidden">

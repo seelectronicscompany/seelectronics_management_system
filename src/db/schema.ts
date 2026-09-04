@@ -1020,3 +1020,15 @@ export const authTokens = pgTable("authTokens", {
     .$onUpdate(() => new Date())
     .notNull(),
 });
+
+export const banners = pgTable("banners", {
+  id: uuid().defaultRandom().primaryKey(),
+  imageKey: varchar({ length: 255 }).notNull(),
+  isActiveCustomer: boolean().default(false).notNull(),
+  isActiveStaff: boolean().default(false).notNull(),
+  createdAt: timestamp({ withTimezone: true }).defaultNow().notNull(),
+  updatedAt: timestamp({ withTimezone: true })
+    .defaultNow()
+    .$onUpdate(() => new Date())
+    .notNull(),
+});

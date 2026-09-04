@@ -2,6 +2,7 @@ import { staffLogout, verifyStaffSession } from "@/actions";
 import { getStaffById, getStaffProfileStats, getStaffCertificateToken } from "@/actions/staffActions";
 import { getComplaintsByStaff } from "@/actions/complaintActions";
 import { getStaffNotices } from "@/actions/noticeActions";
+import { getActiveBanners } from "@/actions/bannerActions";
 import StaffDashboardClient from "@/components/features/staff/StaffDashboardClient";
 import Link from "next/link";
 
@@ -46,12 +47,13 @@ export default async function StaffProfilePage() {
   }
 
   const userId = session.userId as string;
-  const [profileRes, statsRes, complaintsRes, noticesRes, certRes] = await Promise.all([
+  const [profileRes, statsRes, complaintsRes, noticesRes, certRes, bannersRes] = await Promise.all([
     getStaffById(userId),
     getStaffProfileStats(userId),
     getComplaintsByStaff(userId),
     getStaffNotices(),
     getStaffCertificateToken(userId),
+    getActiveBanners("staff"),
   ]);
 
   const staffData = profileRes.success ? profileRes.data : null;
@@ -63,6 +65,7 @@ export default async function StaffProfilePage() {
     ? noticesRes.data || []
     : [];
   const certificateToken = certRes.success ? certRes.token : null;
+  const activeBanners = bannersRes.banners?.map((b: any) => ({ img: b.url })) || [];
 
   if (!staffData) {
     return (
@@ -149,6 +152,7 @@ export default async function StaffProfilePage() {
       activeComplaints={activeComplaints}
       activeNotices={activeNotices}
       certificateToken={certificateToken}
+      banners={activeBanners}
     />
   );
 }

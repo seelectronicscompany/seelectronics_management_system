@@ -30,6 +30,7 @@ interface StaffDashboardClientProps {
   activeComplaints: any[];
   activeNotices: any[];
   certificateToken?: string | null;
+  banners?: { img: string | any }[];
 }
 
 export default function StaffDashboardClient({
@@ -40,6 +41,7 @@ export default function StaffDashboardClient({
   activeComplaints,
   activeNotices,
   certificateToken,
+  banners,
 }: StaffDashboardClientProps) {
   const unreadNotices = activeNotices.filter((n) => !n.isRead);
   const showMarquee =
@@ -52,7 +54,7 @@ export default function StaffDashboardClient({
       <div className="flex flex-col gap-4 px-2 text-gray-800 pb-24">
         {/* Banner */}
         <div className="mt-2 w-full overflow-hidden shadow-md">
-          <Banner />
+          <Banner slides={banners} />
         </div>
 
         {showMarquee && (
