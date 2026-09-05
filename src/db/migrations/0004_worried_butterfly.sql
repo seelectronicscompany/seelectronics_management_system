@@ -1,4 +1,4 @@
-CREATE TABLE "banners" (
+CREATE TABLE IF NOT EXISTS "banners" (
 	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
 	"imageKey" varchar(255) NOT NULL,
 	"isActiveCustomer" boolean DEFAULT false NOT NULL,
