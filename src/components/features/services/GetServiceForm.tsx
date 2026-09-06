@@ -139,7 +139,7 @@ export default function GetServiceForm({
     return (
       <div className="max-w-4xl mx-auto bg-white p-3 rounded-md shadow-sm border border-gray-100">
         <div className="mb-6">
-          <h2 className="text-2xl sm:text-3xl text-center font-extrabold text-brand mb-4 leading-tight">
+          <h2 className="text-lg sm:text-xl text-center font-extrabold text-brand mb-4 leading-tight">
             এস ই ইলেকট্রনিকস: অনলাইন সার্ভিসিং-এর শর্তাবলী ও নির্দেশিকা
           </h2>
           <p className="text-base sm:text-lg text-gray-500 text-center mb-8 leading-relaxed">
@@ -187,7 +187,7 @@ export default function GetServiceForm({
         </div>
 
         <button
-          className="w-full py-4 sm:py-5 bg-brand text-white rounded-md font-black text-lg sm:text-xl hover:bg-brand-800 active:scale-[0.98] transition-all shadow-lg shadow-brand/20 disabled:opacity-50 disabled:grayscale"
+          className="w-full py-2 sm:py-2 bg-brand text-white rounded-md font-black text-lg sm:text-xl hover:bg-brand-800 active:scale-[0.98] transition-all shadow-lg shadow-brand/20 disabled:opacity-50 disabled:grayscale"
           disabled={!agreed}
           onClick={() => setShowToC(false)}
         >
@@ -202,10 +202,10 @@ export default function GetServiceForm({
   return (
     <div className="mx-auto max-w-[1000px] text-center p-2 sm:p-4">
       <div className="font-bold mb-4 flex flex-col gap-1 bg-white p-4 sm:p-8 rounded-md border border-gray-100 shadow-sm">
-        <div className="text-2xl sm:text-3xl text-brand font-black">
+        <div className="text-xl text-brand font-black">
           এস ই ইলেকট্রনিকস প্রডাক্ট অনলাইন সার্ভিসিং সেন্টার
         </div>
-        <div className="flex flex-col sm:flex-row items-center justify-center gap-2 sm:gap-8 mt-4 text-base sm:text-lg text-gray-600">
+        <div className="flex flex-col sm:flex-row items-center justify-center gap-2 sm:gap-8  text-base sm:text-lg text-gray-600">
           <span className="font-bold">
             হেল্পলাইন:{" "}
             <span className="text-brand">{contactDetails.customerCare}</span>
@@ -215,15 +215,15 @@ export default function GetServiceForm({
             Email: <span className="text-brand">{contactDetails.email}</span>
           </span>
         </div>
-        <div className="text-sm sm:text-base text-gray-400 mt-2 font-medium">
+        <div className="text-sm sm:text-base text-gray-400 font-medium">
           হেড অফিস : {contactDetails.headOffice}
         </div>
 
-        <div className="border-2 border-brand/20 bg-brand/5 p-4 sm:p-6 rounded-md mt-6">
+        <div className="border-2 border-brand/20 bg-brand/5 p-2 sm:p-6 rounded-md mt-3">
           <p className="font-black text-gray-700 mb-4 text-base sm:text-lg">
             যে কোন সহযোগীতা ও তথ্যের জন্য আমাদের সাথে আলাপ করুন
           </p>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4">
+          <div className="grid grid-cols-4 md:grid-cols-4 gap-3 sm:gap-4">
             <Link
               className="flex items-center justify-center h-12 bg-white border-2 border-brand/20 text-brand rounded-md hover:bg-brand hover:text-white transition-all text-sm sm:text-base font-black"
               href={`sms:${contactDetails.sms}`}

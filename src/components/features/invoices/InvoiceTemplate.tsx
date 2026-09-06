@@ -89,24 +89,24 @@ export default function InvoiceTemplate({
             <tbody>
               {data.products?.map((product, index) => (
                 <tr key={product.id} className="border border-black">
-                  <td className="py-3 px-3 text-md border-r border-black">
+                  <td className="py-2 px-3 text-md border-r border-black">
                     {index + 1}.
                   </td>
-                  <td className="py-3 px-3 text-md border-r border-black">
+                  <td className="py-2 px-3 text-md border-r border-black">
                     {product.type.toUpperCase()}-{product.model}
                   </td>
-                  <td className="py-3 px-3 text-center text-md border-r border-black">
+                  <td className="py-2 px-3 text-center text-md border-r border-black">
                     {product.warrantyDurationMonths === 0
                       ? "None"
                       : product.warrantyDurationMonths + " Months"}
                   </td>
-                  <td className="py-3 px-3 text-center text-md border-r border-black">
+                  <td className="py-2 px-3 text-center text-md border-r border-black">
                     {product.quantity}
                   </td>
-                  <td className="py-3 px-3 text-right text-md border-r border-black">
+                  <td className="py-2 px-3 text-right text-md border-r border-black">
                     {product.unitPrice.toLocaleString()}
                   </td>
-                  <td className="py-3 px-3 text-right text-md font-semibold border-black">
+                  <td className="py-2 px-3 text-right text-md font-semibold border-black">
                     {(product.unitPrice * product.quantity).toLocaleString()} TK
                   </td>
                 </tr>

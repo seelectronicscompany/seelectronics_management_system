@@ -1,12 +1,12 @@
 "use client";
 
-import { CustomerHeader } from "./CustomerHeader";
-import { CustomerBottomNav } from "./CustomerBottomNav";
-import { usePathname } from "next/navigation";
-import { NoticeBanner } from "../features/notices";
-import { useEffect, useState } from "react";
 import { getCustomerNotices } from "@/actions";
 import { NoticeRecipientType } from "@/types";
+import { usePathname } from "next/navigation";
+import { useEffect, useState } from "react";
+import { NoticeBanner } from "../features/notices";
+import { CustomerBottomNav } from "./CustomerBottomNav";
+import { CustomerHeader } from "./CustomerHeader";
 
 interface CustomerLayoutProps {
   children: React.ReactNode;

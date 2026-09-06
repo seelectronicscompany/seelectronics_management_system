@@ -1,28 +1,21 @@
 "use client";
-import { useState } from "react";
 import { customerLogout } from "@/actions/customerActions";
 import { CustomerLayout } from "@/components/layout";
 import Banner from "@/components/ui/Banner";
+import clsx from "clsx";
 import {
-  Activity,
   AlertCircle,
   AlertTriangle,
   Banknote,
-  BatteryCharging,
   Boxes,
-  CheckCircle,
-  Clock,
   Crown,
   FileText,
-  Home,
   Loader2,
   LocateIcon,
   LogOut,
   MapPin,
   MessageSquare,
-  Monitor,
   PhoneCall,
-  Settings,
   ShieldCheck,
   ShoppingCart,
   Star,
@@ -30,11 +23,11 @@ import {
   Zap,
 } from "lucide-react";
 import Link from "next/link";
-import PrayerTimes from "../shared/PrayerTimes";
-import CustomerNotificationBell from "./CustomerNotificationBell";
+import { useState } from "react";
 import Marquee from "react-fast-marquee";
-import clsx from "clsx";
-import { custom } from "zod";
+import PrayerTimes from "../shared/PrayerTimes";
+import CustomerBalanceBar from "./CustomerBalanceBar";
+import CustomerNotificationBell from "./CustomerNotificationBell";
 
 interface CustomerDashboardClientProps {
   customer: {
@@ -45,6 +38,7 @@ interface CustomerDashboardClientProps {
     address: string | null;
     vipStatus?: string | null;
     vipCardNumber?: string | null;
+    referralBalance?: number | string | null;
     isWarrantyStopped?: boolean;
     warrantyExpiryDate?: string | null;
   };
@@ -196,13 +190,19 @@ export default function CustomerDashboardClient({
     },
   ];
 
+  const isVipCustomer = customer?.vipStatus === "approved";
+
   return (
     <CustomerLayout>
       {/* Dashboard Welcome Header */}
-      <div className="bg-[#0A1A3A] text-white rounded-b-3xl sm:rounded-b-[2.5rem]  w-full py-5 flex items-center justify-center z-10 relative mb-2">
-        <h1 className="font-bold text-[13px] sm:text-base md:text-lg tracking-[0.2em] uppercase text-center w-full">
-          Welcome to SE Electronics
-        </h1>
+      <div className="bg-[#0A1A3A] text-white rounded-b-3xl sm:rounded-b-[2.5rem] w-full py-3 flex items-center justify-center z-10 relative mb-2">
+        {isVipCustomer ? (
+          <CustomerBalanceBar amount={customer?.referralBalance || 0} />
+        ) : (
+          <h1 className="font-bold text-[13px] sm:text-base md:text-lg tracking-[0.2em] uppercase text-center w-full">
+            Welcome to SE Electronics
+          </h1>
+        )}
       </div>
 
       <div className="flex flex-col gap-4 px-2 text-gray-800 pb-24">
@@ -598,7 +598,9 @@ export default function CustomerDashboardClient({
               </button>
               <button
                 disabled={!!loadingTarget}
-                onClick={() => handleRedirect("https://semartbd.com/", "semart")}
+                onClick={() =>
+                  handleRedirect("https://semartbd.com/", "semart")
+                }
                 className="w-full bg-blue-600 hover:bg-blue-700 disabled:opacity-70 text-white font-bold py-3 rounded-xl transition-all shadow-md flex items-center justify-center gap-2"
               >
                 {loadingTarget === "semart" ? (
