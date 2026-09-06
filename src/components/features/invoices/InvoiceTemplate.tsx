@@ -167,10 +167,11 @@ export default function InvoiceTemplate({
               </tr>
             </tbody>
           </table>
-          <div className="text-center w-full py-3">
-            {data.notes && (
-              <div className="text-sm">
-                <p className="whitespace-pre-wrap mt-1">{data.notes}</p>
+          <div className="text-left w-full py-3 mt-4">
+            {data.notes && data.notes.trim() !== "" && (
+              <div className="text-sm px-2">
+                <span className="font-semibold underline">Notes:</span>
+                <p className="whitespace-pre-wrap mt-1 text-gray-800">{data.notes}</p>
               </div>
             )}
           </div>
