@@ -77,13 +77,12 @@ export function StaffHeader({ balance }: StaffHeaderProps) {
   const pathname = usePathname();
   const { title, showBalance } = getHeaderConfig(pathname);
 
-  const isDashboard = pathname === "/staff/profile";
-  const isNoTitlePage = pathname === "/staff/profile" || pathname === "/staff/details";
+  const isNoTitlePage =
+    pathname === "/staff/profile" || pathname === "/staff/details";
 
   return (
     <header className="sticky top-0 z-50 bg-[#0A1A3A] text-white shadow-lg overflow-hidden w-full">
       <div className="max-w-4xl mx-auto px-4 h-14 md:h-16 flex items-center justify-between gap-3">
-        {!isDashboard ? (
         {!isNoTitlePage ? (
           <>
             {/* LEFT BRAND LOGO */}
@@ -114,7 +113,6 @@ export function StaffHeader({ balance }: StaffHeaderProps) {
           </>
         ) : (
           <>
-            {/* DASHBOARD ONLY: BALANCE BAR & NOTIFICATIONS */}
             {/* NO TITLE PAGE: BALANCE BAR & NOTIFICATIONS ONLY */}
             {showBalance && (
               <div className="min-w-0 max-w-[140px] xs:max-w-none">
