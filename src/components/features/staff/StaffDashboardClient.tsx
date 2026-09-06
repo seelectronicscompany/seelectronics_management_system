@@ -2,7 +2,9 @@
 import {
   Activity,
   AlertCircle,
-  Download,
+  Award,
+  Banknote,
+  Contact,
   MessageSquare,
   PhoneCall,
   ShieldAlert,
@@ -10,9 +12,6 @@ import {
   User,
   Wallet,
   Wrench,
-  Banknote,
-  Contact,
-  Award,
 } from "lucide-react";
 import Link from "next/link";
 import Marquee from "react-fast-marquee";

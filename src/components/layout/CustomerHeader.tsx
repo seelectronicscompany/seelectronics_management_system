@@ -36,7 +36,7 @@ export function CustomerHeader() {
         </Link>
 
         {/* TITLE */}
-        <h1 className="font-bold text-xs sm:text-sm md:text-base truncate flex-1 min-w-0">
+        <h1 className="font-bold text-base flex-1 min-w-0">
           {title || "Welcome to SE Electronics"}
         </h1>
 

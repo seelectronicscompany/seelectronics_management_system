@@ -1,25 +1,17 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import {
-  Bell,
-  Check,
-  ExternalLink,
-  Inbox,
-  ArrowLeft,
-  Zap,
-  ChevronRight,
-} from "lucide-react";
-import Link from "next/link";
 import {
   getCustomerNotifications,
   markCustomerNotificationAsRead,
 } from "@/actions/customerActions";
 import { getCustomerNotices, markNoticeAsRead } from "@/actions/noticeActions";
-import { formatDate } from "@/utils";
-import clsx from "clsx";
 import { CustomerLayout } from "@/components/layout/CustomerLayout";
 import { Modal } from "@/components/ui";
+import { formatDate } from "@/utils";
+import clsx from "clsx";
+import { Bell, ChevronRight, ExternalLink, Inbox, Zap } from "lucide-react";
+import Link from "next/link";
+import { useEffect, useState } from "react";
 
 export default function CustomerNotificationsPage() {
   const [notifications, setNotifications] = useState<any[]>([]);
@@ -70,18 +62,7 @@ export default function CustomerNotificationsPage() {
 
   return (
     <CustomerLayout>
-      <div className="space-y-4 pb-24 px-1 sm:px-2">
-        <div className="flex items-center justify-between border-b border-gray-100 pb-4">
-          <div>
-            <h1 className="text-xl sm:text-2xl font-black text-brand tracking-tight">
-              Notifications
-            </h1>
-            <p className="text-[10px] sm:text-xs text-gray-400 font-bold uppercase tracking-wider mt-0.5">
-              Stay updated with your latest status
-            </p>
-          </div>
-        </div>
-
+      <div className="space-y-4 pb-24 px-1 sm:px-2 pt-4">
         {isLoading ? (
           <div className="space-y-3">
             {[1, 2, 3].map((i) => (

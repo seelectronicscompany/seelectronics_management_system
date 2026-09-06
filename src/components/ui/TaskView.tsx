@@ -1,29 +1,21 @@
 "use client";
 
 import { getStaffTasks, updateTaskStatus } from "@/actions/taskActions";
-import { Spinner, Modal } from "@/components/ui";
-import { TaskType, TaskStatus } from "@/types";
+import { Modal, Spinner } from "@/components/ui";
+import { TaskStatus, TaskType } from "@/types";
 import { formatDate } from "@/utils";
-import { useState, useEffect } from "react";
+import clsx from "clsx";
 import {
-  ListTodo,
-  ChevronRight,
-  Info,
-  AlertTriangle,
-  Zap,
   Calendar,
   Clock,
+  FileText,
   Inbox,
   PlayCircle,
-  CheckCircle,
   XCircle,
-  FileText,
-  Bell,
-  Wrench,
 } from "lucide-react";
-import { toast } from "react-toastify";
-import clsx from "clsx";
 import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
+import { toast } from "react-toastify";
 
 const getVisualStatus = (task: any): TaskStatus => {
   if (task.service) {
@@ -81,7 +73,10 @@ export default function TaskView() {
 
       // Redirect to report page if starting a service task
       if (newStatus === "in_progress" && (selectedTask?.serviceId || taskId)) {
-        const targetTask = selectedTask?.taskId === taskId ? selectedTask : tasks.find(t => t.taskId === taskId);
+        const targetTask =
+          selectedTask?.taskId === taskId
+            ? selectedTask
+            : tasks.find((t) => t.taskId === taskId);
         if (targetTask?.serviceId) {
           router.push(`/service-report?serviceId=${targetTask.serviceId}`);
           return;
@@ -110,22 +105,8 @@ export default function TaskView() {
 
   return (
     <div className="space-y-3">
-      {/* Header */}
-      <div className="flex items-center gap-2 bg-white p-3 rounded-xl border border-gray-100 shadow-sm">
-        <div className="size-9 rounded-md bg-brand/5 flex items-center justify-center">
-          <ListTodo size={18} className="text-brand" />
-        </div>
-        <div>
-          <h2 className="text-lg font-bold text-gray-900">Assigned Tasks</h2>
-          <p className="text-[10px] font-bold text-gray-400 uppercase">
-            {pendingCount} Pending Tasks
-          </p>
-        </div>
-      </div>
-
       {/* Task List */}
-      <div className="grid gap-2"
-      >
+      <div className="grid gap-2">
         {tasks.length === 0 ? (
           <div className="h-52 flex flex-col items-center justify-center text-gray-400 bg-white rounded-xl border border-dashed">
             <Inbox size={32} />
@@ -141,7 +122,6 @@ export default function TaskView() {
                 handleMarkAsRead(task.taskId);
                 setSelectedTask(task);
               }}
-
               className={clsx(
                 "group flex flex-col sm:flex-row items-start sm:items-center gap-3 p-3 bg-white rounded-xl border transition-all text-left",
                 getVisualStatus(task) === "completed"
@@ -171,13 +151,13 @@ export default function TaskView() {
 </div> */}
 
               {/* Content */}
-              <div className="flex-1 min-w-0 space-y-0.5"
-              >
+              <div className="flex-1 min-w-0 space-y-0.5">
                 <div className="flex items-center gap-2">
-                  <h3 className="text-sm font-semibold text-gray-900
-               truncate uppercase">
+                  <h3
+                    className="text-sm font-semibold text-gray-900
+               truncate uppercase"
+                  >
                     {task.staff?.name} নতুন {task.title} আসছে
-
                   </h3>
 
                   <div className="hidden sm:flex items-center gap-2">
@@ -214,9 +194,7 @@ export default function TaskView() {
                 <div className="flex flex-wrap items-center gap-x-3 gap-y-1 mt-1">
                   <div className="flex items-center gap-1 text-[12px] font-bold text-gray-400">
                     <Calendar size={10} />
-                    {task.dueDate
-                      ? formatDate(task.dueDate)
-                      : "No Deadline"}
+                    {task.dueDate ? formatDate(task.dueDate) : "No Deadline"}
                   </div>
                   <div className="flex items-center gap-1 text-[12px] font-bold text-gray-400">
                     <Clock size={10} />
@@ -231,7 +209,6 @@ export default function TaskView() {
                 details
               </div>
               <div className="flex sm:hidden items-center justify-between mt-2">
-
                 {/* LEFT: status + NEW */}
                 <div className="flex items-center gap-2">
                   <span
@@ -379,14 +356,17 @@ export default function TaskView() {
             )}
 
             <div className="pt-4 border-t border-gray-100 flex flex-wrap gap-3">
-              {(getVisualStatus(selectedTask) === "pending" || getVisualStatus(selectedTask) === "in_progress") && (
+              {(getVisualStatus(selectedTask) === "pending" ||
+                getVisualStatus(selectedTask) === "in_progress") && (
                 <button
                   disabled={isUpdatingStatus}
                   onClick={() => {
                     if (getVisualStatus(selectedTask) === "pending") {
                       handleStatusUpdate(selectedTask.taskId, "in_progress");
                     } else if (selectedTask.serviceId) {
-                      router.push(`/service-report?serviceId=${selectedTask.serviceId}`);
+                      router.push(
+                        `/service-report?serviceId=${selectedTask.serviceId}`,
+                      );
                     }
                   }}
                   className="flex-1 min-w-[140px] py-4 rounded-md bg-blue-600 text-white font-black uppercase tracking-widest text-xs hover:bg-blue-700 transition-all shadow-lg shadow-blue-100 flex items-center justify-center gap-2"

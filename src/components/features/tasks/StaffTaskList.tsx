@@ -115,17 +115,6 @@ export default function StaffTaskList() {
   return (
     <div className="space-y-3">
       {/* Header */}
-      <div className="flex items-center gap-2 bg-white p-3 rounded-xl border border-gray-100 shadow-sm">
-        <div className="size-9 rounded-md bg-brand/5 flex items-center justify-center">
-          <ListTodo size={18} className="text-brand" />
-        </div>
-        <div>
-          <h2 className="text-lg font-bold text-gray-900">Assigned Tasks</h2>
-          <p className="text-[10px] font-bold text-gray-400 uppercase">
-            {pendingCount} Pending Tasks
-          </p>
-        </div>
-      </div>
 
       {/* Task List */}
       <div className="grid gap-3 w-full">
