@@ -112,6 +112,9 @@ export default async function generatePDF({
         }
         const invoice = response.data;
 
+        // Debug: log notes value to Vercel function logs
+        console.log(`[PDF Debug] Invoice ${invoice.invoiceNumber} — notes value:`, JSON.stringify(invoice.notes), `| type: ${typeof invoice.notes} | length: ${invoice.notes?.length ?? 'N/A'}`);
+
         const isDue = invoice.dueAmount > 0;
         const templatePath = path.join(
           process.cwd(),
