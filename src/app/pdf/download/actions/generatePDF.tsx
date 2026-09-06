@@ -749,9 +749,10 @@ export default async function generatePDF({
                 <meta charset="UTF-8">
                 <script src="https://cdn.tailwindcss.com"></script>
                 <link href="https://fonts.maateen.me/solaiman-lipi/font.css" rel="stylesheet">
+                <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Tiro+Bangla&display=swap" rel="stylesheet">
                 <style>
                     @page { margin: 0; }
-                    body { margin: 0; padding: 0; font-family: 'SolaimanLipi', sans-serif; }
+                    body { margin: 0; padding: 0; font-family: 'SolaimanLipi', 'Tiro Bangla', sans-serif; }
                     * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
                 </style>
             </head>

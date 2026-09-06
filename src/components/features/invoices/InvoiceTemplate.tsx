@@ -12,7 +12,7 @@ export default function InvoiceTemplate({
       className="relative w-[210mm] h-[297mm] mx-auto bg-white bg-center bg-no-repeat bg-cover"
       style={{
         backgroundImage: `url(${data.bgImage})`,
-        fontFamily: `Inter, Tiro Bangla`,
+        fontFamily: `Inter, 'Tiro Bangla', SolaimanLipi, sans-serif`,
       }}
     >
       <div className="absolute top-[200px] left-[40px] right-[40px]">
@@ -167,13 +167,20 @@ export default function InvoiceTemplate({
               </tr>
             </tbody>
           </table>
-          <div className="text-center w-full py-3">
-            {data.notes && (
-              <div className="text-sm">
-                <p className="whitespace-pre-wrap mt-1">{data.notes}</p>
-              </div>
-            )}
-          </div>
+          {data.notes && (
+            <div
+              style={{
+                width: '100%',
+                textAlign: 'center',
+                paddingTop: '12px',
+                paddingBottom: '12px',
+                fontSize: '14px',
+                fontFamily: "SolaimanLipi, 'Tiro Bangla', sans-serif",
+              }}
+            >
+              <p style={{ whiteSpace: 'pre-wrap', margin: 0 }}>{data.notes}</p>
+            </div>
+          )}
         </div>
       </div>
     </div>
