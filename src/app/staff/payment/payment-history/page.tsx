@@ -3,9 +3,8 @@ import { getStaffPaymentHistory } from "@/actions/paymentRequestActions";
 import { StaffLayout } from "@/components/layout/StaffLayout";
 import { PaymentDataType } from "@/types";
 import clsx from "clsx";
-import Link from "next/link";
 import { CreditCard } from "lucide-react";
-import React from "react";
+import Link from "next/link";
 
 export default async function PaymentHistoryPage() {
   const session = await verifyStaffSession();
@@ -34,7 +33,7 @@ export default async function PaymentHistoryPage() {
         ) : (
           <div className="space-y-3">
             {paymentsList.map((payment: PaymentDataType) => {
-              const isRequest = payment.status === "requested";
+              const isRequest = payment.status !== "credited";
 
               const statusLabel =
                 payment.status === "completed"
@@ -56,6 +55,17 @@ export default async function PaymentHistoryPage() {
                       ? "bg-blue-100 text-blue-700 border border-blue-700"
                       : "bg-yellow-100 text-yellow-700 border border-yellow-700";
 
+              let messageText = "";
+              if (payment.status === "credited") {
+                messageText = `এস ইলেকট্রনিক্স আপনার সার্ভিস আইডি ${payment.serviceId ? payment.serviceId : ""} ভার্চুয়াল একাউন্টে পেমেন্টটি পাঠানো হয়েছে। পেমেন্ট আইডি এবং বিস্তারিত জানতে আপনার পেমেন্ট হিস্ট্রি চেক করুন।`;
+              } else if (payment.status === "completed") {
+                messageText = `টেকনিশিয়ান/ ইলেকট্রিশিয়ান, এস ই ইলেকট্রনিকস-এ আপনার টাকা উত্তোলন রিকোয়েস্ট পেমেন্ট এডমিন প্যানেল থেকে সফলভাবে পরিশোধ করা হয়েছে। অনুগ্রহ করে আপনার একাউন্ট চেক করে নিন।`;
+              } else if (payment.status === "approved") {
+                messageText = `এস ইলেকট্রনিক্স এডমিন প্যানেলে আপনার পেমেন্ট রিকোয়েস্টটি সফলভাবে সাবমিট হয়েছে। খুব শীঘ্রই টাকা আপনার ${payment.paymentMethod || "Bkash"} একাউন্টে মাধ্যমে নির্দিষ্ট সময়ে পাঠিয়ে দেওয়া হবে।`;
+              } else {
+                messageText = `আপনার পেমেন্ট রিকোয়েস্ট (৳${payment.amount}) এখন ${payment.status} অবস্থায় আছে।`;
+              }
+
               return (
                 <Link
                   key={payment.paymentId}
@@ -73,9 +83,7 @@ export default async function PaymentHistoryPage() {
                         </h2>
 
                         <p className="text-sm text-gray-700 mt-1">
-                          {isRequest
-                            ? `আপনার পেমেন্ট রিকোয়েস্টের ৳${payment.amount} টাকা ${payment.paymentMethod} নাম্বারে পাঠানো হয়েছে।`
-                            : `সার্ভিস ID (${payment.serviceId}) থেকে ৳${payment.amount} টাকা আপনার ব্যালেন্সে যোগ হয়েছে।`}
+                          {messageText}
                         </p>
 
                         <p className="text-xs text-gray-500 mt-2">

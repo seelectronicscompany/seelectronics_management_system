@@ -39,7 +39,7 @@ export async function getStaffBalance(staffId: string) {
       .where(
         and(
           eq(payments.staffId, staffId),
-          sql`${payments.status} IN ('requested', 'pending', 'approved', 'completed')`,
+          sql`${payments.status} IN ('requested', 'pending', 'processing', 'approved', 'completed')`,
         ),
       )
       .limit(1);
@@ -72,13 +72,15 @@ export async function requestPayment(_prevState: any, formData: FormData) {
     if (!staffData) return { success: false, message: "Staff not found" };
 
     const method = staffData.paymentPreference;
-    const hasWallet = ["bkash", "nagad", "rocket"].includes(method) && staffData.walletNumber;
+    const hasWallet =
+      ["bkash", "nagad", "rocket"].includes(method) && staffData.walletNumber;
     const hasBank = method === "bank" && staffData.bankInfo;
 
     if (method !== "cash" && !hasWallet && !hasBank) {
       return {
         success: false,
-        message: "Set your payment method and account details first (Payment Settings).",
+        message:
+          "Set your payment method and account details first (Payment Settings).",
       };
     }
 
@@ -104,10 +106,14 @@ export async function requestPayment(_prevState: any, formData: FormData) {
       status: "requested", // NEW: starts as "requested"
       date: new Date(),
     };
-    if (hasWallet) (insertPayload as any).receiverWalletNumber = staffData.walletNumber;
-    if (hasBank && staffData.bankInfo) (insertPayload as any).receiverBankInfo = staffData.bankInfo;
+    if (hasWallet)
+      (insertPayload as any).receiverWalletNumber = staffData.walletNumber;
+    if (hasBank && staffData.bankInfo)
+      (insertPayload as any).receiverBankInfo = staffData.bankInfo;
 
-    await db.insert(payments).values(insertPayload as typeof payments.$inferInsert);
+    await db
+      .insert(payments)
+      .values(insertPayload as typeof payments.$inferInsert);
 
     // Send SMS to admin
     if (process.env.ADMIN_PHONE_NUMBER) {
@@ -132,7 +138,10 @@ export async function requestPayment(_prevState: any, formData: FormData) {
     revalidatePath("/staff/payment");
     revalidatePath("/staff/payment/request");
     revalidatePath("/payments");
-    return { success: true, message: "Payment request sent. Admin will be notified." };
+    return {
+      success: true,
+      message: "Payment request sent. Admin will be notified.",
+    };
   } catch (error) {
     if (error instanceof z.ZodError) {
       console.error(error.issues);
