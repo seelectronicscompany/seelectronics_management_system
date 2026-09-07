@@ -1,29 +1,28 @@
 "use client";
 
-import { useState } from "react";
-import clsx from "clsx";
+import { reportService } from "@/actions";
 import {
   contactDetails,
   installCancelationReasons,
   serviceCancelationReasons,
 } from "@/constants";
-import { reportService } from "@/actions";
 import { StaffServiveReport, Statuses } from "@/types";
-import { toast } from "react-toastify";
-import Link from "next/link";
+import clsx from "clsx";
 import {
-  Navigation,
-  UserCheck,
-  MessageSquare,
-  Send,
   AlertCircle,
-  CheckCircle2,
   ArrowRight,
+  CheckCircle2,
+  ChevronLeft,
   HelpCircle,
   Info,
-  ChevronLeft,
+  MessageSquare,
+  Navigation,
+  Send,
+  UserCheck,
 } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { useState } from "react";
+import { toast } from "react-toastify";
 
 export default function ServiceReport({
   serviceData,
@@ -255,56 +254,74 @@ export default function ServiceReport({
     <div className="space-y-6 pb-20">
       {currentScreen === "success" && (
         <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-[999] px-4 animate-in fade-in duration-300">
-          <div className="w-full max-w-sm bg-white rounded shadow-2xl p-6 text-center relative animate-in zoom-in-95 duration-300">
-            {/* glow background */}
-            <div className="absolute -top-10 -right-10 w-32 h-32 bg-green-200 blur-3xl opacity-40 rounded-full" />
-            <div className="absolute -bottom-10 -left-10 w-32 h-32 bg-emerald-200 blur-3xl opacity-40 rounded-full" />
+          <div className="bg-white rounded-xl p-6 w-full max-w-sm text-center shadow-xl relative animate-in zoom-in-95 duration-300">
+            <button
+              type="button"
+              onClick={() => {
+                if (!isUnregistered) {
+                  router.push("/staff/services");
+                } else {
+                  setCurrentScreen("journey");
+                }
+              }}
+              className="absolute top-4 right-4 text-gray-400 hover:text-gray-600 transition-colors"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="h-5 w-5"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                strokeWidth={2}
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M6 18L18 6M6 6l12 12"
+                />
+              </svg>
+            </button>
 
-            {/* icon */}
-            <div className="w-20 h-20 mx-auto rounded-full bg-gradient-to-br from-green-100 to-emerald-200 flex items-center justify-center shadow-inner mb-5">
-              <CheckCircle2 className="text-green-600" size={40} />
+            <div className="w-16 h-16 mx-auto rounded-full bg-brand/10 flex items-center justify-center mb-4">
+              <div className="w-10 h-10 rounded-full bg-brand text-white flex items-center justify-center">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="h-5 w-5"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                  strokeWidth={3}
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M5 13l4 4L19 7"
+                  />
+                </svg>
+              </div>
             </div>
 
-            {/* title */}
-            <h2 className="text-xl font-black text-gray-800 mb-2">
+            <h2 className="text-xl font-bold text-brand mb-2">
               রিপোর্ট সফল হয়েছে
             </h2>
-
-            {/* subtitle */}
-            <p className="text-sm text-gray-500 mb-5 leading-relaxed">
+            <p className="text-sm text-gray-500 mb-6 leading-relaxed">
               আপনার সার্ভিস রিপোর্ট সফলভাবে সাবমিট করা হয়েছে। সিস্টেমে এটি এখন
               আপডেট হয়েছে।
             </p>
 
-            {/* fake / id box */}
-            <div className="bg-gray-50 border border-dashed rounded-lg py-2 px-3 mb-5 text-xs font-mono text-gray-600">
-              Report ID: #
-              {Math.random().toString(36).slice(2, 10).toUpperCase()}
-            </div>
-
-            {/* buttons */}
-            <div className="flex gap-3">
-              {/* Close */}
-              <button
-                onClick={() => setCurrentScreen("journey")}
-                className={clsx(
-                  "py-3 rounded-xl font-bold text-sm bg-gray-100 text-gray-700 hover:bg-gray-200 active:scale-95 transition-all",
-                  isUnregistered ? "w-full" : "flex-1"
-                )}
-              >
-                Close
-              </button>
-
-              {/* Go Dashboard */}
-              {!isUnregistered && (
-                <button
-                  onClick={() => router.push("/staff/profile")}
-                  className="flex-1 py-3 rounded-xl font-bold text-sm bg-gradient-to-r from-green-500 to-emerald-500 text-white shadow-md hover:from-green-600 hover:to-emerald-600 active:scale-95 transition-all"
-                >
-                  Dashboard
-                </button>
-              )}
-            </div>
+            <button
+              type="button"
+              onClick={() => {
+                if (!isUnregistered) {
+                  router.push("/staff/services");
+                } else {
+                  setCurrentScreen("journey");
+                }
+              }}
+              className="w-full py-2.5 rounded-lg font-bold text-sm border border-gray-200 text-brand bg-white hover:bg-gray-50 transition-all active:scale-[0.98]"
+            >
+              বন্ধ করুন
+            </button>
           </div>
         </div>
       )}

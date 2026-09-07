@@ -2,7 +2,6 @@
 
 // Import Next.js server actions, third-party icons, and React hooks
 import { requestPayment } from "@/actions/paymentRequestActions";
-import { CircleCheckBig } from "lucide-react";
 import { useActionState, useState } from "react";
 import { toast } from "react-toastify";
 
@@ -108,49 +107,63 @@ export function StaffPaymentRequestForm({
 
       {/* Success Modal Overlay - rendered conditionally on successful request */}
       {showSuccess && (
-        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-[60]">
-          <div className="bg-[#f0fcfc] border-2 border-[#00a8a8] rounded-md p-8 w-full max-w-sm text-center shadow-2xl animate-in zoom-in duration-200">
-            {/* Green Success Checkmark Icon */}
-            <div className="w-20 h-20 mx-auto rounded-full bg-white border border-[#00a8a8] flex items-center justify-center mb-5 shadow-sm">
-              <CircleCheckBig size={40} className="text-[#00a8a8]" />
+        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-[70]">
+          <div className="bg-white rounded-xl p-6 w-full max-w-sm text-center shadow-xl animate-in zoom-in duration-200 relative">
+            <button
+              type="button"
+              onClick={() => setShowSuccess(false)}
+              className="absolute top-4 right-4 text-gray-400 hover:text-gray-600 transition-colors"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="h-5 w-5"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                strokeWidth={2}
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M6 18L18 6M6 6l12 12"
+                />
+              </svg>
+            </button>
+
+            <div className="w-16 h-16 mx-auto rounded-full bg-brand/10 flex items-center justify-center mb-4">
+              <div className="w-10 h-10 rounded-full bg-brand text-white flex items-center justify-center">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="h-5 w-5"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                  strokeWidth={3}
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M5 13l4 4L19 7"
+                  />
+                </svg>
+              </div>
             </div>
 
-            {/* Success title */}
-            <h2 className="text-xl font-extrabold text-[#00a8a8] mb-2">
-              Request Sent!
+            <h2 className="text-xl font-bold text-brand mb-2">
+              অনুরোধ সফল হয়েছে!
             </h2>
-
-            {/* Success explanation */}
-            <p className="text-sm text-gray-600 mb-6 font-medium leading-relaxed">
-              Your payment request has been successfully sent to SE ELECTRONICS.
-              They will process it shortly.
+            <p className="text-sm text-gray-500 mb-6 leading-relaxed">
+              আপনার ক্যাশ আউট অনুরোধটি সফলভাবে জমা হয়েছে। দ্রুত আমাদের টিম
+              পেমেন্টটি প্রসেস করবে।
             </p>
 
-            {/* Modal actions */}
-            <div className="flex gap-3">
-              {/* Close Button - dismisses the success modal but stays on the same page */}
-              <button
-                onClick={() => setShowSuccess(false)}
-                className="flex-1 py-3 rounded-md font-bold text-sm 
-                     border border-slate-200 text-gray-500 bg-white
-                     hover:bg-slate-50 transition-all active:scale-[0.98]"
-              >
-                Close
-              </button>
-
-              {/* View History Button - closes modal and redirects to services/history list */}
-              <button
-                onClick={() => {
-                  setShowSuccess(false);
-                  window.location.href = "/staff/services";
-                }}
-                className="flex-1 py-3 rounded-md font-bold text-sm 
-                     bg-[#7aa4f6] text-white hover:bg-[#5b84e6]
-                     transition-all active:scale-[0.98]"
-              >
-                View History
-              </button>
-            </div>
+            <button
+              type="button"
+              onClick={() => setShowSuccess(false)}
+              className="w-full py-2.5 rounded-lg font-bold text-sm border border-gray-200 text-brand bg-white hover:bg-gray-50 transition-all active:scale-[0.98]"
+            >
+              বন্ধ করুন
+            </button>
           </div>
         </div>
       )}

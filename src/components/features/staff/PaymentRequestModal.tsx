@@ -1,10 +1,9 @@
 "use client";
 
 import { requestPayment } from "@/actions/paymentRequestActions";
-import {  CircleCheckBig } from "lucide-react";
+import { useRouter } from "next/navigation";
 import { useActionState, useEffect, useState } from "react";
 import { toast } from "react-toastify";
-import { useRouter } from "next/navigation";
 
 interface PaymentRequestModalProps {
   staffId: string;
@@ -24,14 +23,13 @@ export default function PaymentRequestModal({
   const [showSuccess, setShowSuccess] = useState(false);
   const router = useRouter();
 
- useEffect(() => {
-  if (state?.success) {
-   
-    setShowSuccess(true); 
-  } else if (state?.success === false) {
-    toast.error(state.message);
-  }
-}, [state]);
+  useEffect(() => {
+    if (state?.success) {
+      setShowSuccess(true);
+    } else if (state?.success === false) {
+      toast.error(state.message);
+    }
+  }, [state]);
 
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
@@ -139,64 +137,72 @@ export default function PaymentRequestModal({
           </div>
         </form>
         {showSuccess && (
-  <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-[60]">
-    <div className="bg-white rounded-2xl p-6 w-full max-w-sm text-center shadow-2xl animate-in zoom-in duration-200">
+          <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-[70]">
+            <div className="bg-white rounded-xl p-6 w-full max-w-sm text-center shadow-xl animate-in zoom-in duration-200 relative">
+              <button
+                type="button"
+                onClick={() => {
+                  setShowSuccess(false);
+                  onClose();
+                }}
+                className="absolute top-4 right-4 text-gray-400 hover:text-gray-600 transition-colors"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="h-5 w-5"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                  strokeWidth={2}
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M6 18L18 6M6 6l12 12"
+                  />
+                </svg>
+              </button>
 
-      {/* icon */}
-      <div className="w-16 h-16 mx-auto rounded-full bg-green-100 flex items-center justify-center mb-4">
-       <CircleCheckBig  className="text-green-500"/>
-      </div>
+              <div className="w-16 h-16 mx-auto rounded-full bg-brand/10 flex items-center justify-center mb-4">
+                <div className="w-10 h-10 rounded-full bg-brand text-white flex items-center justify-center">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="h-5 w-5"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    strokeWidth={3}
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M5 13l4 4L19 7"
+                    />
+                  </svg>
+                </div>
+              </div>
 
-      {/* title */}
-      <h2 className="text-lg font-bold text-gray-800 mb-1">
-        Payment Request Success!
-      </h2>
+              <h2 className="text-xl font-bold text-brand mb-2">
+                অনুরোধ সফল হয়েছে!
+              </h2>
+              <p className="text-sm text-gray-500 mb-6 leading-relaxed">
+                আপনার ক্যাশ আউট অনুরোধটি সফলভাবে জমা হয়েছে। দ্রুত আমাদের টিম
+                পেমেন্টটি প্রসেস করবে।
+              </p>
 
-      {/* description */}
-      <p className="text-sm text-gray-500 mb-4">
-        Your payment request has been successfully sent to SE ELECTRONICS. They will process it shortly.
-      </p>
-
-      {/* fake id (optional) */}
-      <div className="border border-dashed rounded-md py-2 mb-4 text-sm font-mono text-gray-600">
-        Payment ID: #{Math.random().toString(36).slice(2, 10).toUpperCase()}
-      </div>
-
-      {/* buttons */}
-      <div className="flex gap-3 ">
-  <button
-  onClick={() => {
-    setShowSuccess(false);
-    onClose();
-  }}
-  className="flex-1 py-2.5 rounded-lg font-semibold text-sm 
-             bg-gradient-to-r from-green-500 to-emerald-500 
-             text-white shadow-md 
-             hover:from-green-600 hover:to-emerald-600 
-             active:scale-95 
-             transition-all duration-200"
->
-  Close
-</button>
-<button
-  onClick={() => {
-    setShowSuccess(false);
-    onClose();
-    router.push("/staff/services"); //  redirect
-  }}
-  className="flex-1 py-2.5 rounded-lg font-semibold text-sm 
-             bg-gradient-to-r from-green-500 to-emerald-500 
-             text-white shadow-md 
-             hover:from-green-600 hover:to-emerald-600 
-             active:scale-95 
-             transition-all duration-200"
->
-  View History
-</button>
-      </div>
-    </div>
-  </div>
-)}
+              <button
+                type="button"
+                onClick={() => {
+                  setShowSuccess(false);
+                  onClose();
+                }}
+                className="w-full py-2.5 rounded-lg font-bold text-sm border border-gray-200 text-brand bg-white hover:bg-gray-50 transition-all active:scale-[0.98]"
+              >
+                বন্ধ করুন
+              </button>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );
