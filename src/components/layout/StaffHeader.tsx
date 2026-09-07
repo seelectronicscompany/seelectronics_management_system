@@ -14,7 +14,7 @@ const routeConfig: Record<string, { title: string; showBalance?: boolean }> = {
   "/staff/details": { title: "Profile", showBalance: true },
   "/staff/profile/edit": { title: "Edit Profile" },
   "/staff/services": { title: "Services" },
-  "/staff/payment": { title: "Payment", showBalance: true },
+  "/staff/payment": { title: "Payment" },
   "/staff/payment/payment-history": { title: "Payment History" },
   "/staff/payment/request": { title: "Payment Request" },
   "/staff/payment/settings": { title: "Payment Settings" },
