@@ -1,21 +1,22 @@
 "use client";
 
 import { createService } from "@/actions";
+import geoData from "@/assets/data/geo-data.json";
 import { InputField } from "@/components";
 import {
-  contactDetails,
   batteryTypes,
+  contactDetails,
+  ipsBrands,
   productPowerRatings,
   productTypes,
-  ipsBrands,
   stabilizerBrands,
   stabilizerPowerRatings,
 } from "@/constants";
 import { useThemeColor } from "@/hooks";
+import { Headset, MessageCircle, MessageSquare, Phone } from "lucide-react";
 import Link from "next/link";
 import { useActionState, useEffect, useState } from "react";
 import { toast } from "react-toastify";
-import geoData from "@/assets/data/geo-data.json";
 
 const requirementsList = [
   {
@@ -155,13 +156,24 @@ export default function GetServiceForm({
                 className="flex items-start gap-4 p-4 sm:p-5 bg-gray-50 rounded-xl"
               >
                 <div className="bg-[#10b981] text-white rounded-md flex items-center justify-center min-w-[24px] w-6 h-6 shrink-0 mt-0.5">
-                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4">
-                    <path fillRule="evenodd" d="M16.704 4.153a.75.75 0 01.143 1.052l-8 10.5a.75.75 0 01-1.127.075l-4.5-4.5a.75.75 0 011.06-1.06l3.894 3.893 7.48-9.817a.75.75 0 011.05-.143z" clipRule="evenodd" />
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 20 20"
+                    fill="currentColor"
+                    className="w-4 h-4"
+                  >
+                    <path
+                      fillRule="evenodd"
+                      d="M16.704 4.153a.75.75 0 01.143 1.052l-8 10.5a.75.75 0 01-1.127.075l-4.5-4.5a.75.75 0 011.06-1.06l3.894 3.893 7.48-9.817a.75.75 0 011.05-.143z"
+                      clipRule="evenodd"
+                    />
                   </svg>
                 </div>
 
                 <div>
-                  <div className="font-bold text-gray-800 text-base sm:text-lg mb-1">{item.title}</div>
+                  <div className="font-bold text-gray-800 text-base sm:text-lg mb-1">
+                    {item.title}
+                  </div>
                   <div className="text-gray-600 text-sm sm:text-base leading-relaxed">
                     {item.description}
                   </div>
@@ -225,28 +237,32 @@ export default function GetServiceForm({
           </p>
           <div className="grid grid-cols-4 md:grid-cols-4 gap-3 sm:gap-4">
             <Link
-              className="flex items-center justify-center h-12 bg-white border-2 border-brand/20 text-brand rounded-md hover:bg-brand hover:text-white transition-all text-sm sm:text-base font-black"
+              className="flex flex-col items-center justify-center p-1 sm:p-4 bg-white border-2 border-brand/20 text-brand rounded-md hover:bg-brand hover:text-white transition-all text-xs sm:text-sm font-black gap-2 text-center"
               href={`sms:${contactDetails.sms}`}
             >
-              এস এম এস
+              <MessageSquare className="w-6 h-6 sm:w-8 sm:h-8" />
+              <span>এস এম এস</span>
             </Link>
             <Link
-              className="flex items-center justify-center h-12 bg-white border-2 border-brand/20 text-brand rounded-md hover:bg-brand hover:text-white transition-all text-sm sm:text-base font-black"
+              className="flex flex-col items-center justify-center p-1 sm:p-4 bg-white border-2 border-brand/20 text-brand rounded-md hover:bg-brand hover:text-white transition-all text-xs sm:text-sm font-black gap-2 text-center"
               href={`tel:${contactDetails.phone}`}
             >
-              ফোন কল
+              <Phone className="w-6 h-6 sm:w-8 sm:h-8" />
+              <span>ফোন কল</span>
             </Link>
             <Link
-              className="flex items-center justify-center h-12 bg-white border-2 border-brand/20 text-brand rounded-md hover:bg-brand hover:text-white transition-all text-sm sm:text-base font-black"
+              className="flex flex-col items-center justify-center p-1 sm:p-4 bg-white border-2 border-brand/20 text-brand rounded-md hover:bg-brand hover:text-white transition-all text-xs sm:text-sm font-black gap-2 text-center"
               href={`tel:${contactDetails.customerCare}`}
             >
-              কাস্টমার কেয়ার
+              <Headset className="w-6 h-6 sm:w-8 sm:h-8" />
+              <span>কাস্টমার কেয়ার</span>
             </Link>
             <Link
-              className="flex items-center justify-center h-12 bg-white border-2 border-brand/20 text-brand rounded-md hover:bg-brand hover:text-white transition-all text-sm sm:text-base font-black"
+              className="flex flex-col items-center justify-center p-1 sm:p-4 bg-white border-2 border-brand/20 text-brand rounded-md hover:bg-brand hover:text-white transition-all text-xs sm:text-sm font-black gap-2 text-center"
               href={`https://wa.me/${contactDetails.whatsApp}`}
             >
-              ওয়াসআপ
+              <MessageCircle className="w-6 h-6 sm:w-8 sm:h-8" />
+              <span>ওয়াসআপ</span>
             </Link>
           </div>
         </div>

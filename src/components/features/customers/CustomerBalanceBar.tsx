@@ -24,7 +24,7 @@ export function CustomerBalanceBar({ amount }: { amount: number | string }) {
       : `${displayAmount.toLocaleString()}৳`;
 
   return (
-    <div className="flex items-center">
+    <div className="flex items-center justify-around w-full  ">
       <div className="bg-white rounded-full h-8 px-1 shadow-md border border-brand/10 overflow-hidden relative min-w-[170px] sm:min-w-[170px]">
         <div className="flex items-start h-full w-full relative overflow-hidden px-8 py-2">
           {/* 🔹 Tap For Balance (ALWAYS mounted) */}
@@ -64,6 +64,9 @@ export function CustomerBalanceBar({ amount }: { amount: number | string }) {
             </div>
           </div>
         </div>
+      </div>
+      <div>
+        <h1 className="text-xl font-bold">SE Electronics</h1>
       </div>
     </div>
   );

@@ -1,16 +1,9 @@
-import { verifyCustomerSession } from "@/actions/customerActions";
 import { getComplaintsByCustomer } from "@/actions/complaintActions";
-import Link from "next/link";
-import {
-  PlusCircle,
-  FileText,
-  Home,
-  ExternalLink,
-  ArrowRight,
-  CheckCircle,
-} from "lucide-react";
-import { formatDate } from "@/utils";
+import { verifyCustomerSession } from "@/actions/customerActions";
 import { CustomerLayout } from "@/components/layout/CustomerLayout";
+import { formatDate } from "@/utils";
+import { CheckCircle, FileText, Home, PlusCircle } from "lucide-react";
+import Link from "next/link";
 
 export default async function ComplainDashboardPage() {
   const session = await verifyCustomerSession();
@@ -38,16 +31,16 @@ export default async function ComplainDashboardPage() {
 
   return (
     <CustomerLayout>
-      <div className="space-y-6 pb-20">
+      <div className="space-y-2 pb-20">
         {/* Header Title */}
         <div className="flex items-center justify-between border-b border-gray-200/60 py-4">
-          <h1 className="text-xl sm:text-2xl font-black text-brand tracking-tight">
+          <h1 className="text-xl sm:text-2xl font-black text-brand px-4 tracking-tight">
             অভিযোগ ড্যাশবোর্ড
           </h1>
         </div>
 
         {/* Top Action Buttons (Dashboard Style) */}
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3.5">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3.5 px-2">
           <Link
             href="/customer/complain/new"
             className="flex items-center justify-center gap-3 bg-emerald-50 hover:bg-emerald-100/80 text-emerald-700 font-black py-4 px-6 rounded-xl border border-emerald-100 transition-all shadow-sm active:scale-[0.98]"
@@ -89,10 +82,10 @@ export default async function ComplainDashboardPage() {
                         <CheckCircle size={15} className="text-emerald-500" />
                       </div>
                       <div className="flex-1 bg-emerald-50/40 border border-emerald-100/80 rounded-xl px-3 py-1.5">
-                        <p className="font-black text-emerald-800 text-[10px] uppercase tracking-wider">
+                        <p className="font-black text-emerald-800 text-sm uppercase tracking-wider">
                           অপেক্ষমাণ
                         </p>
-                        <p className="text-[9px] text-emerald-600 font-extrabold">
+                        <p className="text-xs text-emerald-600 font-extrabold">
                           {formatDate(lastComplaint.createdAt)}
                         </p>
                       </div>
@@ -124,7 +117,7 @@ export default async function ComplainDashboardPage() {
                         }`}
                       >
                         <p
-                          className={`font-black text-[10px] uppercase tracking-wider ${
+                          className={`font-black text-sm uppercase tracking-wider ${
                             lastComplaint.status !== "under_trial"
                               ? "text-emerald-800"
                               : "text-gray-400"
@@ -133,7 +126,7 @@ export default async function ComplainDashboardPage() {
                           প্রক্রিয়াধীন
                         </p>
                         <p
-                          className={`text-[9px] font-extrabold ${
+                          className={`text-xs font-extrabold ${
                             lastComplaint.status !== "under_trial"
                               ? "text-emerald-600"
                               : "text-gray-300"
@@ -175,7 +168,7 @@ export default async function ComplainDashboardPage() {
                         }`}
                       >
                         <p
-                          className={`font-black text-[10px] uppercase tracking-wider ${
+                          className={`font-black text-sm uppercase tracking-wider ${
                             lastComplaint.status === "hearing" ||
                             lastComplaint.status === "completed"
                               ? "text-emerald-800"
@@ -185,7 +178,7 @@ export default async function ComplainDashboardPage() {
                           শুনানি
                         </p>
                         <p
-                          className={`text-[9px] font-extrabold ${
+                          className={`text-xs font-extrabold ${
                             lastComplaint.status === "hearing" ||
                             lastComplaint.status === "completed"
                               ? "text-emerald-600"
@@ -226,7 +219,7 @@ export default async function ComplainDashboardPage() {
                         }`}
                       >
                         <p
-                          className={`font-black text-[10px] uppercase tracking-wider ${
+                          className={`font-black text-sm uppercase tracking-wider ${
                             lastComplaint.status === "completed"
                               ? "text-white"
                               : "text-gray-400"
@@ -235,7 +228,7 @@ export default async function ComplainDashboardPage() {
                           নিষ্পত্তি
                         </p>
                         <p
-                          className={`text-[9px] font-extrabold ${
+                          className={`text-xs font-extrabold ${
                             lastComplaint.status === "completed"
                               ? "text-white/80"
                               : "text-gray-300"

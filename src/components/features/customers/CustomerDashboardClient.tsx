@@ -195,7 +195,7 @@ export default function CustomerDashboardClient({
   return (
     <CustomerLayout>
       {/* Dashboard Welcome Header */}
-      <div className="bg-[#0A1A3A] text-white rounded-b-3xl sm:rounded-b-[2.5rem] w-full py-3 flex items-center justify-center z-10 relative mb-2">
+      <div className="bg-[#0A1A3A] text-white w-full py-2 flex items-center justify-center z-10 relative mb-2">
         {isVipCustomer ? (
           <CustomerBalanceBar amount={customer?.referralBalance || 0} />
         ) : (
