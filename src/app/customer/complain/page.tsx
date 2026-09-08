@@ -340,7 +340,7 @@ export default async function ComplainDashboardPage() {
                         </td>
                         <td className="py-3 px-2">
                           <span
-                            className={`text-[11px] font-black px-2 py-0.5 rounded-full uppercase border ${
+                            className={`text-[9px] font-black px-2 py-0.5 rounded-full uppercase border ${
                               c.status === "completed"
                                 ? "bg-emerald-50 text-emerald-700 border-emerald-100"
                                 : c.status === "hearing"

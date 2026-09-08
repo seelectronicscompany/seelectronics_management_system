@@ -1,10 +1,12 @@
 "use client";
 
 import geoData from "@/assets/data/geo-data.json";
+import blacklistImg from "@/assets/images/suspend.png";
 import { ImageWithLightbox, Modal } from "@/components/ui";
-import { contactDetails, staffStats } from "@/constants";
+import { contactDetails } from "@/constants";
 import { renderText } from "@/utils";
 import {
+  AlertTriangle,
   BriefcaseBusiness,
   Building2,
   CheckSquare,
@@ -13,7 +15,6 @@ import {
   MapPin,
   Phone,
   XCircle,
-  AlertTriangle,
 } from "lucide-react";
 import Image from "next/image";
 import { useState } from "react";
@@ -23,6 +24,7 @@ export default function TeamMembers({
   staffId,
 }: {
   staffs: {
+    isActiveStaff: boolean;
     photoUrl: string | null;
     currentDistrict: string;
     currentPoliceStation: string | null;
@@ -96,8 +98,17 @@ export default function TeamMembers({
             <div className="bg-blue-50/60 border border-blue-200 rounded-md text-primary text-center">
               {/* <div className="bg-primary/15 border border-primary p-6  rounded-md"> */}
               {/* <!-- Profile Image Placeholder --> */}
-              <div className="size-48 rounded-full overflow-hidden __center mx-auto my-5">
+              <div className="size-48 rounded-full overflow-hidden __center mx-auto my-5 relative">
                 <ImageWithLightbox src={selectedProfile?.photoUrl || ""} />
+                {selectedProfile?.isActiveStaff === false && (
+                  <div className="absolute inset-0 bg-black/50 flex items-center justify-center z-10 pointer-events-none">
+                    <Image
+                      src={blacklistImg}
+                      alt="Blacklisted"
+                      className="w-full  object-contain"
+                    />
+                  </div>
+                )}
               </div>
               <h1 className="text-2xl font-bold mb-1">
                 {selectedProfile?.name}
@@ -347,13 +358,22 @@ export default function TeamMembers({
               onClick={() => handleProfileSelect(staff)}
               className="bg-white border p-6 rounded-md text-center cursor-pointer"
             >
-              <div className="size-44 rounded-full overflow-hidden __center mx-auto">
+              <div className="size-44 rounded-full overflow-hidden __center mx-auto relative">
                 <Image
                   src={staff.photoUrl || ""}
                   alt=""
                   width={176}
                   height={176}
                 />
+                {staff.isActiveStaff === false && (
+                  <div className="absolute inset-0 bg-black/50 flex items-center justify-center z-10 pointer-events-none">
+                    <Image
+                      src={blacklistImg}
+                      alt="Blacklisted"
+                      className="w-full object-contain"
+                    />
+                  </div>
+                )}
               </div>
               <div className="flex flex-col mt-5 gap-2">
                 <div className="flex gap-1 self-center items-center">

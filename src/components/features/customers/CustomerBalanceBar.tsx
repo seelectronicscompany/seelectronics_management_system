@@ -66,7 +66,7 @@ export function CustomerBalanceBar({ amount }: { amount: number | string }) {
         </div>
       </div>
       <div>
-        <h1 className="text-xl font-bold">SE Electronics</h1>
+        <h1 className="text-xl font-bold">SE ELECTRONICS</h1>
       </div>
     </div>
   );

@@ -1,0 +1,101 @@
+[2026-09-08T15:34:22.258Z] ═══════════════════════════════════════════════════════
+[2026-09-08T15:34:22.258Z] 🚀 Database Migration: OLD → NEW
+[2026-09-08T15:34:22.258Z]    Mode: 🔴 LIVE EXECUTION
+[2026-09-08T15:34:22.258Z]    Old DB: postgresql:***@ep-frosty-glitter-a1srx93i-pooler.ap-southeast-1.aws.neon.tech/neondb?sslmode=require&channel_binding=require
+[2026-09-08T15:34:22.258Z]    New DB: postgresql:***@ep-shy-voice-aocawsds-pooler.c-2.ap-southeast-1.aws.neon.tech/neondb?sslmode=require&channel_binding=require
+[2026-09-08T15:34:22.258Z]    ID Prefix: "OB_"
+[2026-09-08T15:34:22.258Z] ═══════════════════════════════════════════════════════
+[2026-09-08T15:34:22.259Z] 🔍 Building overlap maps...
+[2026-09-08T15:34:24.435Z]   📎 Customer overlap: OLD "SE3ZV3RJU8" (01752288447) → NEW "SEGIARKU6A"
+[2026-09-08T15:34:24.435Z]   📎 Customer overlap: OLD "SEFHGCAMKS" (01752288447) → NEW "SEGIARKU6A"
+[2026-09-08T15:34:24.435Z]   📎 Customer overlap: OLD "SEAC29N3KX" (01752288447) → NEW "SEGIARKU6A"
+[2026-09-08T15:34:24.435Z]   📎 Customer overlap: OLD "SE26FNJ4TB" (01712452755) → NEW "SEJFNPD38M"
+[2026-09-08T15:34:24.435Z]   📎 Customer overlap: OLD "SEE7S6K9KJ" (01752288447) → NEW "SEGIARKU6A"
+[2026-09-08T15:34:24.435Z]   📎 Customer overlap: OLD "SEX9QRFJDY" (01752288447) → NEW "SEGIARKU6A"
+[2026-09-08T15:34:24.435Z]   📎 Customer overlap: OLD "SEDHR52NEV" (01752288447) → NEW "SEGIARKU6A"
+[2026-09-08T15:34:24.436Z]   📎 Customer overlap: OLD "SELMTFEJLI" (01712452755) → NEW "SEJFNPD38M"
+[2026-09-08T15:34:24.436Z]   📎 Customer overlap: OLD "SEG0TP1NS2" (01752288447) → NEW "SEGIARKU6A"
+[2026-09-08T15:34:24.436Z]   📎 Customer overlap: OLD "SEE8FGBXX2" (01310673600) → NEW "SEUO1H6E57"
+[2026-09-08T15:34:24.436Z]   📎 Customer overlap: OLD "SE6GCULAGD" (01752288447) → NEW "SEGIARKU6A"
+[2026-09-08T15:34:24.436Z]   📎 Customer overlap: OLD "SEFFQIC5CW" (01310673600) → NEW "SEUO1H6E57"
+[2026-09-08T15:34:24.436Z]   📎 Customer overlap: OLD "SE5FRU50Y9" (01752288447) → NEW "SEGIARKU6A"
+[2026-09-08T15:34:24.436Z]   📎 Customer overlap: OLD "SE8U8DX887" (01752288447) → NEW "SEGIARKU6A"
+[2026-09-08T15:34:24.436Z]   📎 Customer overlap: OLD "SEG3SY3QC5" (01712452755) → NEW "SEJFNPD38M"
+[2026-09-08T15:34:24.436Z]   📎 Customer overlap: OLD "SEG7GGXGR8" (01752288447) → NEW "SEGIARKU6A"
+[2026-09-08T15:34:24.436Z]   📎 Customer overlap: OLD "SEIRDWFB2E" (01752288447) → NEW "SEGIARKU6A"
+[2026-09-08T15:34:24.436Z]   📎 Customer overlap: OLD "SEOO3KRTOJ" (01718712492) → NEW "SEXHB56LCA"
+[2026-09-08T15:34:24.436Z]   📎 Customer overlap: OLD "SE3VKIQL0Z" (01950737386) → NEW "SEOYW3C1SY"
+[2026-09-08T15:34:24.436Z]   Found 19 customer overlaps
+[2026-09-08T15:34:24.613Z]   📎 Staff overlap: OLD "SEH72JC7XV" (01310673600) → NEW "SEQQTONWQD"
+[2026-09-08T15:34:24.614Z]   📎 Staff overlap: OLD "SE87O4WC20" (01312954819) → NEW "SE2L0OQUBT"
+[2026-09-08T15:34:24.614Z]   📎 Staff overlap: OLD "SEO0QV1ZX1" (01310673600) → NEW "SEQQTONWQD"
+[2026-09-08T15:34:24.614Z]   📎 Staff overlap: OLD "SE2V24A22K" (01310673600) → NEW "SEQQTONWQD"
+[2026-09-08T15:34:24.614Z]   📎 Staff overlap: OLD "SEE1ISTF9A" (01312954819) → NEW "SE2L0OQUBT"
+[2026-09-08T15:34:24.614Z]   📎 Staff overlap: OLD "SEZYPQY6SV" (01855684869) → NEW "SEMQS5YF41"
+[2026-09-08T15:34:24.614Z]   Found 6 staff overlaps
+[2026-09-08T15:34:24.730Z]   📎 Agreement overlap: OLD "560710f2-1da4-4888-8150-7c36a54b3932" → NEW "1e3ab345-f2fb-45e3-8453-d0772cf34c30"
+[2026-09-08T15:34:24.845Z] 
+📦 Migrating: admins
+[2026-09-08T15:34:24.997Z]   ✅ Inserted admin "sahabuddin"
+[2026-09-08T15:34:25.263Z]   ✅ Inserted admin "yasin"
+[2026-09-08T15:34:25.263Z]   📊 admins: 2 inserted, 0 skipped (duplicates)
+[2026-09-08T15:34:25.264Z] 
+📦 Migrating: agreements
+[2026-09-08T15:34:25.330Z]   ⏭️  Skip agreement "application_declaration" v1.0 (already exists)
+[2026-09-08T15:34:25.330Z]   📊 agreements: 0 inserted, 1 skipped
+[2026-09-08T15:34:25.331Z] 
+📦 Migrating: customers
+[2026-09-08T15:34:26.069Z]   ⏭️  Skip customer "SE3ZV3RJU8" (phone 01752288447 → merged to "SEGIARKU6A")
+[2026-09-08T15:34:26.971Z]   ⏭️  Skip customer "SEFHGCAMKS" (phone 01752288447 → merged to "SEGIARKU6A")
+[2026-09-08T15:34:27.086Z]   ⏭️  Skip customer "SEAC29N3KX" (phone 01752288447 → merged to "SEGIARKU6A")
+[2026-09-08T15:34:27.384Z]   ⏭️  Skip customer "SE26FNJ4TB" (phone 01712452755 → merged to "SEJFNPD38M")
+[2026-09-08T15:34:30.425Z]   ⏭️  Skip customer "SEE7S6K9KJ" (phone 01752288447 → merged to "SEGIARKU6A")
+[2026-09-08T15:34:30.674Z]   ⏭️  Skip customer "SEX9QRFJDY" (phone 01752288447 → merged to "SEGIARKU6A")
+[2026-09-08T15:34:30.674Z]   ⏭️  Skip customer "SEDHR52NEV" (phone 01752288447 → merged to "SEGIARKU6A")
+[2026-09-08T15:34:32.468Z]   ⏭️  Skip customer "SELMTFEJLI" (phone 01712452755 → merged to "SEJFNPD38M")
+[2026-09-08T15:34:33.534Z]   ⏭️  Skip customer "SEG0TP1NS2" (phone 01752288447 → merged to "SEGIARKU6A")
+[2026-09-08T15:34:33.646Z]   ⏭️  Skip customer "SEE8FGBXX2" (phone 01310673600 → merged to "SEUO1H6E57")
+[2026-09-08T15:34:33.819Z]   ⏭️  Skip customer "SE6GCULAGD" (phone 01752288447 → merged to "SEGIARKU6A")
+[2026-09-08T15:34:34.549Z]   ⏭️  Skip customer "SEFFQIC5CW" (phone 01310673600 → merged to "SEUO1H6E57")
+[2026-09-08T15:34:34.682Z]   ⏭️  Skip customer "SE5FRU50Y9" (phone 01752288447 → merged to "SEGIARKU6A")
+[2026-09-08T15:34:35.099Z]   ⏭️  Skip customer "SE8U8DX887" (phone 01752288447 → merged to "SEGIARKU6A")
+[2026-09-08T15:34:36.723Z]   ⏭️  Skip customer "SEG3SY3QC5" (phone 01712452755 → merged to "SEJFNPD38M")
+[2026-09-08T15:34:36.840Z]   ⏭️  Skip customer "SEG7GGXGR8" (phone 01752288447 → merged to "SEGIARKU6A")
+[2026-09-08T15:34:36.899Z]   ⏭️  Skip customer "SEIRDWFB2E" (phone 01752288447 → merged to "SEGIARKU6A")
+[2026-09-08T15:34:38.237Z]   ⏭️  Skip customer "SEOO3KRTOJ" (phone 01718712492 → merged to "SEXHB56LCA")
+[2026-09-08T15:34:38.677Z]   ⏭️  Skip customer "SE3VKIQL0Z" (phone 01950737386 → merged to "SEOYW3C1SY")
+[2026-09-08T15:34:39.660Z]   📊 customers: 186 inserted, 19 merged to existing
+[2026-09-08T15:34:39.661Z] 
+📦 Migrating: invoices
+[2026-09-08T15:34:53.908Z]   📊 invoices: 205 inserted
+[2026-09-08T15:34:53.908Z] 
+📦 Migrating: products
+[2026-09-08T15:35:12.256Z]   📊 products: 273 inserted
+[2026-09-08T15:35:12.256Z] 
+📦 Migrating: staffs
+[2026-09-08T15:35:12.498Z]   ⏭️  Skip staff "SEH72JC7XV" (phone 01310673600 → merged to "SEQQTONWQD")
+[2026-09-08T15:35:12.498Z]   ⏭️  Skip staff "SE87O4WC20" (phone 01312954819 → merged to "SE2L0OQUBT")
+[2026-09-08T15:35:13.070Z]   ⏭️  Skip staff "SEO0QV1ZX1" (phone 01310673600 → merged to "SEQQTONWQD")
+[2026-09-08T15:35:13.279Z]   ⏭️  Skip staff "SE2V24A22K" (phone 01310673600 → merged to "SEQQTONWQD")
+[2026-09-08T15:35:13.511Z]   ⏭️  Skip staff "SEE1ISTF9A" (phone 01312954819 → merged to "SE2L0OQUBT")
+[2026-09-08T15:35:13.571Z]   ⏭️  Skip staff "SEZYPQY6SV" (phone 01855684869 → merged to "SEMQS5YF41")
+[2026-09-08T15:35:13.571Z]   📊 staffs: 16 inserted, 6 merged to existing
+[2026-09-08T15:35:13.571Z] 
+📦 Migrating: services
+[2026-09-08T15:35:20.280Z]   📊 services: 94 inserted (status derived from history)
+[2026-09-08T15:35:20.280Z] 
+📦 Migrating: serviceStatusHistory
+[2026-09-08T15:35:51.994Z]   📊 serviceStatusHistory: 441 inserted
+[2026-09-08T15:35:51.994Z] 
+📦 Migrating: subscriptions
+[2026-09-08T15:35:52.378Z]   📊 subscriptions: 3 inserted
+[2026-09-08T15:35:52.378Z] 
+📦 Migrating: applications
+[2026-09-08T15:35:52.850Z] 
+❌ Migration failed: duplicate key value violates unique constraint "applications_applicantId_unique"
+[2026-09-08T15:35:52.856Z]    Stack: NeonDbError: duplicate key value violates unique constraint "applications_applicantId_unique"
+    at mr.execute (/home/talhakhan/Programming/seelectronics_management_system/node_modules/@neondatabase/serverless/index.js:1300:10)
+    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+    at async insertRow (/home/talhakhan/Programming/seelectronics_management_system/scripts/migrate-merge.ts:95:3)
+    at async migrateApplications (/home/talhakhan/Programming/seelectronics_management_system/scripts/migrate-merge.ts:624:5)
+    at async main (/home/talhakhan/Programming/seelectronics_management_system/scripts/migrate-merge.ts:879:5)

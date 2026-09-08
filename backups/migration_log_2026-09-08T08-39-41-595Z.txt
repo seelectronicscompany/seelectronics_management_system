@@ -1,0 +1,21 @@
+[2026-09-08T08:39:41.590Z] ═══════════════════════════════════════════════════════
+[2026-09-08T08:39:41.590Z] 🚀 Database Migration: OLD → NEW
+[2026-09-08T08:39:41.590Z]    Mode: 🧪 DRY RUN (no writes)
+[2026-09-08T08:39:41.590Z]    Old DB: postgresql:***@ep-frosty-glitter-a1srx93i-pooler.ap-southeast-1.aws.neon.tech/neondb?sslmode=require&channel_binding=require
+[2026-09-08T08:39:41.590Z]    New DB: postgresql:***@ep-shy-voice-aocawsds-pooler.c-2.ap-southeast-1.aws.neon.tech/neondb?sslmode=require&channel_binding=require
+[2026-09-08T08:39:41.590Z]    ID Prefix: "OB_"
+[2026-09-08T08:39:41.590Z] ═══════════════════════════════════════════════════════
+[2026-09-08T08:39:41.591Z] 🔍 Building overlap maps...
+[2026-09-08T08:39:41.591Z] 
+❌ Migration failed: This function can now be called only as a tagged-template function: sql`SELECT ${value}`, not sql("SELECT $1", [value], options). For a conventional function call with value placeholders ($1, $2, etc.), use sql.query("SELECT $1", [value], options).
+[2026-09-08T08:39:41.595Z]    Stack: Error: This function can now be called only as a tagged-template function: sql`SELECT ${value}`, not sql("SELECT $1", [value], options). For a conventional function call with value placeholders ($1, $2, etc.), use sql.query("SELECT $1", [value], options).
+    at templateFn (/home/talhakhan/Programming/seelectronics_management_system/node_modules/@neondatabase/serverless/index.js:1278:25)
+    at buildOverlapMaps (/home/talhakhan/Programming/seelectronics_management_system/scripts/migrate-merge.ts:105:30)
+    at main (/home/talhakhan/Programming/seelectronics_management_system/scripts/migrate-merge.ts:770:28)
+    at <anonymous> (/home/talhakhan/Programming/seelectronics_management_system/scripts/migrate-merge.ts:802:1)
+    at Object.<anonymous> (/home/talhakhan/Programming/seelectronics_management_system/scripts/migrate-merge.ts:805:2)
+    at Module._compile (node:internal/modules/cjs/loader:1872:14)
+    at Object.transformer (/home/talhakhan/.npm/_npx/fd45a72a545557e9/node_modules/tsx/dist/register-OY9cqBEN.cjs:9:3619)
+    at Module.load (node:internal/modules/cjs/loader:1594:32)
+    at Module._load (node:internal/modules/cjs/loader:1396:12)
+    at wrapModuleLoad (node:internal/modules/cjs/loader:255:19)

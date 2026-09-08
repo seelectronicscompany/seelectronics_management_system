@@ -12,11 +12,11 @@ import {
   authTokens,
   feedbacks,
   payments,
-  services,
-  staffs,
-  staffComplaints,
-  userAgreements,
   serviceStatusHistory,
+  services,
+  staffComplaints,
+  staffs,
+  userAgreements,
 } from "@/db/schema";
 import {
   SMSError,
@@ -37,7 +37,7 @@ import {
 } from "@/validationSchemas";
 import bcrypt from "bcrypt";
 import crypto from "crypto";
-import { and, desc, eq, ilike, or, sql, inArray, not, gt } from "drizzle-orm";
+import { and, desc, eq, gt, ilike, inArray, not, or, sql } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 import { cookies, headers } from "next/headers";
 import { RedirectType, redirect } from "next/navigation";
@@ -242,6 +242,7 @@ export const getAllTeamMembers = async () => {
         nidFrontPhotoKey: staffs.nidFrontPhotoKey,
         nidBackPhotoKey: staffs.nidBackPhotoKey,
         role: staffs.role,
+        isActiveStaff: staffs.isActiveStaff,
         rating: sql<number>`COALESCE(AVG(${feedbacks.rating}), 0)`.mapWith(
           Number,
         ),
@@ -270,9 +271,9 @@ export const getAllTeamMembers = async () => {
       })
       .from(staffComplaints)
       .groupBy(staffComplaints.staffId);
-    
+
     const complaintsMap = new Map(
-      complaintsCountsData.map((c) => [c.staffId, c.count])
+      complaintsCountsData.map((c) => [c.staffId, c.count]),
     );
 
     const finalStaffData = await Promise.all(
@@ -415,15 +416,16 @@ export const getStaffById = async (staffId: string) => {
 
     if (!staffData) return { success: false, message: "Staff not found" };
 
-    const [photoUrl, nidFrontPhotoUrl, nidBackPhotoUrl, complaintsCountResult] = await Promise.all([
-      getObjectUrl(staffData.photoKey),
-      getObjectUrl(staffData.nidFrontPhotoKey),
-      getObjectUrl(staffData.nidBackPhotoKey),
-      db
-        .select({ count: sql<number>`count(*)`.mapWith(Number) })
-        .from(staffComplaints)
-        .where(eq(staffComplaints.staffId, staffId))
-    ]);
+    const [photoUrl, nidFrontPhotoUrl, nidBackPhotoUrl, complaintsCountResult] =
+      await Promise.all([
+        getObjectUrl(staffData.photoKey),
+        getObjectUrl(staffData.nidFrontPhotoKey),
+        getObjectUrl(staffData.nidBackPhotoKey),
+        db
+          .select({ count: sql<number>`count(*)`.mapWith(Number) })
+          .from(staffComplaints)
+          .where(eq(staffComplaints.staffId, staffId)),
+      ]);
 
     const complaintsCount = complaintsCountResult[0]?.count || 0;
 
@@ -1086,37 +1088,38 @@ export async function setStaffCredentials(
 
 export async function getStaffProfileStats(staffId: string) {
   try {
-    const [staffStats, ratingResult, staffPayments, paymentSums] = await Promise.all([
-      db.query.staffs.findFirst({
-        where: eq(staffs.staffId, staffId),
-        columns: {
-          totalServices: true,
-          successfulServices: true,
-          canceledServices: true,
-          pendingServices: true,
-          serviceCenterServices: true,
-          rating: true,
-        },
-      }),
-      db
-        .select({ avg: sql<number>`AVG(${feedbacks.rating})` })
-        .from(feedbacks)
-        .innerJoin(services, eq(services.serviceId, feedbacks.serviceId))
-        .where(eq(services.staffId, staffId))
-        .limit(1),
-      db.query.payments.findMany({
-        where: eq(payments.staffId, staffId),
-        orderBy: (payments, { desc }) => [desc(payments.date)],
-        limit: 10,
-      }),
-      db
-        .select({
-          added: sql<number>`COALESCE(SUM(${payments.amount}) FILTER (WHERE status = 'credited'), 0)`,
-          requested: sql<number>`COALESCE(SUM(${payments.amount}) FILTER (WHERE status IN ('requested', 'pending', 'approved', 'completed')), 0)`,
-        })
-        .from(payments)
-        .where(eq(payments.staffId, staffId)),
-    ]);
+    const [staffStats, ratingResult, staffPayments, paymentSums] =
+      await Promise.all([
+        db.query.staffs.findFirst({
+          where: eq(staffs.staffId, staffId),
+          columns: {
+            totalServices: true,
+            successfulServices: true,
+            canceledServices: true,
+            pendingServices: true,
+            serviceCenterServices: true,
+            rating: true,
+          },
+        }),
+        db
+          .select({ avg: sql<number>`AVG(${feedbacks.rating})` })
+          .from(feedbacks)
+          .innerJoin(services, eq(services.serviceId, feedbacks.serviceId))
+          .where(eq(services.staffId, staffId))
+          .limit(1),
+        db.query.payments.findMany({
+          where: eq(payments.staffId, staffId),
+          orderBy: (payments, { desc }) => [desc(payments.date)],
+          limit: 10,
+        }),
+        db
+          .select({
+            added: sql<number>`COALESCE(SUM(${payments.amount}) FILTER (WHERE status = 'credited'), 0)`,
+            requested: sql<number>`COALESCE(SUM(${payments.amount}) FILTER (WHERE status IN ('requested', 'pending', 'approved', 'completed')), 0)`,
+          })
+          .from(payments)
+          .where(eq(payments.staffId, staffId)),
+      ]);
 
     if (!staffStats) {
       return { success: false, message: "Staff not found" };
@@ -1341,8 +1344,8 @@ export const getStaffCertificateToken = async (staffId: string) => {
         and(
           gt(authTokens.expiresAt, new Date()),
           sql`payload->>'type' = 'certificate'`,
-          sql`payload->>'staffId' = ${staffId}`
-        )
+          sql`payload->>'staffId' = ${staffId}`,
+        ),
       )
       .orderBy(desc(authTokens.createdAt))
       .limit(1);
@@ -1360,7 +1363,10 @@ export const getCertificatePreviewData = async (token: string) => {
     const { verifyAuthToken } = await import("@/actions/authActions");
     const tokenResult = await verifyAuthToken(token);
     if (!tokenResult.isValid) {
-      return { success: false, message: "ডাউনলোড লিংকটির মেয়াদ শেষ বা অকার্যকর।" };
+      return {
+        success: false,
+        message: "ডাউনলোড লিংকটির মেয়াদ শেষ বা অকার্যকর।",
+      };
     }
 
     const payload = tokenResult.payload;
@@ -1386,14 +1392,20 @@ export const getCertificatePreviewData = async (token: string) => {
       "src",
       "assets",
       "images",
-      "certificate-template.jpg"
+      "certificate-template.jpg",
     );
     const backgroundBase64 = await convertToBase64(templatePath);
 
     const fontsPath = path.join(process.cwd(), "src", "assets", "fonts");
-    const font1 = await convertToBase64(path.join(fontsPath, "oldenglishtextmt.ttf"));
-    const font2 = await convertToBase64(path.join(fontsPath, "edwardianscriptitc.ttf"));
-    const font3 = await convertToBase64(path.join(fontsPath, "brockScript.ttf"));
+    const font1 = await convertToBase64(
+      path.join(fontsPath, "oldenglishtextmt.ttf"),
+    );
+    const font2 = await convertToBase64(
+      path.join(fontsPath, "edwardianscriptitc.ttf"),
+    );
+    const font3 = await convertToBase64(
+      path.join(fontsPath, "brockScript.ttf"),
+    );
 
     const { qrcode } = await import("@/lib/id-gen");
     const qrCodeData = await qrcode(payload.staffId || payload.shopId || "");
@@ -1417,5 +1429,3 @@ export const getCertificatePreviewData = async (token: string) => {
     return { success: false, message: "সার্টিফিকেট লোড করতে ব্যর্থ।" };
   }
 };
-
-

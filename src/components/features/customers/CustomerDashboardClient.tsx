@@ -200,7 +200,7 @@ export default function CustomerDashboardClient({
           <CustomerBalanceBar amount={customer?.referralBalance || 0} />
         ) : (
           <h1 className="font-bold text-[13px] sm:text-base md:text-lg tracking-[0.2em] uppercase text-center w-full">
-            Welcome to SE Electronics
+            Welcome to SE ELECTRONICS
           </h1>
         )}
       </div>
