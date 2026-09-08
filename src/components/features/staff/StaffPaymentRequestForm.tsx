@@ -108,11 +108,11 @@ export function StaffPaymentRequestForm({
       {/* Success Modal Overlay - rendered conditionally on successful request */}
       {showSuccess && (
         <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-[70]">
-          <div className="bg-white rounded-xl p-6 w-full max-w-sm text-center shadow-xl animate-in zoom-in duration-200 relative">
+          <div className="bg-white rounded-2xl p-6 sm:p-8 w-full max-w-sm text-center shadow-xl animate-in zoom-in duration-200 relative">
             <button
               type="button"
               onClick={() => setShowSuccess(false)}
-              className="absolute top-4 right-4 text-gray-400 hover:text-gray-600 transition-colors"
+              className="absolute top-4 right-4 text-blue-300 hover:text-blue-500 transition-colors"
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -130,8 +130,8 @@ export function StaffPaymentRequestForm({
               </svg>
             </button>
 
-            <div className="w-16 h-16 mx-auto rounded-full bg-brand/10 flex items-center justify-center mb-4">
-              <div className="w-10 h-10 rounded-full bg-brand text-white flex items-center justify-center">
+            <div className="w-20 h-20 mx-auto rounded-full bg-blue-50 flex items-center justify-center mb-5">
+              <div className="w-10 h-10 rounded-full bg-blue-600 text-white flex items-center justify-center shadow-sm">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   className="h-5 w-5"
@@ -149,21 +149,33 @@ export function StaffPaymentRequestForm({
               </div>
             </div>
 
-            <h2 className="text-xl font-bold text-brand mb-2">
+            <h2 className="text-[22px] font-extrabold text-blue-900 mb-3">
               অনুরোধ সফল হয়েছে!
             </h2>
-            <p className="text-sm text-gray-500 mb-6 leading-relaxed">
+            <p className="text-[13px] font-medium text-blue-600/90 mb-8 leading-relaxed px-2">
               আপনার ক্যাশ আউট অনুরোধটি সফলভাবে জমা হয়েছে। দ্রুত আমাদের টিম
               পেমেন্টটি প্রসেস করবে।
             </p>
 
-            <button
-              type="button"
-              onClick={() => setShowSuccess(false)}
-              className="w-full py-2.5 rounded-lg font-bold text-sm border border-gray-200 text-brand bg-white hover:bg-gray-50 transition-all active:scale-[0.98]"
-            >
-              বন্ধ করুন
-            </button>
+            <div className="flex gap-3">
+              <button
+                type="button"
+                onClick={() => {
+                  setShowSuccess(false);
+                  window.location.href = "/staff/payment/payment-history";
+                }}
+                className="flex-1 py-3 rounded-xl font-bold text-sm bg-blue-600 text-white hover:bg-blue-700 transition-all active:scale-[0.98] shadow-md shadow-blue-600/20"
+              >
+                ইতিহাস দেখুন
+              </button>
+              <button
+                type="button"
+                onClick={() => setShowSuccess(false)}
+                className="flex-1 py-3 rounded-xl font-bold text-sm border-2 border-blue-100 text-blue-500 bg-white hover:bg-blue-50 transition-all active:scale-[0.98]"
+              >
+                বন্ধ করুন
+              </button>
+            </div>
           </div>
         </div>
       )}
