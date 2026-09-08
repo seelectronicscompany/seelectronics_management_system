@@ -56,17 +56,17 @@ export default function StaffListClient({ staffs }: { staffs: StaffsType[] }) {
             </div>
 
             {/* Staff Info */}
-            <div className="space-y-2 sm:space-y-3 md:space-y-4">
+            <div className="">
               <div>
                 <h3 className="text-sm sm:text-base md:text-lg font-black text-gray-900 group-hover:text-brand transition-colors line-clamp-1 px-1">
                   {staff.name}
                 </h3>
-                <p className="text-[10px] sm:text-[11px] font-black text-gray-400 uppercase tracking-[0.15em] sm:tracking-[0.2em] mt-0.5 sm:mt-1">
+                <p className="text-[10px] sm:text-[11px] font-black text-gray-400 uppercase tracking-[0.15em] sm:tracking-[0.2em] sm:mt-1">
                   {staff.role}
                 </p>
               </div>
 
-              <div className="flex flex-col gap-1 sm:gap-1.5 md:gap-2 pt-1.5 sm:pt-2 border-t border-gray-50">
+              <div className="flex flex-col sm:gap-1.5 md:gap-2  sm:pt-2 border-t border-gray-50">
                 <div className="flex items-center justify-center gap-1 sm:gap-2 text-gray-500">
                   <Phone
                     size={10}
@@ -88,7 +88,7 @@ export default function StaffListClient({ staffs }: { staffs: StaffsType[] }) {
               </div>
 
               {/* View Details Hint */}
-              <div className="pt-1 sm:pt-2">
+              <div className="sm:pt-2">
                 <div className="w-full py-2 sm:py-2.5 md:py-3 rounded-md sm:rounded-md md:rounded-md text-gray-900 bg-gray-50 group-hover:bg-brand group-hover:text-white transition-all flex items-center justify-center gap-1 sm:gap-2">
                   <Eye size={12} className="sm:w-4 sm:h-4" />
                   <span className="text-[8px] sm:text-[10px] md:text-sm font-black uppercase tracking-wider sm:tracking-widest">
