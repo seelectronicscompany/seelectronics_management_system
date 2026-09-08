@@ -16,7 +16,6 @@ export default async function PaymentHistoryPage() {
   const paymentsList = (
     paymentsRes.success ? (paymentsRes.data ?? []) : []
   ) as PaymentDataType[];
-
   return (
     <StaffLayout balance={0}>
       <div className="min-h-screen bg-gray-50 p-3 space-y-3">
@@ -57,7 +56,7 @@ export default async function PaymentHistoryPage() {
 
               let messageText = "";
               if (payment.status === "credited") {
-                messageText = `এস ইলেকট্রনিক্স আপনার সার্ভিস আইডি ${payment.serviceId ? payment.serviceId : ""} ভার্চুয়াল একাউন্টে পেমেন্টটি পাঠানো হয়েছে। পেমেন্ট আইডি এবং বিস্তারিত জানতে আপনার পেমেন্ট হিস্ট্রি চেক করুন।`;
+                messageText = `এস ইলেকট্রনিক্স আপনার সার্ভিস আইডির টাকা ভার্চুয়াল একাউন্টে পেমেন্টটি পাঠানো হয়েছে। পেমেন্ট আইডি এবং বিস্তারিত জানতে আপনার পেমেন্ট হিস্ট্রি চেক করুন।`;
               } else if (payment.status === "completed") {
                 messageText = `টেকনিশিয়ান/ ইলেকট্রিশিয়ান, এস ই ইলেকট্রনিকস-এ আপনার টাকা উত্তোলন রিকোয়েস্ট পেমেন্ট এডমিন প্যানেল থেকে সফলভাবে পরিশোধ করা হয়েছে। অনুগ্রহ করে আপনার একাউন্ট চেক করে নিন।`;
               } else if (payment.status === "approved") {

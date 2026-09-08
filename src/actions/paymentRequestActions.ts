@@ -10,6 +10,7 @@ import { z } from "zod";
 
 const PaymentRequestSchema = z.object({
   staffId: z.string().min(1),
+  serviceId: z.string().optional(),
   amount: z.coerce.number().min(1),
   description: z.string().optional(),
 });
@@ -99,6 +100,7 @@ export async function requestPayment(_prevState: any, formData: FormData) {
     const insertPayload: Record<string, unknown> = {
       paymentId,
       staffId: validated.staffId,
+      serviceId: validated.serviceId || null,
       invoiceNumber,
       amount: validated.amount,
       paymentMethod: method,

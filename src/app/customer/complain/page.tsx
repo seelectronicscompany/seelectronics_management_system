@@ -244,7 +244,7 @@ export default async function ComplainDashboardPage() {
                 </div>
 
                 <div className="space-y-2.5 flex-1 bg-gray-50/50 p-4 rounded-xl border border-gray-100/80">
-                  <div className="text-xs">
+                  <div className="text-sm">
                     <span className="font-extrabold text-gray-400 uppercase tracking-wider block mb-0.5">
                       ট্র্যাকিং নম্বর:
                     </span>
@@ -252,7 +252,7 @@ export default async function ComplainDashboardPage() {
                       {lastComplaint.complaintId}
                     </span>
                   </div>
-                  <div className="text-xs">
+                  <div className="text-sm">
                     <span className="font-extrabold text-gray-400 uppercase tracking-wider block mb-0.5">
                       অভিযুক্ত কর্মী:
                     </span>
@@ -260,7 +260,7 @@ export default async function ComplainDashboardPage() {
                       {lastComplaint.staff?.name || "প্রযোজ্য নয়"}
                     </span>
                   </div>
-                  <div className="text-xs">
+                  <div className="text-sm">
                     <span className="font-extrabold text-gray-400 uppercase tracking-wider block mb-0.5">
                       বিষয়:
                     </span>
@@ -269,7 +269,7 @@ export default async function ComplainDashboardPage() {
                     </span>
                   </div>
                   {lastComplaint.serviceId && (
-                    <div className="text-xs">
+                    <div className="text-sm">
                       <span className="font-extrabold text-gray-400 uppercase tracking-wider block mb-0.5">
                         সেবা আইডি:
                       </span>
@@ -282,16 +282,16 @@ export default async function ComplainDashboardPage() {
 
                 <div className="flex items-center justify-between pt-2">
                   <div className="flex items-center gap-2">
-                    <span className="text-[10px] font-black text-amber-800 bg-amber-100 border border-amber-200/50 px-2 py-1 rounded-md uppercase tracking-wider">
+                    <span className="text-sm font-black text-amber-800 bg-amber-100 border border-amber-200/50 px-2 py-1 rounded-md uppercase tracking-wider">
                       আবেদনের অবস্থা
                     </span>
-                    <span className="text-[10px] font-black text-gray-700 bg-gray-100 border border-gray-200 px-2 py-1 rounded-md  tracking-wider capitalize">
+                    <span className="text-sm font-black text-gray-700 bg-gray-100 border border-gray-200 px-2 py-1 rounded-md  tracking-wider capitalize">
                       {lastComplaint.status.replace("_", " ")}
                     </span>
                   </div>
                   <Link
                     href={`/customer/complain/doc/${lastComplaint.complaintId}`}
-                    className="bg-brand hover:bg-brand-hover text-white font-extrabold py-2 px-3.5 rounded-lg transition-all text-xs shadow-sm active:scale-95"
+                    className="bg-brand hover:bg-brand-hover text-white font-extrabold py-2 px-3.5 rounded-lg transition-all text-sm   shadow-sm active:scale-95"
                   >
                     বিস্তারিত দেখুন
                   </Link>
@@ -315,13 +315,13 @@ export default async function ComplainDashboardPage() {
                 <table className="w-full text-left border-collapse">
                   <thead>
                     <tr className="border-b border-gray-100">
-                      <th className="py-2.5 px-2 text-xs font-black text-gray-400 uppercase tracking-wider">
+                      <th className="py-2.5 px-2 text-sm font-black text-gray-400 uppercase tracking-wider">
                         অভিযুক্ত কর্মী
                       </th>
-                      <th className="py-2.5 px-2 text-xs font-black text-gray-400 uppercase tracking-wider">
+                      <th className="py-2.5 px-2 text-sm font-black text-gray-400 uppercase tracking-wider">
                         তারিখ
                       </th>
-                      <th className="py-2.5 px-2 text-xs font-black text-gray-400 uppercase tracking-wider">
+                      <th className="py-2.5 px-2 text-sm font-black text-gray-400 uppercase tracking-wider">
                         অবস্থা
                       </th>
                     </tr>
@@ -332,15 +332,15 @@ export default async function ComplainDashboardPage() {
                         key={c.complaintId}
                         className="hover:bg-gray-50/50 transition-colors"
                       >
-                        <td className="py-3 px-2 text-xs font-bold text-gray-800">
+                        <td className="py-3 px-2 text-sm font-bold text-gray-800">
                           {c.staff?.name}
                         </td>
-                        <td className="py-3 px-2 text-xs text-gray-500">
+                        <td className="py-3 px-2 text-sm text-gray-500">
                           {formatDate(c.createdAt)}
                         </td>
                         <td className="py-3 px-2">
                           <span
-                            className={`text-[9px] font-black px-2 py-0.5 rounded-full uppercase border ${
+                            className={`text-[11px] font-black px-2 py-0.5 rounded-full uppercase border ${
                               c.status === "completed"
                                 ? "bg-emerald-50 text-emerald-700 border-emerald-100"
                                 : c.status === "hearing"
