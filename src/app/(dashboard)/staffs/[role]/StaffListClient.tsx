@@ -38,8 +38,8 @@ export default function StaffListClient({ staffs }: { staffs: StaffsType[] }) {
             </div>
 
             {/* Profile Image */}
-            <div className="relative mx-auto mb-3 sm:mb-4 md:mb-5">
-              <div className="size-25 sm:size-28 md:size-32 lg:size-36 rounded-md sm:rounded-md md:rounded-[2rem] overflow-hidden __center mx-auto border-2 sm:border-4 border-gray-50 group-hover:border-brand/10 transition-colors bg-gray-50">
+            <div className="relative mx-auto  sm:mb-4 md:mb-5">
+              <div className="size-72 py-2 sm:size-28 md:size-32 lg:size-36 rounded-md sm:rounded-md md:rounded-[2rem] overflow-hidden __center mx-auto border-2 sm:border-4 border-gray-50 group-hover:border-brand/10 transition-colors bg-gray-50">
                 <Image
                   src={staff.photoUrl || "/placeholder-avatar.png"}
                   alt={staff.name}
@@ -56,25 +56,21 @@ export default function StaffListClient({ staffs }: { staffs: StaffsType[] }) {
             </div>
 
             {/* Staff Info */}
-            <div className="space-y-2 sm:space-y-3 md:space-y-4">
-              <div>
-                <h3 className="text-lg sm:text-base md:text-lg font-black text-gray-900 group-hover:text-brand transition-colors line-clamp-1 px-1">
-                  {staff.name}
-                </h3>
-                <p className="text-sm sm:text-[11px] font-black text-gray-400 uppercase tracking-[0.15em] sm:tracking-[0.2em] mt-0.5 sm:mt-1">
-                  {staff.role}
-                </p>
-              </div>
-
-              <div className="flex flex-col gap-1 sm:gap-1.5 md:gap-2 pt-1.5 sm:pt-2 border-t border-gray-50">
-                <div className="flex items-center justify-center gap-1 sm:gap-2 text-gray-500">
-                  <Phone
-                    size={10}
-                    className="text-brand/40 sm:w-3.5 sm:h-3.5"
-                  />
-                  <span className="text-sm sm:text-sm md:text-sm font-bold">
-                    {staff.phone}
-                  </span>
+            <div className="py-2 sm:space-y-3 md:space-y-4">
+              <div className="flex flex-col gap-1 sm:gap-1.5 md:gap-2  sm:pt-2 border-t border-gray-50">
+                <div className="flex flex-col items-center justify-center gap-1 sm:gap-2 text-gray-500">
+                  <h3 className="text-lg sm:text-base md:text-lg font-black text-gray-900 group-hover:text-brand transition-colors line-clamp-1 px-1">
+                    {staff.name}
+                  </h3>
+                  <div className="flex items-center justify-center gap-2">
+                    <Phone
+                      size={10}
+                      className="text-brand/40 sm:w-3.5 sm:h-3.5"
+                    />
+                    <span className="text-sm sm:text-sm md:text-sm font-bold">
+                      {staff.phone}
+                    </span>
+                  </div>
                 </div>
                 <div className="flex items-center justify-center gap-1 sm:gap-2 text-gray-500">
                   <MapPin
