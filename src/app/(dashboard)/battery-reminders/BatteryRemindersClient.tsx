@@ -88,36 +88,36 @@ export default function BatteryRemindersClient({
 
   return (
     <div className="flex-1 overflow-hidden flex flex-col gap-4">
-      <div className="flex justify-between items-center pb-4 border-b">
+      <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center pb-4 border-b gap-4">
         <h2 className="text-xl font-bold">
           Maintenance Reminders (Bulk SMS & Voice)
         </h2>
-        <div className="flex gap-4">
+        <div className="flex flex-wrap gap-2 sm:gap-4 w-full lg:w-auto">
           <button
             onClick={handleSendToAll}
             disabled={loadingAll || loadingVoiceAll || loadingUserManual}
-            className="px-4 py-2 bg-red-600 text-white rounded-md disabled:bg-gray-400 font-medium"
+            className="flex-1 sm:flex-none px-4 py-2 bg-red-600 text-white rounded-md disabled:bg-gray-400 font-medium whitespace-nowrap text-sm sm:text-base"
           >
             {loadingAll ? "Sending SMS..." : "Send SMS to ALL Customers"}
           </button>
           <button
             onClick={handleUserManualSms}
             disabled={loadingAll || loadingVoiceAll || loadingUserManual}
-            className="px-4 py-2 bg-green-600 text-white rounded-md disabled:bg-gray-400 font-medium"
+            className="flex-1 sm:flex-none px-4 py-2 bg-green-600 text-white rounded-md disabled:bg-gray-400 font-medium whitespace-nowrap text-sm sm:text-base"
           >
             {loadingUserManual ? "Sending SMS..." : "User Manual SMS (ALL)"}
           </button>
           <button
             onClick={handleBatteryVoice}
             disabled={loadingAll || loadingVoiceAll || loadingUserManual}
-            className="px-4 py-2 bg-indigo-600 text-white rounded-md disabled:bg-gray-400 font-medium"
+            className="flex-1 sm:flex-none px-4 py-2 bg-indigo-600 text-white rounded-md disabled:bg-gray-400 font-medium whitespace-nowrap text-sm sm:text-base"
           >
             {loadingVoiceAll ? "Sending Voice..." : "Battery Voice (ALL)"}
           </button>
           <button
             onClick={handleMaintenanceVoice}
             disabled={loadingAll || loadingVoiceAll || loadingUserManual}
-            className="px-4 py-2 bg-orange-600 text-white rounded-md disabled:bg-gray-400 font-medium"
+            className="flex-1 sm:flex-none px-4 py-2 bg-orange-600 text-white rounded-md disabled:bg-gray-400 font-medium whitespace-nowrap text-sm sm:text-base"
           >
             {loadingVoiceAll ? "Sending Voice..." : "Maintenance Voice (ALL)"}
           </button>

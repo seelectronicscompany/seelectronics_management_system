@@ -4,11 +4,19 @@ import { SearchParams } from "@/types";
 import { formatDate } from "@/utils";
 import InvoiceActionButtons from "./InvoiceActionButtons";
 
-export default async function InvoiceList(params: SearchParams & {
-  invoicesPromise?: Promise<{ success: boolean; data?: any[]; message?: string }>;
-}) {
+export default async function InvoiceList(
+  params: SearchParams & {
+    invoicesPromise?: Promise<{
+      success: boolean;
+      data?: any[];
+      message?: string;
+    }>;
+  },
+) {
   const { invoicesPromise, ...p } = params;
-  const response = invoicesPromise ? await invoicesPromise : await getInvoices(p);
+  const response = invoicesPromise
+    ? await invoicesPromise
+    : await getInvoices(p);
 
   if (!response.success) {
     return (
@@ -79,7 +87,7 @@ export default async function InvoiceList(params: SearchParams & {
       <td className="py-4 px-4 whitespace-nowrap text-gray-500 text-sm sm:text-sm font-bold">
         {formatDate(invoice.date!)}
       </td>
-      <td className="py-4 px-4 whitespace-nowrap sticky right-0 bg-white group-hover:bg-gray-50 transition-colors shadow-[-4px_0_10px_-4px_rgba(0,0,0,0.1)]">
+      <td className="py-4 px-4 whitespace-nowrap md:sticky md:right-0 bg-white group-hover:bg-gray-50 transition-colors md:shadow-[-4px_0_10px_-4px_rgba(0,0,0,0.1)]">
         <InvoiceActionButtons invoiceData={invoice} />
       </td>
     </tr>

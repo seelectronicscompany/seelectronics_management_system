@@ -51,7 +51,7 @@ export default async function Customers({
               <th className="py-4 px-4 font-bold text-gray-700 whitespace-nowrap">
                 Date
               </th>
-              <th className="py-4 px-4 font-bold text-gray-700 whitespace-nowrap sticky right-0 bg-gray-50 shadow-[-4px_0_10px_-4px_rgba(0,0,0,0.1)]">
+              <th className="py-4 px-4 font-bold text-gray-700 whitespace-nowrap md:sticky md:right-0 md:bg-gray-50 md:shadow-[-4px_0_10px_-4px_rgba(0,0,0,0.1)]">
                 Actions
               </th>
             </tr>

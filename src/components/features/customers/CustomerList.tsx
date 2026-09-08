@@ -7,11 +7,19 @@ import { Crown } from "lucide-react";
 import InvoicePreviewButton from "../../features/invoices/InvoicePreviewButton";
 import CustomerActionButtons from "./CustomerActionButtons";
 
-export default async function CustomerList(params: SearchParams & {
-  customersPromise?: Promise<{ success: boolean; data?: any[]; message?: string }>;
-}) {
+export default async function CustomerList(
+  params: SearchParams & {
+    customersPromise?: Promise<{
+      success: boolean;
+      data?: any[];
+      message?: string;
+    }>;
+  },
+) {
   const { customersPromise, ...p } = params;
-  const response = customersPromise ? await customersPromise : await getCustomers(p);
+  const response = customersPromise
+    ? await customersPromise
+    : await getCustomers(p);
 
   if (!response.success) {
     return (
@@ -105,7 +113,7 @@ export default async function CustomerList(params: SearchParams & {
       <td className="py-4 px-4 whitespace-nowrap text-gray-500 text-sm sm:text-sm font-bold">
         {customer.invoice?.date ? formatDate(customer.invoice.date) : "N/A"}
       </td>
-      <td className="py-4 px-4 whitespace-nowrap sticky right-0 bg-white group-hover:bg-gray-50 transition-colors shadow-[-4px_0_10px_-4px_rgba(0,0,0,0.1)]">
+      <td className="py-4 px-4 whitespace-nowrap md:sticky md:right-0 bg-white group-hover:bg-gray-50 transition-colors md:shadow-[-4px_0_10px_-4px_rgba(0,0,0,0.1)]">
         <CustomerActionButtons customerData={customer} />
       </td>
     </tr>

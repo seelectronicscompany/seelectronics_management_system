@@ -1,5 +1,5 @@
 import { getServices, getServicesMetadata } from "@/actions";
-import { DelayedLoading, ServiceList, Spinner, Toolbar } from "@/components";
+import { DelayedLoading, ServiceList, Toolbar } from "@/components";
 import { Suspense } from "react";
 
 export default async function Services({
@@ -17,7 +17,7 @@ export default async function Services({
   const sp = await searchParams;
   const type = prms.type === "repairs" ? "repair" : "install";
   const title = prms.type === "repairs" ? "Repairs" : "Installations";
-  
+
   const paginationPromise = getServicesMetadata({ ...sp, type: type });
   const servicesPromise = getServices({ ...sp, type: type });
 
@@ -57,7 +57,7 @@ export default async function Services({
               <th className="py-4 px-4 font-bold text-gray-700 text-sm whitespace-nowrap">
                 Staff Number
               </th>
-              <th className="py-4 px-4 font-bold text-gray-700 whitespace-nowrap sticky right-0 bg-gray-50 shadow-[-4px_0_10px_-4px_rgba(0,0,0,0.1)]">
+              <th className="py-4 px-4 font-bold text-gray-700 whitespace-nowrap md:sticky md:right-0 md:bg-gray-50 md:shadow-[-4px_0_10px_-4px_rgba(0,0,0,0.1)]">
                 Actions
               </th>
             </tr>
@@ -79,7 +79,10 @@ export default async function Services({
                 </tr>
               }
             >
-              <ServiceList {...{ ...sp, type: type }} servicesPromise={servicesPromise} />
+              <ServiceList
+                {...{ ...sp, type: type }}
+                servicesPromise={servicesPromise}
+              />
             </Suspense>
           </tbody>
         </table>

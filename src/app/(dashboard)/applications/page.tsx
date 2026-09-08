@@ -1,4 +1,7 @@
-import { getApplications, getApplicationsMetadata } from "@/actions/applicationActions";
+import {
+  getApplications,
+  getApplicationsMetadata,
+} from "@/actions/applicationActions";
 import {
   ApplicationFilter,
   ApplicationList,
@@ -51,7 +54,10 @@ export default async function Applications({
                 </tr>
               }
             >
-              <ApplicationList {...params} applicationsPromise={applicationsPromise} />
+              <ApplicationList
+                {...params}
+                applicationsPromise={applicationsPromise}
+              />
             </Suspense>
           </tbody>
         </table>
