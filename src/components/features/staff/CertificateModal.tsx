@@ -2,6 +2,7 @@
 
 import { sendCertificateLink } from "@/actions/staffActions";
 import { Modal } from "@/components/ui";
+import { Loader2 } from "lucide-react";
 import { useState } from "react";
 import { toast } from "react-toastify";
 
@@ -79,7 +80,7 @@ export default function CertificateModal({ onClose }: { onClose: () => void }) {
             placeholder="Shop ID"
             required
           />
-           <input
+          <input
             type="text"
             name="staffId"
             className="__input"
@@ -94,9 +95,13 @@ export default function CertificateModal({ onClose }: { onClose: () => void }) {
           >
             Cancel
           </button>
-          <button disabled={loading} type="submit" className="__btn">
-            {" "}
-            {loading ? "Sending..." : "Send Link"}{" "}
+          <button
+            disabled={loading}
+            type="submit"
+            className="__btn flex items-center justify-center gap-2"
+          >
+            {loading && <Loader2 className="w-4 h-4 animate-spin" />}
+            {loading ? "Sending..." : "Send Link"}
           </button>
         </div>
       </form>

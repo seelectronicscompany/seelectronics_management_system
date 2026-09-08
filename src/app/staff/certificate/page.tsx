@@ -91,7 +91,7 @@ export default async function StaffCertificatePage({
 
       {/* Preview Section */}
       <main className="flex-1 flex items-center justify-center p-6 overflow-auto">
-        <div className="w-full max-w-[1200px] aspect-[297/210] bg-white rounded-2xl border border-slate-200 shadow-lg overflow-hidden p-1 relative flex items-center justify-center">
+        <div className="w-full max-w-[1200px] aspect-[297/210] bg-white border border-slate-200 shadow-lg overflow-hidden p-1 relative flex items-center justify-center">
           {/* Certificate Wrapper to fit nicely with zoom/scale */}
           <div className="origin-center scale-[0.3] min-[400px]:scale-[0.38] min-[500px]:scale-[0.48] sm:scale-[0.55] md:scale-[0.72] lg:scale-[0.85] xl:scale-100 transition-all duration-300">
             <CertificateTemplate data={data as any} />

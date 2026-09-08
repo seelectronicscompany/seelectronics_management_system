@@ -97,7 +97,7 @@ export default function CertificateTemplate({
             </div>
             <div className="w-full">
               <div
-                className="text-3xl relative top-0 -left-[55px] font-semibold"
+                className="text-3xl relative -top-[6px] -left-[55px] font-semibold"
                 style={{ fontFamily: '"font3"' }}
               >
                 {data.phone}

@@ -4,7 +4,7 @@ import { db } from "@/db/drizzle";
 import { customers } from "@/db/schema";
 import { verifySession } from "@/lib";
 import { sendSMS } from "@/lib/sms";
-import { inArray, eq, isNotNull, and, not } from "drizzle-orm";
+import { and, eq, inArray, isNotNull, not } from "drizzle-orm";
 
 const BATTERY_REMINDER_MSG =
   "প্রিয় গ্রাহক, এস ই ইলেকট্রনিক্সের পক্ষ থেকে শুভেচ্ছা। আপনার আইপিএস ব্যাটারি দীর্ঘস্থায়ী নিশ্চিত করতে নিয়মিত ব্যাটারির পানি চেক করুন এবং আইপিএস-এর সঠিক যত্ন নিন। ধন্যবাদান্তে এস ই পাওয়ার আইপিএস।";
@@ -95,5 +95,54 @@ export async function sendBatteryReminderToAll() {
   } catch (error) {
     console.error("Error sending bulk SMS to all:", error);
     return { success: false, message: "Failed to send SMS to all customers." };
+  }
+}
+
+const USER_MANUAL_MSG =
+  "প্রিয় গ্রাহক আপনার আই পি এস ও ব্যাটারি বেশিদিন ব্যবহার করতে ব্যবহার বিধি মেনে চুলুন। এস ই ইলেকট্রনিকস\nhttps://seelectronicsbd.com/usage-guide";
+
+export async function sendUserManualSmsToAll() {
+  try {
+    const session = await verifySession(false, "admin");
+    if (!session) return { success: false, message: "Unauthorized" };
+
+    const allCustomers = await db.query.customers.findMany({
+      where: and(isNotNull(customers.phone), not(eq(customers.phone, ""))),
+      columns: { phone: true },
+    });
+
+    if (allCustomers.length === 0) {
+      return {
+        success: false,
+        message: "No valid customer phone numbers found.",
+      };
+    }
+
+    let successCount = 0;
+    const batchSize = 10;
+
+    for (let i = 0; i < allCustomers.length; i += batchSize) {
+      const batch = allCustomers.slice(i, i + batchSize);
+      await Promise.all(
+        batch.map(async (customer) => {
+          if (customer.phone) {
+            await sendSMS(customer.phone, USER_MANUAL_MSG);
+            successCount++;
+          }
+        }),
+      );
+    }
+
+    return {
+      success: true,
+      count: successCount,
+      message: `Sent ${successCount} SMS successfully.`,
+    };
+  } catch (error) {
+    console.error("Error sending bulk user manual SMS to all:", error);
+    return {
+      success: false,
+      message: "Failed to send User Manual SMS to all customers.",
+    };
   }
 }

@@ -1,12 +1,8 @@
 "use client";
 
+import { sendBatteryReminderToAll, sendUserManualSmsToAll } from "@/actions";
+import { sendBulkVoiceCallToAll } from "@/actions/voiceReminderActions";
 import { useState } from "react";
-import {
-  sendBatteryReminderToAll,
-} from "@/actions";
-import {
-  sendBulkVoiceCallToAll,
-} from "@/actions/voiceReminderActions";
 import { toast } from "react-toastify";
 
 export default function BatteryRemindersClient({
@@ -16,6 +12,26 @@ export default function BatteryRemindersClient({
 }) {
   const [loadingAll, setLoadingAll] = useState(false);
   const [loadingVoiceAll, setLoadingVoiceAll] = useState(false);
+  const [loadingUserManual, setLoadingUserManual] = useState(false);
+
+  const handleUserManualSms = async () => {
+    if (
+      !confirm(
+        "WARNING: This will send a User Manual SMS to EVERY customer in the database. Are you absolutely sure?",
+      )
+    )
+      return;
+
+    setLoadingUserManual(true);
+    const res = await sendUserManualSmsToAll();
+    setLoadingUserManual(false);
+
+    if (res?.success) {
+      toast.success(res.message);
+    } else {
+      toast.error(res?.message || "Something went wrong");
+    }
+  };
 
   const handleSendToAll = async () => {
     if (
@@ -35,45 +51,72 @@ export default function BatteryRemindersClient({
       toast.error(res?.message || "Something went wrong");
     }
   };
-  
+
   const handleBatteryVoice = async () => {
-    if (!confirm("WARNING: This will send a BATTERY check voice call to EVERY customer in the database. Are you absolutely sure?")) return;
+    if (
+      !confirm(
+        "WARNING: This will send a BATTERY check voice call to EVERY customer in the database. Are you absolutely sure?",
+      )
+    )
+      return;
     setLoadingVoiceAll(true);
     const res = await sendBulkVoiceCallToAll("battery_health_check");
     setLoadingVoiceAll(false);
-    if (res?.success) { toast.success(res.message); } else { toast.error(res?.message || "Something went wrong"); }
+    if (res?.success) {
+      toast.success(res.message);
+    } else {
+      toast.error(res?.message || "Something went wrong");
+    }
   };
 
   const handleMaintenanceVoice = async () => {
-    if (!confirm("WARNING: This will send an OVERALL MAINTENANCE voice call to EVERY customer in the database. Are you absolutely sure?")) return;
+    if (
+      !confirm(
+        "WARNING: This will send an OVERALL MAINTENANCE voice call to EVERY customer in the database. Are you absolutely sure?",
+      )
+    )
+      return;
     setLoadingVoiceAll(true);
     const res = await sendBulkVoiceCallToAll("overall_maintenance");
     setLoadingVoiceAll(false);
-    if (res?.success) { toast.success(res.message); } else { toast.error(res?.message || "Something went wrong"); }
+    if (res?.success) {
+      toast.success(res.message);
+    } else {
+      toast.error(res?.message || "Something went wrong");
+    }
   };
 
   return (
     <div className="flex-1 overflow-hidden flex flex-col gap-4">
       <div className="flex justify-between items-center pb-4 border-b">
-        <h2 className="text-xl font-bold">Maintenance Reminders (Bulk SMS & Voice)</h2>
+        <h2 className="text-xl font-bold">
+          Maintenance Reminders (Bulk SMS & Voice)
+        </h2>
         <div className="flex gap-4">
           <button
             onClick={handleSendToAll}
-            disabled={loadingAll || loadingVoiceAll}
+            disabled={loadingAll || loadingVoiceAll || loadingUserManual}
             className="px-4 py-2 bg-red-600 text-white rounded-md disabled:bg-gray-400 font-medium"
           >
             {loadingAll ? "Sending SMS..." : "Send SMS to ALL Customers"}
           </button>
           <button
+            onClick={handleUserManualSms}
+            disabled={loadingAll || loadingVoiceAll || loadingUserManual}
+            className="px-4 py-2 bg-green-600 text-white rounded-md disabled:bg-gray-400 font-medium"
+          >
+            {loadingUserManual ? "Sending SMS..." : "User Manual SMS (ALL)"}
+          </button>
+          <button
             onClick={handleBatteryVoice}
-            disabled={loadingAll || loadingVoiceAll}
+            disabled={loadingAll || loadingVoiceAll || loadingUserManual}
             className="px-4 py-2 bg-indigo-600 text-white rounded-md disabled:bg-gray-400 font-medium"
           >
             {loadingVoiceAll ? "Sending Voice..." : "Battery Voice (ALL)"}
           </button>
           <button
             onClick={handleMaintenanceVoice}
-            disabled={loadingAll || loadingVoiceAll}
+            disabled={loadingAll || loadingVoiceAll || loadingUserManual}
             className="px-4 py-2 bg-orange-600 text-white rounded-md disabled:bg-gray-400 font-medium"
           >
             {loadingVoiceAll ? "Sending Voice..." : "Maintenance Voice (ALL)"}
