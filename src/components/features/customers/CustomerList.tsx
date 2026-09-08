@@ -24,7 +24,7 @@ export default async function CustomerList(
   if (!response.success) {
     return (
       <tr>
-        <td colSpan={8} className="text-center py-4 text-red-500">
+        <td colSpan={8} className="text-center py-3 text-red-500">
           <p>{response.message}</p>
         </td>
       </tr>
@@ -34,7 +34,7 @@ export default async function CustomerList(
   if (response.data!.length === 0) {
     return (
       <tr className="border-b">
-        <td colSpan={8} className="text-center py-4 text-gray-600">
+        <td colSpan={8} className="text-center py-3 text-gray-600">
           <p>No data</p>
         </td>
       </tr>
@@ -48,7 +48,7 @@ export default async function CustomerList(
       key={customer.id}
       className="hover:bg-gray-50/50 transition-colors group"
     >
-      <td className="py-4 px-4 whitespace-nowrap">
+      <td className="py-3 px-4 whitespace-nowrap">
         <div className="flex items-center gap-2">
           <span className="font-bold text-gray-900 text-sm sm:text-base">
             {customer.customerId}
@@ -56,7 +56,7 @@ export default async function CustomerList(
           <CopyButton content={customer.customerId} />
         </div>
       </td>
-      <td className="py-4 px-4 whitespace-nowrap">
+      <td className="py-3 px-4 whitespace-nowrap">
         <div className="flex items-center gap-2">
           {customer.invoiceNumber ? (
             <div className="flex items-center gap-1.5">
@@ -75,7 +75,7 @@ export default async function CustomerList(
           )}
         </div>
       </td>
-      <td className="py-4 px-4 whitespace-nowrap">
+      <td className="py-3 px-4 whitespace-nowrap">
         <div className="flex items-center gap-2">
           <span className="font-bold text-gray-900 text-sm sm:text-base">
             {customer.name}
@@ -88,11 +88,11 @@ export default async function CustomerList(
           )}
         </div>
       </td>
-      <td className="py-4 px-4 whitespace-nowrap text-gray-700 font-bold text-sm sm:text-base">
+      <td className="py-3 px-4 whitespace-nowrap text-gray-700 font-bold text-sm sm:text-base">
         <span>{customer.phone}</span>
         <CopyButton content={customer.phone} />
       </td>
-      <td className="py-4 px-4 whitespace-nowrap">
+      <td className="py-3 px-4 whitespace-nowrap">
         <p
           title={customer.address}
           className="truncate max-w-[200px] text-gray-600 text-[16px] font-medium"
@@ -110,10 +110,10 @@ export default async function CustomerList(
       >
         ৳{customer.invoice?.total.toLocaleString() || 0}
       </td>
-      <td className="py-4 px-4 whitespace-nowrap text-gray-500 text-sm sm:text-sm font-bold">
+      <td className="py-3 px-4 whitespace-nowrap text-gray-500 text-sm sm:text-sm font-bold">
         {customer.invoice?.date ? formatDate(customer.invoice.date) : "N/A"}
       </td>
-      <td className="py-4 px-4 whitespace-nowrap md:sticky md:right-0 bg-white group-hover:bg-gray-50 transition-colors md:shadow-[-4px_0_10px_-4px_rgba(0,0,0,0.1)]">
+      <td className="py-3 px-4 whitespace-nowrap md:sticky md:right-0 bg-white group-hover:bg-gray-50 transition-colors md:shadow-[-4px_0_10px_-4px_rgba(0,0,0,0.1)]">
         <CustomerActionButtons customerData={customer} />
       </td>
     </tr>

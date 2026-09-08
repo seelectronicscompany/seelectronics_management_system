@@ -119,7 +119,7 @@ export default function ApplicationActionButtons({
           </div>
         </Modal>
       )}
-      <td className="text-left py-4 px-2">
+      <td className="text-left py-3 px-2">
         <div className="flex items-center justify-center gap-x-2">
           {showDropdown ? (
             <select
@@ -138,7 +138,7 @@ export default function ApplicationActionButtons({
           )}
         </div>
       </td>
-      <td className="text-left py-4 px-2">
+      <td className="text-left py-3 px-2">
         <div className="flex gap-4 ml-2">
           {showViewModal &&
             (applicationData.type === "staff_application" ? (

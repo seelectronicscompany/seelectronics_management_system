@@ -35,25 +35,25 @@ export default async function StaffPaymentHistoryPage({
         >
           <thead>
             <tr className="sticky top-0 z-10 bg-gray-50">
-              <th className="py-4 px-4 text-sm font-bold text-gray-700 whitespace-nowrap">
+              <th className="py-3 px-4 text-sm font-bold text-gray-700 whitespace-nowrap">
                 Payment ID
               </th>
-              <th className="py-4 px-4 text-sm font-bold text-gray-700 whitespace-nowrap">
+              <th className="py-3 px-4 text-sm font-bold text-gray-700 whitespace-nowrap">
                 Invoice
               </th>
-              <th className="py-4 px-4 text-sm font-bold text-gray-700 whitespace-nowrap">
+              <th className="py-3 px-4 text-sm font-bold text-gray-700 whitespace-nowrap">
                 Amount
               </th>
-              <th className="py-4 px-4 text-sm font-bold text-gray-700 whitespace-nowrap">
+              <th className="py-3 px-4 text-sm font-bold text-gray-700 whitespace-nowrap">
                 Status
               </th>
-              <th className="py-4 px-4 text-sm font-bold text-gray-700 whitespace-nowrap">
+              <th className="py-3 px-4 text-sm font-bold text-gray-700 whitespace-nowrap">
                 Method
               </th>
-              <th className="py-4 px-4 text-sm font-bold text-gray-700 whitespace-nowrap">
+              <th className="py-3 px-4 text-sm font-bold text-gray-700 whitespace-nowrap">
                 Date
               </th>
-              <th className="py-4 px-4 text-sm font-bold text-gray-700 whitespace-nowrap">
+              <th className="py-3 px-4 text-sm font-bold text-gray-700 whitespace-nowrap">
                 Actions
               </th>
             </tr>

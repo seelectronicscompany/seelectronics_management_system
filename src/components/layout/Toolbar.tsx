@@ -97,6 +97,12 @@ export default function Toolbar({
   return (
     <header className="flex flex-col gap-4 mb-4">
       <div className="flex flex-wrap gap-4 items-center justify-between">
+        {/* Title and hamburger */}
+        <div className="flex items-center gap-3 sm:gap-4">
+          <div className="font-extrabold text-2xl sm:text-3xl text-brand tracking-tight">
+            <span>{title}</span>
+          </div>
+        </div>
         {/* Custom Actions */}
         <div className="flex items-center gap-2">{actions}</div>
       </div>

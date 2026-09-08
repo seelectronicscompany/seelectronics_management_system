@@ -33,7 +33,7 @@ async function PaymentList(
       <tr>
         <td
           colSpan={hideStaff ? 7 : 8}
-          className="text-center py-4 text-red-500"
+          className="text-center py-3 text-red-500"
         >
           <p>{response.message}</p>
         </td>
@@ -46,7 +46,7 @@ async function PaymentList(
       <tr className="border-b">
         <td
           colSpan={hideStaff ? 7 : 8}
-          className="text-center py-4 text-gray-600"
+          className="text-center py-3 text-gray-600"
         >
           <p>No data</p>
         </td>
@@ -62,13 +62,13 @@ async function PaymentList(
         key={payment.paymentId}
         className="border-b hover:bg-gray-50/50 transition-colors"
       >
-        <td className="py-4 px-4 whitespace-nowrap">
+        <td className="py-3 px-4 whitespace-nowrap">
           <div className="flex items-center gap-2">
             <span className="font-bold text-gray-900">{payment.paymentId}</span>
             <CopyButton content={payment.paymentId} />
           </div>
         </td>
-        <td className="py-4 px-4 whitespace-nowrap">
+        <td className="py-3 px-4 whitespace-nowrap">
           {payment.invoiceNumber ? (
             <div className="flex items-center gap-2">
               <InvoicePreviewButton
@@ -84,7 +84,7 @@ async function PaymentList(
           )}
         </td>
         {!hideStaff && (
-          <td className="text-left py-4 px-4">
+          <td className="text-left py-3 px-4">
             <p title={payment.staff.name} className="truncate max-w-52">
               <ProfileLinkButton
                 text={payment.staff.name}
@@ -93,10 +93,10 @@ async function PaymentList(
             </p>
           </td>
         )}
-        <td className="text-left py-4 px-4 font-black text-gray-900">
+        <td className="text-left py-3 px-4 font-black text-gray-900">
           ৳ {payment.amount.toLocaleString()}
         </td>
-        <td className="text-left py-4 px-4">
+        <td className="text-left py-3 px-4">
           <span
             className={clsx(
               "px-2.5 py-1 rounded-md text-[10px] font-black uppercase border tracking-widest",
@@ -107,13 +107,13 @@ async function PaymentList(
             {payment.status}
           </span>
         </td>
-        <td className="text-left py-4 px-4 font-bold text-gray-600 uppercase text-sm">
+        <td className="text-left py-3 px-4 font-bold text-gray-600 uppercase text-sm">
           {payment.paymentMethod}
         </td>
-        <td className="py-4 px-4 whitespace-nowrap text-gray-500 font-bold text-sm">
+        <td className="py-3 px-4 whitespace-nowrap text-gray-500 font-bold text-sm">
           {formatDate(payment.date)}
         </td>
-        <td className="text-left py-4 px-4">
+        <td className="text-left py-3 px-4">
           <PaymentActionButtons paymentData={payment} />
         </td>
       </tr>

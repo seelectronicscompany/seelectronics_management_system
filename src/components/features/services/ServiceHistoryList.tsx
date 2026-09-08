@@ -19,7 +19,7 @@ export default async function ServiceHistoryList(
       <tr>
         <td
           colSpan={hideStaff ? 9 : 11}
-          className="text-center py-4 text-red-500"
+          className="text-center py-3 text-red-500"
         >
           <p>{response.message}</p>
         </td>
@@ -32,7 +32,7 @@ export default async function ServiceHistoryList(
       <tr className="border-b">
         <td
           colSpan={hideStaff ? 8 : 10}
-          className="text-center py-4 text-gray-600"
+          className="text-center py-3 text-gray-600"
         >
           <p>No data</p>
         </td>
@@ -47,7 +47,7 @@ export default async function ServiceHistoryList(
       key={service.id}
       className="hover:bg-gray-50/50 transition-colors group"
     >
-      <td className="py-4 px-4 whitespace-nowrap">
+      <td className="py-3 px-4 whitespace-nowrap">
         <div className="flex items-center gap-2">
           <span className="font-bold text-gray-900 text-sm sm:text-base">
             {service.serviceId}
@@ -55,7 +55,7 @@ export default async function ServiceHistoryList(
           <CopyButton content={service.serviceId} />
         </div>
       </td>
-      <td className="py-4 px-4 whitespace-nowrap">
+      <td className="py-3 px-4 whitespace-nowrap">
         <div className="flex items-center gap-2">
           {service.customerId ? (
             <ProfileLinkButton
@@ -69,10 +69,10 @@ export default async function ServiceHistoryList(
           )}
         </div>
       </td>
-      <td className="py-4 px-4 whitespace-nowrap text-gray-700 font-bold text-sm sm:text-base">
+      <td className="py-3 px-4 whitespace-nowrap text-gray-700 font-bold text-sm sm:text-base">
         {service.customerPhone}
       </td>
-      <td className="py-4 px-4 whitespace-nowrap">
+      <td className="py-3 px-4 whitespace-nowrap">
         <p
           title={service.customerAddress}
           className="truncate max-w-[200px] text-gray-600 text-sm sm:text-sm font-medium"
@@ -80,15 +80,15 @@ export default async function ServiceHistoryList(
           {service.customerAddress}
         </p>
       </td>
-      <td className="py-4 px-4 whitespace-nowrap">
-        <span className="inline-flex items-center px-2.5 py-1 rounded-md bg-gray-100 text-gray-800 text-sm sm:text-sm font-black uppercase tracking-wider border border-gray-200">
+      <td className="py-3 px-4 whitespace-nowrap">
+        <span className="inline-flex items-center px-2.5 py-1 rounded-md text-gray-800 text-sm sm:text-sm font-black uppercase tracking-wider ">
           {service.productType}-{service.productModel}
         </span>
       </td>
-      <td className="py-4 px-4 whitespace-nowrap text-gray-500 text-sm sm:text-sm font-bold">
+      <td className="py-3 px-4 whitespace-nowrap text-gray-500 text-sm sm:text-sm font-bold">
         {formatDate(service.createdAt!)}
       </td>
-      <td className="py-4 px-4 whitespace-nowrap text-center">
+      <td className="py-3 px-4 whitespace-nowrap text-center">
         <span
           className={`inline-flex items-center px-2.5 py-1 rounded-md text-xs sm:text-sm font-semibold uppercase tracking-wider border ${
             service.task?.status === "completed"
@@ -105,7 +105,7 @@ export default async function ServiceHistoryList(
       </td>
       {!hideStaff && (
         <>
-          <td className="py-4 px-4 whitespace-nowrap">
+          <td className="py-3 px-4 whitespace-nowrap">
             <div className="flex items-center gap-2">
               {service.staffId ? (
                 <ProfileLinkButton
@@ -119,7 +119,7 @@ export default async function ServiceHistoryList(
               )}
             </div>
           </td>
-          <td className="py-4 px-4 whitespace-nowrap text-gray-600 text-sm sm:text-sm font-bold">
+          <td className="py-3 px-4 whitespace-nowrap text-gray-600 text-sm sm:text-sm font-bold">
             {service.staffPhone || "--"}
           </td>
         </>

@@ -14,13 +14,13 @@ export default async function SubscriberList(params: SearchParams & {
 
   if (!response.success) {
     return <tr>
-      <td colSpan={8} className="text-center py-4 text-red-500"><p>{response.message}</p></td>
+      <td colSpan={8} className="text-center py-3 text-red-500"><p>{response.message}</p></td>
     </tr>
   }
 
   if (response.data && response.data.length === 0) {
     return <tr className="border-b">
-      <td colSpan={8} className="text-center py-4 text-gray-600">
+      <td colSpan={8} className="text-center py-3 text-gray-600">
         <p>No data</p>
       </td>
     </tr>
@@ -30,17 +30,17 @@ export default async function SubscriberList(params: SearchParams & {
 
   return subscribers.map(subscriber =>
     <tr key={subscriber.id} className="border-b">
-      <td className="py-4 px-2 whitespace-nowrap">
+      <td className="py-3 px-2 whitespace-nowrap">
         <div className="flex items-center">
           <span>{subscriber.subscriptionId}</span>
           <CopyButton content={subscriber.subscriptionId} />
         </div>
       </td>
-      <td className="py-4 px-2 whitespace-nowrap">{subscriber.name}</td>
-      <td className="py-4 px-2 whitespace-nowrap">{subscriber.phone}</td>
-      <td className="py-4 px-2 whitespace-nowrap">{subscriber.district}</td>
-      <td className="py-4 px-2 whitespace-nowrap">{formatDate(subscriber.createdAt!)}</td>
-      <td className="py-4 px-2 whitespace-nowrap text-center">
+      <td className="py-3 px-2 whitespace-nowrap">{subscriber.name}</td>
+      <td className="py-3 px-2 whitespace-nowrap">{subscriber.phone}</td>
+      <td className="py-3 px-2 whitespace-nowrap">{subscriber.district}</td>
+      <td className="py-3 px-2 whitespace-nowrap">{formatDate(subscriber.createdAt!)}</td>
+      <td className="py-3 px-2 whitespace-nowrap text-center">
         <StatusBadge
           status={
             subscriber.servicesCompleted === subscriber.subscriptionDuration
@@ -49,7 +49,7 @@ export default async function SubscriberList(params: SearchParams & {
           }
         />
       </td>
-      <td className="py-4 px-2 whitespace-nowrap text-center">
+      <td className="py-3 px-2 whitespace-nowrap text-center">
         <ServiceCounter
           subscriptionId={subscriber.subscriptionId}
           servicesCompleted={subscriber.servicesCompleted}
@@ -57,7 +57,7 @@ export default async function SubscriberList(params: SearchParams & {
           isCompleted={subscriber.servicesCompleted === subscriber.subscriptionDuration}
         />
       </td>
-      <td className="py-4 px-2 whitespace-nowrap"><SubscriberActionButtons subscriber={subscriber} /></td>
+      <td className="py-3 px-2 whitespace-nowrap"><SubscriberActionButtons subscriber={subscriber} /></td>
     </tr>
   )
 }

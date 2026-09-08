@@ -21,15 +21,15 @@ export default async function Feedback({
         <table id="feedbacks" className="w-full">
           <thead>
             <tr className="sticky top-0 z-10">
-              <th className="text-left py-4 px-2">Service ID</th>
-              <th className="text-left py-4 px-2">Customer Name</th>
-              <th className="text-left py-4 px-2">Customer Phone Number</th>
-              <th className="text-left py-4 px-2">Product Model</th>
-              <th className="text-left py-4 px-2">Date</th>
-              <th className="text-left py-4 px-2">Serviceman Name</th>
-              <th className="text-left py-4 px-2">Serviceman Phone Number</th>
+              <th className="text-left py-3 px-2">Service ID</th>
+              <th className="text-left py-3 px-2">Customer Name</th>
+              <th className="text-left py-3 px-2">Customer Phone Number</th>
+              <th className="text-left py-3 px-2">Product Model</th>
+              <th className="text-left py-3 px-2">Date</th>
+              <th className="text-left py-3 px-2">Serviceman Name</th>
+              <th className="text-left py-3 px-2">Serviceman Phone Number</th>
               <th className="hidden">Feedbacks</th>
-              <th className="text-left py-4 px-2">Actions</th>
+              <th className="text-left py-3 px-2">Actions</th>
             </tr>
           </thead>
           <tbody>
@@ -37,7 +37,7 @@ export default async function Feedback({
               key={params?.query}
               fallback={
                 <tr>
-                  <td colSpan={9} className="text-center py-4 text-gray-600">
+                  <td colSpan={9} className="text-center py-3 text-gray-600">
                     <DelayedLoading />
                   </td>
                 </tr>

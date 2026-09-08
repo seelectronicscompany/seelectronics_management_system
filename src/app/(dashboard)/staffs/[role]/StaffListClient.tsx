@@ -11,7 +11,7 @@ export default function StaffListClient({ staffs }: { staffs: StaffsType[] }) {
 
   return (
     <div className="flex-1 overflow-auto p-2 sm:p-3">
-      <div className="grid  grid-cols-1 sm:grid-cols-2 md:grid-cols-3  xl:grid-cols-5 2xl:grid-cols-6 gap-3 sm:gap-4 md:gap-5">
+      <div className="grid  grid-cols-2 sm:grid-cols-2 md:grid-cols-3  xl:grid-cols-5 2xl:grid-cols-6 gap-3 sm:gap-4 md:gap-5">
         {staffs.map((staff) => (
           <div
             key={staff.id}

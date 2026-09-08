@@ -128,16 +128,16 @@ export default function BatteryRemindersClient({
         <table className="w-full text-sm text-left">
           <thead className="sticky top-0 z-20 bg-gray-50 shadow-sm">
             <tr>
-              <th className="py-4 px-4 font-bold text-gray-700 whitespace-nowrap">
+              <th className="py-3 px-4 font-bold text-gray-700 whitespace-nowrap">
                 Customer ID
               </th>
-              <th className="py-4 px-4 font-bold text-gray-700 whitespace-nowrap">
+              <th className="py-3 px-4 font-bold text-gray-700 whitespace-nowrap">
                 Name
               </th>
-              <th className="py-4 px-4 font-bold text-gray-700 whitespace-nowrap">
+              <th className="py-3 px-4 font-bold text-gray-700 whitespace-nowrap">
                 Phone
               </th>
-              <th className="py-4 px-4 font-bold text-gray-700 whitespace-nowrap">
+              <th className="py-3 px-4 font-bold text-gray-700 whitespace-nowrap">
                 Address
               </th>
             </tr>
@@ -148,10 +148,10 @@ export default function BatteryRemindersClient({
                 key={customer.customerId}
                 className="border-b hover:bg-gray-50"
               >
-                <td className="py-4 px-4">{customer.customerId}</td>
-                <td className="py-4 px-4">{customer.name}</td>
-                <td className="py-4 px-4">{customer.phone}</td>
-                <td className="py-4 px-4">{customer.address}</td>
+                <td className="py-3 px-4">{customer.customerId}</td>
+                <td className="py-3 px-4">{customer.name}</td>
+                <td className="py-3 px-4">{customer.phone}</td>
+                <td className="py-3 px-4">{customer.address}</td>
               </tr>
             ))}
             {customers.length === 0 && (

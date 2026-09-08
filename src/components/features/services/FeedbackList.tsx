@@ -16,7 +16,7 @@ async function FeedbackList(params: SearchParams & {
   if (!response.success) {
     return (
       <tr>
-        <td colSpan={9} className="text-center py-4 text-red-500">
+        <td colSpan={9} className="text-center py-3 text-red-500">
           <p>{response.message}</p>
         </td>
       </tr>
@@ -26,7 +26,7 @@ async function FeedbackList(params: SearchParams & {
   if (response.data!.length === 0) {
     return (
       <tr className="border-b">
-        <td colSpan={9} className="text-center py-4 text-gray-600">
+        <td colSpan={9} className="text-center py-3 text-gray-600">
           <p>No data</p>
         </td>
       </tr>
@@ -37,13 +37,13 @@ async function FeedbackList(params: SearchParams & {
 
   return feedbacks.map((feedback: any) => (
     <tr key={feedback.serviceId} className="border-b text-lg">
-      <td className="py-4 px-2 whitespace-nowrap">
+      <td className="py-3 px-2 whitespace-nowrap">
         <div className="flex items-center">
           <span>{feedback.serviceId}</span>
           <CopyButton content={feedback.serviceId} />
         </div>
       </td>
-      <td className="py-4 px-2 whitespace-nowrap">
+      <td className="py-3 px-2 whitespace-nowrap">
         <p className="truncate max-w-52" title={feedback.service?.customerName}>
           {feedback.customerId ? (
             <ProfileLinkButton
@@ -55,10 +55,10 @@ async function FeedbackList(params: SearchParams & {
           )}
         </p>
       </td>
-      <td className="py-4 px-2 whitespace-nowrap">
+      <td className="py-3 px-2 whitespace-nowrap">
         {feedback.service?.customerPhone}
       </td>
-      <td className="py-4 px-2 whitespace-nowrap">
+      <td className="py-3 px-2 whitespace-nowrap">
         <p
           title={`${feedback.service?.productType}-${feedback.service?.productModel}`}
           className="truncate w-52"
@@ -66,10 +66,10 @@ async function FeedbackList(params: SearchParams & {
           {feedback.service?.productType}-{feedback.service?.productModel}
         </p>
       </td>
-      <td className="py-4 px-2 whitespace-nowrap">
+      <td className="py-3 px-2 whitespace-nowrap">
         {formatDate(feedback.createdAt!)}
       </td>
-      <td className="py-4 px-2 whitespace-nowrap">
+      <td className="py-3 px-2 whitespace-nowrap">
         <p title={feedback.service?.staffName} className="truncate max-w-52">
           {feedback.service?.staffId ? (
             <ProfileLinkButton
@@ -81,7 +81,7 @@ async function FeedbackList(params: SearchParams & {
           )}
         </p>
       </td>
-      <td className="py-4 px-2 whitespace-nowrap">
+      <td className="py-3 px-2 whitespace-nowrap">
         {feedback.service?.staffPhone || "--"}
       </td>
       {/* <td className="hidden">
@@ -93,7 +93,7 @@ async function FeedbackList(params: SearchParams & {
                         </p>
                     )}
                 </td> */}
-      <td className="py-4 px-2 whitespace-nowrap">
+      <td className="py-3 px-2 whitespace-nowrap">
         <FeedbackActionButtons feedbackData={feedback} />
       </td>
     </tr>

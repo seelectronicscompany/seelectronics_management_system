@@ -100,12 +100,12 @@ export default function ReferralPaymentList({
         <table className="w-full text-sm text-left min-w-[850px] whitespace-nowrap">
           <thead className="bg-gray-50/50">
             <tr>
-              <th className="px-6 py-4 font-bold text-gray-700">Request Details</th>
-              <th className="px-6 py-4 font-bold text-gray-700">Customer</th>
-              <th className="px-6 py-4 font-bold text-gray-700">Payment Info</th>
-              <th className="px-6 py-4 font-bold text-gray-700 text-right">Amount</th>
-              <th className="px-6 py-4 font-bold text-gray-700 text-right">Status</th>
-              <th className="px-6 py-4 font-bold text-gray-700 text-right">Action</th>
+              <th className="px-6 py-3 font-bold text-gray-700">Request Details</th>
+              <th className="px-6 py-3 font-bold text-gray-700">Customer</th>
+              <th className="px-6 py-3 font-bold text-gray-700">Payment Info</th>
+              <th className="px-6 py-3 font-bold text-gray-700 text-right">Amount</th>
+              <th className="px-6 py-3 font-bold text-gray-700 text-right">Status</th>
+              <th className="px-6 py-3 font-bold text-gray-700 text-right">Action</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-gray-50">
@@ -121,11 +121,11 @@ export default function ReferralPaymentList({
             ) : (
               filteredRequests.map(req => (
                 <tr key={req.id} className="hover:bg-gray-50/50 transition-colors">
-                  <td className="px-6 py-4">
+                  <td className="px-6 py-3">
                     <p className="font-bold text-gray-800 tracking-tight">{req.requestId}</p>
                     <p className="text-xs text-gray-400">{new Date(req.createdAt).toLocaleString()}</p>
                   </td>
-                  <td className="px-6 py-4">
+                  <td className="px-6 py-3">
                     <div className="flex items-center gap-3">
                       <div className="p-2 bg-gray-100 rounded-lg">
                         <User className="size-4 text-gray-600" />
@@ -136,15 +136,15 @@ export default function ReferralPaymentList({
                       </div>
                     </div>
                   </td>
-                  <td className="px-6 py-4">
+                  <td className="px-6 py-3">
                     <p className="font-semibold text-gray-700 capitalize">{req.paymentMethod}</p>
                     <p className="text-xs text-brand font-mono">{req.walletNumber}</p>
 
                   </td>
-                  <td className="px-6 py-4 text-right font-bold text-gray-800">
+                  <td className="px-6 py-3 text-right font-bold text-gray-800">
                     ৳{Number(req.amount).toLocaleString()}
                   </td>
-                  <td className="px-6 py-4 text-right">
+                  <td className="px-6 py-3 text-right">
                     <span className={clsx(
                       "px-2.5 py-1 rounded-full text-[11px] font-bold uppercase tracking-wider",
                       req.status === 'completed' && "bg-green-100 text-green-700",
@@ -155,7 +155,7 @@ export default function ReferralPaymentList({
                       {req.status}
                     </span>
                   </td>
-                  <td className="px-6 py-4 text-right">
+                  <td className="px-6 py-3 text-right">
                     {req.status === 'requested' || req.status === 'processing' ? (
                       <button
                         onClick={() => setSelectedRequest(req)}

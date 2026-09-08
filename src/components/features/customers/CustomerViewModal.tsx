@@ -255,7 +255,7 @@ function CustomerViewModal({
               <tbody>
                 {isProductsLoading ? (
                   <tr>
-                    <td colSpan={7} className="text-center py-4 text-gray-600">
+                    <td colSpan={7} className="text-center py-3 text-gray-600">
                       <Spinner />
                     </td>
                   </tr>
@@ -296,7 +296,7 @@ function CustomerViewModal({
                   ))
                 ) : (
                   <tr>
-                    <td colSpan={7} className="text-center py-4 text-gray-600 italic">
+                    <td colSpan={7} className="text-center py-3 text-gray-600 italic">
                       No products found
                     </td>
                   </tr>

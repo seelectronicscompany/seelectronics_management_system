@@ -100,7 +100,7 @@ function ProductSelectionModal({
               ))
             ) : (
               <tr>
-                <td colSpan={4} className="text-center py-4 text-gray-600">
+                <td colSpan={4} className="text-center py-3 text-gray-600">
                   <Spinner />
                 </td>
               </tr>

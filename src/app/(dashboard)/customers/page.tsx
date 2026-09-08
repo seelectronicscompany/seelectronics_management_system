@@ -30,28 +30,28 @@ export default async function Customers({
         <table className="w-full text-sm text-left">
           <thead className="sticky top-0 z-20">
             <tr className="bg-gray-50">
-              <th className="py-4 px-4 font-bold text-gray-700 whitespace-nowrap">
+              <th className="py-3 px-4 font-bold text-gray-700 whitespace-nowrap">
                 Customer ID
               </th>
-              <th className="py-4 px-4 font-bold text-gray-700 whitespace-nowrap">
+              <th className="py-3 px-4 font-bold text-gray-700 whitespace-nowrap">
                 Invoice Number
               </th>
-              <th className="py-4 px-4 font-bold text-gray-700 whitespace-nowrap">
+              <th className="py-3 px-4 font-bold text-gray-700 whitespace-nowrap">
                 Name
               </th>
-              <th className="py-4 px-4 font-bold text-gray-700 whitespace-nowrap">
+              <th className="py-3 px-4 font-bold text-gray-700 whitespace-nowrap">
                 Phone Number
               </th>
-              <th className="py-4 px-4 font-bold text-gray-700 whitespace-nowrap">
+              <th className="py-3 px-4 font-bold text-gray-700 whitespace-nowrap">
                 Address
               </th>
-              <th className="py-4 px-4 font-bold text-gray-700 whitespace-nowrap text-right">
+              <th className="py-3 px-4 font-bold text-gray-700 whitespace-nowrap text-right">
                 Total Amount
               </th>
-              <th className="py-4 px-4 font-bold text-gray-700 whitespace-nowrap">
+              <th className="py-3 px-4 font-bold text-gray-700 whitespace-nowrap">
                 Date
               </th>
-              <th className="py-4 px-4 font-bold text-gray-700 whitespace-nowrap md:sticky md:right-0 md:bg-gray-50 md:shadow-[-4px_0_10px_-4px_rgba(0,0,0,0.1)]">
+              <th className="py-3 px-4 font-bold text-gray-700 whitespace-nowrap md:sticky md:right-0 md:bg-gray-50 md:shadow-[-4px_0_10px_-4px_rgba(0,0,0,0.1)]">
                 Actions
               </th>
             </tr>

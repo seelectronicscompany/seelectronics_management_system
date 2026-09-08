@@ -452,18 +452,18 @@ export default function CustomerForm({
               <table className="w-full table-auto whitespace-nowrap">
                 <thead>
                   <tr className="text-sm bg-gray-100">
-                    <th className="text-left py-4 px-2">
+                    <th className="text-left py-3 px-2">
                       Type <span className="text-red-500">*</span>
                     </th>
-                    <th className="text-left py-4 px-2">
+                    <th className="text-left py-3 px-2">
                       Model <span className="text-red-500">*</span>
                     </th>
-                    <th className="text-left py-4 px-2">Warranty</th>
-                    <th className="text-left py-4 px-2">Warranty Start Date</th>
-                    <th className="text-left py-4 px-2">
+                    <th className="text-left py-3 px-2">Warranty</th>
+                    <th className="text-left py-3 px-2">Warranty Start Date</th>
+                    <th className="text-left py-3 px-2">
                       Qty <span className="text-red-500">*</span>
                     </th>
-                    <th className="text-left py-4 px-2">
+                    <th className="text-left py-3 px-2">
                       Unit Price <span className="text-red-500">*</span>
                     </th>
                   </tr>
@@ -473,7 +473,7 @@ export default function CustomerForm({
                     <tr>
                       <td
                         colSpan={6}
-                        className="text-center py-4 text-gray-600"
+                        className="text-center py-3 text-gray-600"
                       >
                         <Spinner />
                       </td>

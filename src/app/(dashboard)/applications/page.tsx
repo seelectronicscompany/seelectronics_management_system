@@ -33,14 +33,14 @@ export default async function Applications({
         <table id="services" className="w-full border ">
           <thead>
             <tr className="sticky top-0 z-10 bg-gray-100 border-b">
-              <th className="text-left py-4 text-sm px-2">Application ID</th>
-              <th className="text-left py-4 text-sm px-2">Name</th>
-              <th className="text-left py-4 text-sm px-2">Phone Number</th>
-              <th className="text-left py-4 text-sm px-2">District</th>
-              <th className="text-left py-4 text-sm px-2">Type</th>
-              <th className="text-left py-4 text-sm px-2">Date</th>
-              <th className="text-left py-4 text-sm px-2">Status</th>
-              <th className="text-left py-4 text-sm px-2">Actions</th>
+              <th className="text-left py-3 text-sm px-2">Application ID</th>
+              <th className="text-left py-3 text-sm px-2">Name</th>
+              <th className="text-left py-3 text-sm px-2">Phone Number</th>
+              <th className="text-left py-3 text-sm px-2">District</th>
+              <th className="text-left py-3 text-sm px-2">Type</th>
+              <th className="text-left py-3 text-sm px-2">Date</th>
+              <th className="text-left py-3 text-sm px-2">Status</th>
+              <th className="text-left py-3 text-sm px-2">Actions</th>
             </tr>
           </thead>
           <tbody>
@@ -48,7 +48,7 @@ export default async function Applications({
               key={params?.query}
               fallback={
                 <tr>
-                  <td colSpan={8} className="text-center py-4 text-gray-600">
+                  <td colSpan={8} className="text-center py-3 text-gray-600">
                     <DelayedLoading />
                   </td>
                 </tr>
