@@ -11,7 +11,7 @@ export default function StaffListClient({ staffs }: { staffs: StaffsType[] }) {
 
   return (
     <div className="flex-1 overflow-auto p-2 sm:p-3">
-      <div className="grid  grid-cols-2 sm:grid-cols-2 md:grid-cols-3  xl:grid-cols-5 2xl:grid-cols-6 gap-3 sm:gap-4 md:gap-5">
+      <div className="grid  grid-cols-1  sm:grid-cols-2 md:grid-cols-3  xl:grid-cols-5 2xl:grid-cols-6 gap-3 sm:gap-4 md:gap-5">
         {staffs.map((staff) => (
           <div
             key={staff.id}
@@ -39,7 +39,7 @@ export default function StaffListClient({ staffs }: { staffs: StaffsType[] }) {
 
             {/* Profile Image */}
             <div className="relative mx-auto mb-3 sm:mb-4 md:mb-5">
-              <div className="size-20 sm:size-28 md:size-32 lg:size-36 rounded-md sm:rounded-md md:rounded-[2rem] overflow-hidden __center mx-auto border-2 sm:border-4 border-gray-50 group-hover:border-brand/10 transition-colors bg-gray-50">
+              <div className="size-25 sm:size-28 md:size-32 lg:size-36 rounded-md sm:rounded-md md:rounded-[2rem] overflow-hidden __center mx-auto border-2 sm:border-4 border-gray-50 group-hover:border-brand/10 transition-colors bg-gray-50">
                 <Image
                   src={staff.photoUrl || "/placeholder-avatar.png"}
                   alt={staff.name}
@@ -49,7 +49,7 @@ export default function StaffListClient({ staffs }: { staffs: StaffsType[] }) {
                 />
               </div>
               <div className="absolute -bottom-1.5 sm:-bottom-2 left-1/2 -translate-x-1/2 bg-white px-2 sm:px-3 py-0.5 sm:py-1 rounded-full shadow-sm border border-gray-100 flex items-center gap-1.5">
-                <span className="text-[12px] sm:text-[12px] font-black text-brand uppercase tracking-widest">
+                <span className="text-lg sm:text-[12px] font-black text-brand uppercase tracking-widest">
                   {staff.staffId}
                 </span>
               </div>
@@ -58,10 +58,10 @@ export default function StaffListClient({ staffs }: { staffs: StaffsType[] }) {
             {/* Staff Info */}
             <div className="space-y-2 sm:space-y-3 md:space-y-4">
               <div>
-                <h3 className="text-sm sm:text-base md:text-lg font-black text-gray-900 group-hover:text-brand transition-colors line-clamp-1 px-1">
+                <h3 className="text-lg sm:text-base md:text-lg font-black text-gray-900 group-hover:text-brand transition-colors line-clamp-1 px-1">
                   {staff.name}
                 </h3>
-                <p className="text-[10px] sm:text-[11px] font-black text-gray-400 uppercase tracking-[0.15em] sm:tracking-[0.2em] mt-0.5 sm:mt-1">
+                <p className="text-sm sm:text-[11px] font-black text-gray-400 uppercase tracking-[0.15em] sm:tracking-[0.2em] mt-0.5 sm:mt-1">
                   {staff.role}
                 </p>
               </div>
@@ -72,7 +72,7 @@ export default function StaffListClient({ staffs }: { staffs: StaffsType[] }) {
                     size={10}
                     className="text-brand/40 sm:w-3.5 sm:h-3.5"
                   />
-                  <span className="text-[10px] sm:text-sm md:text-sm font-bold">
+                  <span className="text-sm sm:text-sm md:text-sm font-bold">
                     {staff.phone}
                   </span>
                 </div>
@@ -81,7 +81,7 @@ export default function StaffListClient({ staffs }: { staffs: StaffsType[] }) {
                     size={10}
                     className="text-brand/40 sm:w-3.5 sm:h-3.5"
                   />
-                  <span className="text-[10px] sm:text-sm md:text-sm font-bold truncate max-w-[80px] sm:max-w-[120px] md:max-w-[150px]">
+                  <span className="text-sm sm:text-sm md:text-sm font-bold truncate max-w-[80px] sm:max-w-[120px] md:max-w-[150px]">
                     {staff.currentDistrict}
                   </span>
                 </div>
@@ -91,7 +91,7 @@ export default function StaffListClient({ staffs }: { staffs: StaffsType[] }) {
               <div className="pt-1 sm:pt-2">
                 <div className="w-full py-2 sm:py-2.5 md:py-3 rounded-md sm:rounded-md md:rounded-md bg-gray-50 text-gray-400 group-hover:bg-brand group-hover:text-white transition-all flex items-center justify-center gap-1 sm:gap-2">
                   <Eye size={12} className="sm:w-4 sm:h-4" />
-                  <span className="text-[8px] sm:text-[10px] md:text-sm font-black uppercase tracking-wider sm:tracking-widest">
+                  <span className="text-sm sm:text-[10px] md:text-sm font-black uppercase tracking-wider sm:tracking-widest">
                     View Details
                   </span>
                 </div>
