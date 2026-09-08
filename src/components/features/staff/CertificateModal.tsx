@@ -9,8 +9,10 @@ import { toast } from "react-toastify";
 export default function CertificateModal({ onClose }: { onClose: () => void }) {
   const [loading, setLoading] = useState(false);
 
-  const handleSubmit = async (formData: FormData) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
     setLoading(true);
+    const formData = new FormData(e.currentTarget);
     const res = await sendCertificateLink(formData);
     if (res.success) {
       toast.success(res.message);
@@ -23,7 +25,7 @@ export default function CertificateModal({ onClose }: { onClose: () => void }) {
 
   return (
     <Modal isVisible title="Certificate" onClose={onClose}>
-      <form action={handleSubmit} className="space-y-3">
+      <form onSubmit={handleSubmit} className="space-y-3">
         <div className="flex gap-x-3">
           <input
             type="text"
