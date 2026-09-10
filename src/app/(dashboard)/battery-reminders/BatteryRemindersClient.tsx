@@ -176,7 +176,7 @@ export default function BatteryRemindersClient({
           >
             {loadingAction === "maintenance-voice"
               ? "Sending..."
-              : "আই পি এস রক্ষণাবেক্ষণ ভয়েস কল"}
+              : "ব্যাটারির পানি চেকের ভয়েস কল"}
           </button>
         </div>
       </Modal>
