@@ -227,6 +227,8 @@ export const sendBulkVoiceCallToAll = async (
     }
 
     let successCount = 0;
+    let mockedCount = 0;
+    let failedChunkCount = 0;
     const titleType =
       type === "battery_health_check"
         ? "Battery Health Check"
@@ -238,15 +240,20 @@ export const sendBulkVoiceCallToAll = async (
         `Bulk ${titleType} Reminder`,
       );
       if (res.success) {
-        successCount += chunk.length;
+        if (res.mocked) mockedCount += chunk.length;
+        else successCount += chunk.length;
       } else {
+        failedChunkCount++;
         console.error("Failed to send to chunk:", res.error);
       }
     }
 
     return {
-      success: true,
-      message: `Sent voice call to ${successCount} customers`,
+      success: failedChunkCount === 0 && (successCount > 0 || mockedCount > 0),
+      message:
+        mockedCount > 0
+          ? `Voice call simulation completed for ${mockedCount} customers. Configure MRAM to send real calls.`
+          : `Sent voice call to ${successCount} customers${failedChunkCount ? `; ${failedChunkCount} batch(es) failed.` : "."}`,
     };
   } catch (error) {
     console.error(error);

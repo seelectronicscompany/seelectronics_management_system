@@ -15,6 +15,16 @@ export const getCustomersMetadata = async ({
   page = "1",
   limit = "20",
 }: SearchParams) => {
+  const session = await verifySession(false, "admin");
+  if (!session) {
+    return {
+      currentPage: Number(page),
+      totalRecords: 0,
+      totalPages: 0,
+      currentLimit: Number(limit),
+    };
+  }
+
   const q = `%${query}%`;
   const filters = query
     ? or(
@@ -39,6 +49,32 @@ export const getCustomersMetadata = async ({
     totalPages: totalPages,
     currentLimit: Number(limit),
   };
+};
+
+export const getCustomerIds = async ({ query }: Pick<SearchParams, "query">) => {
+  try {
+    const session = await verifySession(false, "admin");
+    if (!session) return { success: false, message: "Unauthorized" };
+
+    const q = `%${query || ""}%`;
+    const data = await db.query.customers.findMany({
+      where: query
+        ? or(
+            ilike(customers.customerId, q),
+            ilike(customers.name, q),
+            ilike(customers.phone, q),
+            ilike(customers.address, q),
+            ilike(customers.invoiceNumber, q),
+          )
+        : undefined,
+      columns: { customerId: true },
+    });
+
+    return { success: true, data: data.map((customer) => customer.customerId) };
+  } catch (error) {
+    console.error("Error fetching customer IDs:", error);
+    return { success: false, message: "Could not fetch customer IDs" };
+  }
 };
 
 /**

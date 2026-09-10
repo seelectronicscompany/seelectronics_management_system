@@ -41,6 +41,7 @@ export const sendSMS = async (phoneNumber: string, message: string) => {
 Phone: ${phoneNumber}
 Message: ${message}
 `);
+  return { mocked: true };
     }
   } catch (error) {
     console.error(error);

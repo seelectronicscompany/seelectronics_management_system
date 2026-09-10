@@ -1,4 +1,4 @@
-import { getCustomers, getCustomersMetadata } from "@/actions";
+import { getCustomerIds, getCustomers, getCustomersMetadata } from "@/actions";
 import { Toolbar } from "@/components";
 import { SearchParams } from "@/types";
 import BatteryRemindersClient from "./BatteryRemindersClient";
@@ -15,16 +15,21 @@ export default async function BatteryRemindersPage({
 
   const paginationPromise = getCustomersMetadata(customParams);
   const customersPromise = getCustomers(customParams);
+  const customerIdsPromise = getCustomerIds({ query: params?.query });
 
-  const [pagination, customersRes] = await Promise.all([
+  const [pagination, customersRes, customerIdsRes] = await Promise.all([
     paginationPromise,
     customersPromise,
+    customerIdsPromise,
   ]);
 
   return (
     <div className="flex-1 overflow-hidden flex flex-col gap-4">
       <Toolbar title="Maintenance Reminders" pagination={pagination!} />
-      <BatteryRemindersClient customers={customersRes.data || []} />
+      <BatteryRemindersClient
+        customers={customersRes.data || []}
+        allCustomerIds={customerIdsRes.data || []}
+      />
     </div>
   );
 }

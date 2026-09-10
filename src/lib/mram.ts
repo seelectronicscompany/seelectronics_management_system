@@ -34,7 +34,13 @@ export const sendVoiceCall = async (
     const rawNumbers = Array.isArray(phoneNumbers)
       ? phoneNumbers
       : [phoneNumbers];
-    const numbers = Array.from(new Set(rawNumbers.map(formatPhoneNumber)));
+    const numbers = Array.from(new Set(rawNumbers.map(formatPhoneNumber))).filter(
+      (number) => number.length > 0,
+    );
+
+    if (!numbers.length) {
+      return { success: false, error: "No valid phone numbers found" };
+    }
 
     if (
       shouldSendRealCall &&
@@ -82,7 +88,7 @@ Numbers: ${numbers.join(", ")}
 Broadcast ID: ${broadcastId}
 Title: ${title}
 `);
-      return { success: true, data: { status: "dev_mode_mock" } };
+      return { success: true, mocked: true, data: { status: "dev_mode_mock" } };
     }
   } catch (error) {
     console.error("MRAM Service Exception:", error);

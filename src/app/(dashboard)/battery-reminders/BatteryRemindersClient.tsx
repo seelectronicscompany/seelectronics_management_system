@@ -1,88 +1,81 @@
 "use client";
 
-import { sendBatteryReminderToAll, sendUserManualSmsToAll } from "@/actions";
-import { sendBulkVoiceCallToAll } from "@/actions/voiceReminderActions";
+import {
+  sendBatteryReminderToSelected,
+  sendUserManualSmsToSelected,
+} from "@/actions";
+import { sendBulkVoiceCallToSelected } from "@/actions/voiceReminderActions";
+import Modal from "@/components/ui/Modal";
 import { useState } from "react";
 import { toast } from "react-toastify";
 
+type CustomerRow = {
+  customerId: string;
+  name: string | null;
+  phone: string | null;
+  address: string | null;
+};
+
 export default function BatteryRemindersClient({
   customers,
+  allCustomerIds,
 }: {
-  customers: any[];
+  customers: CustomerRow[];
+  allCustomerIds: string[];
 }) {
-  const [loadingAll, setLoadingAll] = useState(false);
-  const [loadingVoiceAll, setLoadingVoiceAll] = useState(false);
-  const [loadingUserManual, setLoadingUserManual] = useState(false);
+  const [selectedIds, setSelectedIds] = useState<string[]>([]);
+  const [openMenu, setOpenMenu] = useState<"sms" | "voice" | null>(null);
+  const [loadingAction, setLoadingAction] = useState<string | null>(null);
 
-  const handleUserManualSms = async () => {
-    if (
-      !confirm(
-        "WARNING: This will send a User Manual SMS to EVERY customer in the database. Are you absolutely sure?",
-      )
-    )
-      return;
+  const visibleIds = customers.map((customer) => customer.customerId);
+  const allMatchingSelected =
+    allCustomerIds.length > 0 && allCustomerIds.every((id) => selectedIds.includes(id));
+  const visibleSelected = visibleIds.filter((id) => selectedIds.includes(id));
 
-    setLoadingUserManual(true);
-    const res = await sendUserManualSmsToAll();
-    setLoadingUserManual(false);
-
-    if (res?.success) {
-      toast.success(res.message);
-    } else {
-      toast.error(res?.message || "Something went wrong");
-    }
+  const toggleCustomer = (customerId: string) => {
+    setSelectedIds((current) =>
+      current.includes(customerId)
+        ? current.filter((id) => id !== customerId)
+        : [...current, customerId],
+    );
   };
 
-  const handleSendToAll = async () => {
-    if (
-      !confirm(
-        "WARNING: This will send a battery reminder SMS to EVERY customer in the database. Are you absolutely sure?",
-      )
-    )
-      return;
-
-    setLoadingAll(true);
-    const res = await sendBatteryReminderToAll();
-    setLoadingAll(false);
-
-    if (res?.success) {
-      toast.success(res.message);
-    } else {
-      toast.error(res?.message || "Something went wrong");
-    }
+  const toggleVisibleCustomers = () => {
+    setSelectedIds((current) => {
+      const allVisibleSelected = visibleIds.every((id) => current.includes(id));
+      if (allVisibleSelected) return current.filter((id) => !visibleIds.includes(id));
+      return Array.from(new Set([...current, ...visibleIds]));
+    });
   };
 
-  const handleBatteryVoice = async () => {
-    if (
-      !confirm(
-        "WARNING: This will send a BATTERY check voice call to EVERY customer in the database. Are you absolutely sure?",
-      )
-    )
-      return;
-    setLoadingVoiceAll(true);
-    const res = await sendBulkVoiceCallToAll("battery_health_check");
-    setLoadingVoiceAll(false);
-    if (res?.success) {
-      toast.success(res.message);
-    } else {
-      toast.error(res?.message || "Something went wrong");
-    }
+  const toggleAllMatchingCustomers = () => {
+    setSelectedIds((current) => (allMatchingSelected ? [] : allCustomerIds));
   };
 
-  const handleMaintenanceVoice = async () => {
-    if (
-      !confirm(
-        "WARNING: This will send an OVERALL MAINTENANCE voice call to EVERY customer in the database. Are you absolutely sure?",
-      )
-    )
+  const openCampaignMenu = (menu: "sms" | "voice") => {
+    if (!selectedIds.length) {
+      toast.error("Please select at least one customer first.");
       return;
-    setLoadingVoiceAll(true);
-    const res = await sendBulkVoiceCallToAll("overall_maintenance");
-    setLoadingVoiceAll(false);
-    if (res?.success) {
-      toast.success(res.message);
-    } else {
-      toast.error(res?.message || "Something went wrong");
+    }
+    setOpenMenu(menu);
+  };
+
+  const sendCampaign = async (
+    action: string,
+    campaign: () => Promise<{ success?: boolean; message?: string }>,
+  ) => {
+    if (!confirm(`এই বার্তাটি ${selectedIds.length} জন গ্রাহককে পাঠানো হবে। আপনি কি নিশ্চিত?`)) return;
+
+    setLoadingAction(action);
+    try {
+      const res = await campaign();
+      if (res?.success) toast.success(res.message);
+      else toast.error(res?.message || "Something went wrong");
+      setOpenMenu(null);
+    } catch {
+      toast.error("Something went wrong");
+    } finally {
+      setLoadingAction(null);
     }
   };
 
@@ -92,42 +85,114 @@ export default function BatteryRemindersClient({
         <h2 className="text-xl font-bold">
           Maintenance Reminders (Bulk SMS & Voice)
         </h2>
+        <span className="text-sm font-medium text-gray-600">
+          {selectedIds.length} selected
+        </span>
         <div className="flex flex-wrap gap-2 sm:gap-4 w-full lg:w-auto">
           <button
-            onClick={handleSendToAll}
-            disabled={loadingAll || loadingVoiceAll || loadingUserManual}
+            onClick={() => openCampaignMenu("sms")}
+            disabled={loadingAction !== null}
             className="flex-1 sm:flex-none px-4 py-2 bg-red-600 text-white rounded-md disabled:bg-gray-400 font-medium whitespace-nowrap text-sm sm:text-base"
           >
-            {loadingAll ? "Sending SMS..." : "Send SMS to ALL Customers"}
+            Send SMS
           </button>
           <button
-  onClick={handleUserManualSms}
-  disabled={loadingUserManual}  // Only disable this button
-  className="..."
->
-  {loadingUserManual ? "Sending SMS..." : "User Manual SMS (ALL)"}
-</button>
-          <button
-            onClick={handleBatteryVoice}
-            disabled={loadingAll || loadingVoiceAll || loadingUserManual}
+            onClick={() => openCampaignMenu("voice")}
+            disabled={loadingAction !== null}
             className="flex-1 sm:flex-none px-4 py-2 bg-indigo-600 text-white rounded-md disabled:bg-gray-400 font-medium whitespace-nowrap text-sm sm:text-base"
           >
-            {loadingVoiceAll ? "Sending Voice..." : "Battery Voice (ALL)"}
-          </button>
-          <button
-            onClick={handleMaintenanceVoice}
-            disabled={loadingAll || loadingVoiceAll || loadingUserManual}
-            className="flex-1 sm:flex-none px-4 py-2 bg-orange-600 text-white rounded-md disabled:bg-gray-400 font-medium whitespace-nowrap text-sm sm:text-base"
-          >
-            {loadingVoiceAll ? "Sending Voice..." : "Maintenance Voice (ALL)"}
+            Send Voice call
           </button>
         </div>
       </div>
+
+      <div className="flex flex-wrap items-center gap-3 text-sm">
+        <button
+          type="button"
+          onClick={toggleAllMatchingCustomers}
+          className="px-3 py-2 border border-gray-300 rounded-md font-medium hover:bg-gray-50"
+        >
+          {allMatchingSelected ? "Clear all matching" : "Select all matching customers"}
+        </button>
+        <span className="text-gray-500">
+          {visibleSelected.length} of {visibleIds.length} visible selected
+        </span>
+      </div>
+
+      <Modal
+        title="Send SMS"
+        isVisible={openMenu === "sms"}
+        onClose={() => setOpenMenu(null)}
+        width="500"
+      >
+        <div className="grid gap-3 py-3">
+          <button
+            disabled={loadingAction !== null}
+            onClick={() =>
+              sendCampaign("battery-sms", () => sendBatteryReminderToSelected(selectedIds))
+            }
+            className="w-full rounded-md bg-red-600 px-4 py-3 font-bold text-white disabled:bg-gray-400"
+          >
+            {loadingAction === "battery-sms" ? "Sending..." : "ব্যাটারির রক্ষণাবেক্ষণ এসএমএস"}
+          </button>
+          <button
+            disabled={loadingAction !== null}
+            onClick={() =>
+              sendCampaign("manual-sms", () => sendUserManualSmsToSelected(selectedIds))
+            }
+            className="w-full rounded-md bg-green-600 px-4 py-3 font-bold text-white disabled:bg-gray-400"
+          >
+            {loadingAction === "manual-sms" ? "Sending..." : "ব্যবহারবিধি এসএমএস"}
+          </button>
+        </div>
+      </Modal>
+
+      <Modal
+        title="Send Voice call"
+        isVisible={openMenu === "voice"}
+        onClose={() => setOpenMenu(null)}
+        width="500"
+      >
+        <div className="grid gap-3 py-3">
+          <button
+            disabled={loadingAction !== null}
+            onClick={() =>
+              sendCampaign("battery-voice", () =>
+                sendBulkVoiceCallToSelected(selectedIds, "battery_health_check"),
+              )
+            }
+            className="w-full rounded-md bg-indigo-600 px-4 py-3 font-bold text-white disabled:bg-gray-400"
+          >
+            {loadingAction === "battery-voice" ? "Sending..." : "ব্যাটারির রক্ষণাবেক্ষণ ভয়েস কল"}
+          </button>
+          <button
+            disabled={loadingAction !== null}
+            onClick={() =>
+              sendCampaign("maintenance-voice", () =>
+                sendBulkVoiceCallToSelected(selectedIds, "overall_maintenance"),
+              )
+            }
+            className="w-full rounded-md bg-orange-600 px-4 py-3 font-bold text-white disabled:bg-gray-400"
+          >
+            {loadingAction === "maintenance-voice"
+              ? "Sending..."
+              : "আই পি এস রক্ষণাবেক্ষণ ভয়েস কল"}
+          </button>
+        </div>
+      </Modal>
 
       <div className="overflow-x-auto overflow-y-auto flex-1 bg-white rounded-md border border-gray-100 shadow-sm custom-scrollbar">
         <table className="w-full text-sm text-left">
           <thead className="sticky top-0 z-20 bg-gray-50 shadow-sm">
             <tr>
+              <th className="py-3 px-4">
+                <input
+                  type="checkbox"
+                  checked={visibleIds.length > 0 && visibleSelected.length === visibleIds.length}
+                  onChange={toggleVisibleCustomers}
+                  aria-label="Select visible customers"
+                />
+              </th>
               <th className="py-3 px-4 font-bold text-gray-700 whitespace-nowrap">
                 Customer ID
               </th>
@@ -148,6 +213,14 @@ export default function BatteryRemindersClient({
                 key={customer.customerId}
                 className="border-b hover:bg-gray-50"
               >
+                <td className="py-3 px-4">
+                  <input
+                    type="checkbox"
+                    checked={selectedIds.includes(customer.customerId)}
+                    onChange={() => toggleCustomer(customer.customerId)}
+                    aria-label={`Select ${customer.name || customer.customerId}`}
+                  />
+                </td>
                 <td className="py-3 px-4">{customer.customerId}</td>
                 <td className="py-3 px-4">{customer.name}</td>
                 <td className="py-3 px-4">{customer.phone}</td>
@@ -156,7 +229,7 @@ export default function BatteryRemindersClient({
             ))}
             {customers.length === 0 && (
               <tr>
-                <td colSpan={4} className="py-8 text-center text-gray-500">
+                <td colSpan={5} className="py-8 text-center text-gray-500">
                   No customers found.
                 </td>
               </tr>
