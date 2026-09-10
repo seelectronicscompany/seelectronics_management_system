@@ -101,12 +101,12 @@ export default function BatteryRemindersClient({
             {loadingAll ? "Sending SMS..." : "Send SMS to ALL Customers"}
           </button>
           <button
-            onClick={handleUserManualSms}
-            disabled={loadingAll || loadingVoiceAll || loadingUserManual}
-            className="flex-1 sm:flex-none px-4 py-2 bg-green-600 text-white rounded-md disabled:bg-gray-400 font-medium whitespace-nowrap text-sm sm:text-base"
-          >
-            {loadingUserManual ? "Sending SMS..." : "User Manual SMS (ALL)"}
-          </button>
+  onClick={handleUserManualSms}
+  disabled={loadingUserManual}  // Only disable this button
+  className="..."
+>
+  {loadingUserManual ? "Sending SMS..." : "User Manual SMS (ALL)"}
+</button>
           <button
             onClick={handleBatteryVoice}
             disabled={loadingAll || loadingVoiceAll || loadingUserManual}
